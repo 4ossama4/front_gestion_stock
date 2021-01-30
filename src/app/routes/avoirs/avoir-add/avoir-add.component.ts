@@ -88,7 +88,7 @@ export class avoirAddComponent implements OnInit {
         this.avoirForm.patchValue({ reference: '' + response.count + '/' + response.year.toString().substring(2, 4) });
         this.avoirForm.patchValue({ count: response.count, year: response.year });
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -128,7 +128,7 @@ export class avoirAddComponent implements OnInit {
           this.selectClient(client);
         }
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -154,7 +154,7 @@ export class avoirAddComponent implements OnInit {
           this.goToList();
           this.clickSave = false;
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -262,7 +262,7 @@ export class avoirAddComponent implements OnInit {
     this.calculeTotalAvoir();
   }
 
-  public selectArticle(ret: {}) {}
+  public selectArticle(ret: {}) { }
 
   public calculeTotalAvoir() {
     console.log('ventesel', this.listeOfAvoir);
@@ -290,5 +290,9 @@ export class avoirAddComponent implements OnInit {
     this.listeOfAvoir[index].total_with_remise = this.listeOfAvoir[index].quantite * this.listeOfAvoir[index].prix_vente_avec_remise;
     console.log('this.listeOfAvoir[index].total_with_remise');
     this.calculeTotalAvoir();
+  }
+
+  public cancel() {
+
   }
 }
