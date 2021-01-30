@@ -146,13 +146,13 @@
                 *ngIf="data.is_facture > 0 && ROLE_SHOW_FACTURE" class="fal fa-file-check"></i>
             </td>
 
-            <td class="text-center ">
-              <i nz-dropdown [nzOverlayClassName]="'drop-down-vente'" nzTrigger="click" [nzDropdownMenu]="menuaction"
-                style="font-size: 2em;" class="fal fa-ellipsis-v my-btn-edit fa-2x"></i>
+            <td nz-dropdown [nzOverlayClassName]="'drop-down-vente'" nzTrigger="click" [nzDropdownMenu]="menuaction"
+              class="text-center ">
+              <i style="font-size: 2.25em;" class="fal fa-ellipsis-v my-btn-edit fa-2x"></i>
 
               <nz-dropdown-menu #menuaction="nzDropdownMenu">
                 <div nz-menu class="width-md">
-                  <div class="c-blue" (click)="editVente(data)" *ngIf="ROLE_UPDATE" nz-menu-item>
+                  <div style="color: #1890ff;" (click)="editVente(data)" *ngIf="ROLE_UPDATE" nz-menu-item>
                     <i *ngIf="ROLE_UPDATE" class="fal fa-pen my-btn-edit mr-2"></i>
                     Modifier Vente
                   </div>
