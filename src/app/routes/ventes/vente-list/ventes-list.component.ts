@@ -234,7 +234,7 @@ export class venteListComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listeOfClients = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -243,7 +243,7 @@ export class venteListComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listOfCommerciaux = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -363,7 +363,7 @@ export class venteListComponent extends baseComponent implements OnInit {
         this.notificationService.createNotification('success', '', null);
         this.getVentesByCriteria();
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -408,7 +408,7 @@ export class venteListComponent extends baseComponent implements OnInit {
           this.getVentesByCriteria();
           this.hideModal();
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -450,7 +450,7 @@ export class venteListComponent extends baseComponent implements OnInit {
           });
         }
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -516,8 +516,8 @@ export class venteListComponent extends baseComponent implements OnInit {
     var data = { type: type, criteria: this.venteCriteria, table: 'ventes' };
     console.log('data', data);
     this.stockService.exportData(data).subscribe(
-      (response: any) => {},
-      (error) => {},
+      (response: any) => { },
+      (error) => { },
     );
   }
 
@@ -533,7 +533,7 @@ export class venteListComponent extends baseComponent implements OnInit {
         link.href = downloadURL;
         window.open(downloadURL);
       },
-      (error) => {},
+      (error) => { },
     );
   }
 

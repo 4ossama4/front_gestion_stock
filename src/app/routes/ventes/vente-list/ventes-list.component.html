@@ -14,35 +14,31 @@
   <div class="row">
     <div class="col-md-11 filter-rupture">
       <nz-input-group [nzSize]="'small'" style="width: 100%" [nzAddOnAfter]="searchVente">
-        <nz-range-picker
-          style="width: 30% !important"
-          #rangePicker
-          [nzRenderExtraFooter]="extraDate"
-          [(ngModel)]="venteCriteria.date"
-          (ngModelChange)="onChange($event)"
-        ></nz-range-picker>
+        <nz-range-picker style="width: 30% !important" #rangePicker [nzRenderExtraFooter]="extraDate"
+          [(ngModel)]="venteCriteria.date" (ngModelChange)="onChange($event)"></nz-range-picker>
         <ng-template #extraDate>
           <div class="text-center">
-            <button [nzSize]="'small'" (click)="toDay('30J')" nz-button nzType="primary"><< 30 jours</button>
-            <button [nzSize]="'small'" (click)="toDay('7J')" nz-button nzType="primary"><< 7 jours</button>
-            <button [nzSize]="'small'" (click)="toDay('HIER')" nz-button nzType="primary"><< Hier</button>
-            <button [nzSize]="'small'" (click)="toDay('TODAY')" nz-button nzType="primary">aujourd'hui</button>
+            <button [nzSize]="'small'" (click)="toDay('30J')" nz-button nzType="primary">
+              << 30 jours</button>
+                <button [nzSize]="'small'" (click)="toDay('7J')" nz-button nzType="primary">
+                  << 7 jours</button>
+                    <button [nzSize]="'small'" (click)="toDay('HIER')" nz-button nzType="primary">
+                      << Hier</button>
+                        <button [nzSize]="'small'" (click)="toDay('TODAY')" nz-button
+                          nzType="primary">aujourd'hui</button>
           </div>
         </ng-template>
         <span style="width: 20%; display: inline-flex">
           <input placeholder="charcher par référence" [(ngModel)]="venteCriteria.referenceLike" nz-input type="text" />
         </span>
-        <nz-select nzPlaceHolder="Chercher par client" nzAllowClear nzShowSearch style="width: 25%" [(ngModel)]="venteCriteria.client">
+        <nz-select nzPlaceHolder="Chercher par client" nzAllowClear nzShowSearch style="width: 25%"
+          [(ngModel)]="venteCriteria.client">
           <nz-option *ngFor="let client of listeOfClients" [nzLabel]="client.name" [nzValue]="client"> </nz-option>
         </nz-select>
-        <nz-select
-          nzPlaceHolder="Chercher par commerciale"
-          nzAllowClear
-          nzShowSearch
-          style="width: 25%"
-          [(ngModel)]="venteCriteria.commerciale"
-        >
-          <nz-option *ngFor="let commerciale of listOfCommerciaux" [nzLabel]="commerciale.name" [nzValue]="commerciale"> </nz-option>
+        <nz-select nzPlaceHolder="Chercher par commerciale" nzAllowClear nzShowSearch style="width: 25%"
+          [(ngModel)]="venteCriteria.commerciale">
+          <nz-option *ngFor="let commerciale of listOfCommerciaux" [nzLabel]="commerciale.name" [nzValue]="commerciale">
+          </nz-option>
         </nz-select>
       </nz-input-group>
       <ng-template #searchVente>
@@ -57,19 +53,15 @@
 
   <div *ngIf="filterApplyList.length > 0" class="row pt-2 pb-1">
     <div class="col-md-10">
-      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués : </span>
-      <nz-tag
-        *ngFor="let filter of filterApplyList; let index = index"
-        (nzOnClose)="deleteFilter(index, filter)"
-        [nzMode]="'closeable'"
-        [nzColor]="filter.color"
-        >{{ filter.label }} : {{ filter.name ? filter.name : filter.value }}</nz-tag
-      >
+      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués :
+      </span>
+      <nz-tag *ngFor="let filter of filterApplyList; let index = index" (nzOnClose)="deleteFilter(index, filter)"
+        [nzMode]="'closeable'" [nzColor]="filter.color">{{ filter.label }} : {{ filter.name ? filter.name : filter.value
+        }}</nz-tag>
     </div>
     <div class="col-md-2 text-right">
-      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button nzType="link"
-        >Supprimer les filters</a
-      >
+      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button
+        nzType="link">Supprimer les filters</a>
       <i style="color: #e01372" class="fal fa-trash"></i>
     </div>
   </div>
@@ -87,25 +79,11 @@
         <span style="font-weight: 600">Total : </span>
         <nz-tag [nzColor]="'green'">{{ somme_ventes | priceFormat }} DH</nz-tag>
       </div>
-      <nz-table
-        [nzShowTotal]="datasize"
-        class="pt-1"
-        [nzTotal]="totalVente"
-        [nzFrontPagination]="false"
-        [(nzPageIndex)]="firstVente"
-        [nzPageSizeOptions]="[10, 50, 100]"
-        (nzPageSizeChange)="currentPageDataChange($event)"
-        [(nzPageSize)]="maxResults"
-        [nzShowPagination]="true"
-        nzShowSizeChanger
-        nzOuterBordered
-        [nzLoading]="loading"
-        [nzSize]="'middle'"
-        #basicTable
-        [nzData]="listeOfVente"
-        (nzQueryParams)="sort($event)"
-        [nzScroll]="{ x: '800px' }"
-      >
+      <nz-table [nzShowTotal]="datasize" class="pt-1" [nzTotal]="totalVente" [nzFrontPagination]="false"
+        [(nzPageIndex)]="firstVente" [nzPageSizeOptions]="[10, 50, 100]"
+        (nzPageSizeChange)="currentPageDataChange($event)" [(nzPageSize)]="maxResults" [nzShowPagination]="true"
+        nzShowSizeChanger nzOuterBordered [nzLoading]="loading" [nzSize]="'middle'" #basicTable [nzData]="listeOfVente"
+        (nzQueryParams)="sort($event)" [nzScroll]="{ x: '800px' }">
         <thead>
           <tr>
             <th>
@@ -154,33 +132,56 @@
             <td class="text-center">{{ data.total_avoirs ? data.total_avoirs : (0 | priceFormat) }} DH</td>
             <td class="text-center">
               <i (click)="gotoAvoir(data)" style="color: red" *ngIf="!data.total_avoirs" class="fa fa-circle"></i>
-              <i (click)="gotoAvoir(data)" style="color: green; cursor: pointer" *ngIf="data.total_avoirs" class="fa fa-circle"></i>
+              <i (click)="gotoAvoir(data)" style="color: green; cursor: pointer" *ngIf="data.total_avoirs"
+                class="fa fa-circle"></i>
             </td>
             <td class="text-center">
               <i style="color: red; font-size: 19px" *ngIf="data.is_bl == '0'" class="fal fa-file-check"></i>
               <i style="color: green; font-size: 19px" *ngIf="data.is_bl == '1'" class="fal fa-file-check"></i>
             </td>
             <td class="text-center">
-              <i
-                (click)="showModalInfoFacture(data)"
-                style="color: red; font-size: 19px; cursor: pointer"
-                *ngIf="data.is_facture < 1 && ROLE_SHOW_FACTURE"
-                class="fal fa-file-check"
-              ></i>
-              <i
-                (click)="showModalInfoFacture(data)"
-                style="color: green; font-size: 19px; cursor: pointer"
-                *ngIf="data.is_facture > 0 && ROLE_SHOW_FACTURE"
-                class="fal fa-file-check"
-              ></i>
+              <i (click)="showModalInfoFacture(data)" style="color: red; font-size: 19px; cursor: pointer"
+                *ngIf="data.is_facture < 1 && ROLE_SHOW_FACTURE" class="fal fa-file-check"></i>
+              <i (click)="showModalInfoFacture(data)" style="color: green; font-size: 19px; cursor: pointer"
+                *ngIf="data.is_facture > 0 && ROLE_SHOW_FACTURE" class="fal fa-file-check"></i>
             </td>
 
             <td class="text-center">
-              <i *ngIf="ROLE_UPDATE" (click)="editVente(data)" class="fal fa-pen my-btn-edit mr-2"></i>
-              <i (click)="goToView(data)" class="fal fa-eye my-btn-edit mr-2 c-green"></i>
-              <i *ngIf="ROLE_DELETE" (click)="deleteVente(data)" class="fal fa-trash-alt my-btn-edit mr-2 c-red"></i>
-              <i *ngIf="ROLE_PRINT_BL" (click)="exportAsPDF(data)" class="fal fa-print my-btn-edit mr-2 c-print"></i>
-              <i *ngIf="ROLE_SHOW_FACTURE" (click)="exportAsPDFOuther(data)" class="fal fa-file-alt my-btn-edit" style="color: #eb2f96"></i>
+              <i nz-dropdown nzPlacement="bottomRight" [nzDropdownMenu]="menuaction" style="font-size: 2em;"
+                class="fal fa-ellipsis-v my-btn-edit fa-2x"></i>
+
+              <nz-dropdown-menu #menuaction="nzDropdownMenu">
+                <div nz-menu class="width-md">
+                  <div class="c-blue" (click)="editVente(data)" *ngIf="ROLE_UPDATE" nz-menu-item>
+                    <i *ngIf="ROLE_UPDATE" class="fal fa-pen my-btn-edit mr-2"></i>
+                    Modifier Vente
+                  </div>
+                  <div class="c-red" (click)="deleteVente(data)" *ngIf="ROLE_DELETE" nz-menu-item>
+                    <i *ngIf="ROLE_DELETE" class="fal fa-trash-alt my-btn-edit mr-2 c-red"></i>
+                    Supprimer Vente
+                  </div>
+                  <div class="c-green" (click)="goToView(data)" nz-menu-item>
+                    <i (click)="goToView(data)" class="fal fa-eye my-btn-edit mr-2 c-green"></i>
+                    Détails Vente
+                  </div>
+                  <div class="c-print" (click)="exportAsPDF(data)" *ngIf="ROLE_PRINT_BL" nz-menu-item>
+                    <i *ngIf="ROLE_PRINT_BL" (click)="exportAsPDF(data)"
+                      class="fal fa-print my-btn-edit mr-2 c-print"></i>
+                    Imprimer BL
+                  </div>
+                  <div style="color: #eb2f96" (click)="exportAsPDFOuther(data)" *ngIf="ROLE_SHOW_FACTURE" nz-menu-item>
+                    <i *ngIf="ROLE_SHOW_FACTURE" (click)="exportAsPDFOuther(data)"
+                      class="fal fa-file-alt my-btn-edit mr-2" style="color: #eb2f96"></i>
+                    Imprimer Facture
+                  </div>
+                  <div style="color: #722ed1" (click)="exportAsPDFOuther(data)" nz-menu-item>
+                    <i *ngIf="ROLE_SHOW_FACTURE" (click)="exportAsPDFOuther(data)"
+                      class="fal fa-file-code my-btn-edit mr-2" style="color: #722ed1"></i>
+                    Bon ramassage
+                  </div>
+                </div>
+              </nz-dropdown-menu>
+
             </td>
           </tr>
         </tbody>
@@ -195,13 +196,8 @@
       <input placeholder="référence" [(ngModel)]="venteCriteria.referenceLike" nz-input type="text" />
       <div class="pt-2 d-flex justify-content-end">
         <button nz-button nzSize="small" (click)="resetSearch('referenceLike')">Réinitialiser</button>
-        <button
-          nz-button
-          nzSize="small"
-          nzType="primary"
-          (click)="search('Réference', venteCriteria.referenceLike, 'orange', 'referenceLike')"
-          class="search-button"
-        >
+        <button nz-button nzSize="small" nzType="primary"
+          (click)="search('Réference', venteCriteria.referenceLike, 'orange', 'referenceLike')" class="search-button">
           Chercher
         </button>
       </div>
@@ -216,13 +212,8 @@
       </nz-select>
       <div class="pt-2 d-flex justify-content-end">
         <button nz-button nzSize="small" (click)="resetSearch('clientId')">Réinitialiser</button>
-        <button
-          nz-button
-          nzSize="small"
-          nzType="primary"
-          (click)="search('Client', venteCriteria.clientId, 'green', 'clientId')"
-          class="search-button"
-        >
+        <button nz-button nzSize="small" nzType="primary"
+          (click)="search('Client', venteCriteria.clientId, 'green', 'clientId')" class="search-button">
           Chercher
         </button>
       </div>
@@ -234,17 +225,13 @@
   <div class="ant-table-filter-dropdown p-2">
     <div style="width: 313px" class="search-box">
       <nz-select nzAllowClear nzShowSearch style="width: 100%" [(ngModel)]="venteCriteria.commercialeId">
-        <nz-option *ngFor="let commerciale of listOfCommerciaux" [nzLabel]="commerciale.name" [nzValue]="commerciale.id"> </nz-option>
+        <nz-option *ngFor="let commerciale of listOfCommerciaux" [nzLabel]="commerciale.name"
+          [nzValue]="commerciale.id"> </nz-option>
       </nz-select>
       <div class="pt-2 d-flex justify-content-end">
         <button nz-button nzSize="small" (click)="resetSearch('commercialeId')">Réinitialiser</button>
-        <button
-          nz-button
-          nzSize="small"
-          nzType="primary"
-          (click)="search('Commerciale', venteCriteria.commercialeId, 'green', 'commercialeId')"
-          class="search-button"
-        >
+        <button nz-button nzSize="small" nzType="primary"
+          (click)="search('Commerciale', venteCriteria.commercialeId, 'green', 'commercialeId')" class="search-button">
           Chercher
         </button>
       </div>
@@ -255,12 +242,8 @@
 <nz-dropdown-menu #menuDate="nzDropdownMenu">
   <div class="ant-table-filter-dropdown p-2">
     <div style="width: 313px" class="search-box">
-      <nz-range-picker
-        #rangePicker
-        [nzRenderExtraFooter]="extraDate"
-        [(ngModel)]="venteCriteria.date"
-        (ngModelChange)="onChange($event)"
-      ></nz-range-picker>
+      <nz-range-picker #rangePicker [nzRenderExtraFooter]="extraDate" [(ngModel)]="venteCriteria.date"
+        (ngModelChange)="onChange($event)"></nz-range-picker>
       <ng-template #extraDate>
         <div class="text-center">
           <button [nzSize]="'small'" (click)="toDay()" nz-button nzType="primary">aujourd'hui</button>
@@ -268,13 +251,8 @@
       </ng-template>
       <div class="pt-2 d-flex justify-content-end">
         <button nz-button nzSize="small" (click)="resetSearch('date')">Réinitialiser</button>
-        <button
-          nz-button
-          nzSize="small"
-          nzType="primary"
-          (click)="search('Date', venteCriteria.date, 'magenta', 'date')"
-          class="search-button"
-        >
+        <button nz-button nzSize="small" nzType="primary"
+          (click)="search('Date', venteCriteria.date, 'magenta', 'date')" class="search-button">
           Chercher
         </button>
       </div>
@@ -291,7 +269,8 @@
           <div nz-col [nzSpan]="24">
             <nz-form-item class="mb-0">
               <nz-form-label [nzSpan]="8" nzFor="date">N°Facture </nz-form-label>
-              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16"> {{ venteSelected?.ref_facture }} </nz-form-control>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16"> {{ venteSelected?.ref_facture }}
+              </nz-form-control>
             </nz-form-item>
           </div>
         </div>
@@ -340,17 +319,8 @@
     </div>
 
     <div class="col-md-12">
-      <nz-table
-        [nzTemplateMode]="true"
-        [nzHideOnSinglePage]="true"
-        class="pt-1"
-        nzOuterBordered
-        [nzLoading]="loading"
-        [nzSize]="'middle'"
-        #tableArticle
-        [nzData]="venteSelected?.lignes_vente"
-        [nzScroll]="{ x: '800px' }"
-      >
+      <nz-table [nzTemplateMode]="true" [nzHideOnSinglePage]="true" class="pt-1" nzOuterBordered [nzLoading]="loading"
+        [nzSize]="'middle'" #tableArticle [nzData]="venteSelected?.lignes_vente" [nzScroll]="{ x: '800px' }">
         <thead>
           <tr>
             <th>Article</th>
@@ -372,15 +342,18 @@
                   </div>
                 </div>
                 <ng-template #editTplQTE>
-                  <nz-input-number (nzBlur)="changeQte()" [(ngModel)]="data.quantite_facture" [nzMin]="0" [nzStep]="1"> </nz-input-number>
+                  <nz-input-number (nzBlur)="changeQte()" [(ngModel)]="data.quantite_facture" [nzMin]="0" [nzStep]="1">
+                  </nz-input-number>
                 </ng-template>
               </td>
               <td style="width: 150px" class="text-center">
                 <div class="editable-cell" *ngIf="editId != index; else editTplprix_vente">
-                  <div class="editable-cell-value-wrap" (click)="startEdit(index, data)">{{ data.prix_vente | priceFormat }} DH</div>
+                  <div class="editable-cell-value-wrap" (click)="startEdit(index, data)">{{ data.prix_vente |
+                    priceFormat }} DH</div>
                 </div>
                 <ng-template #editTplprix_vente>
-                  <nz-input-number (nzBlur)="changePrixVente()" [(ngModel)]="data.prix_vente" [nzMin]="0"> </nz-input-number>
+                  <nz-input-number (nzBlur)="changePrixVente()" [(ngModel)]="data.prix_vente" [nzMin]="0">
+                  </nz-input-number>
                 </ng-template>
               </td>
               <td style="width: 100px" class="text-center">
@@ -412,7 +385,8 @@
   </div>
   <div *nzModalFooter>
     <button (click)="hideModal()" nz-button nzType="default">Annuler</button>
-    <button *ngIf="venteSelected?.lignes_vente.length > 0 && ROLE_ADD_FACTURE" (click)="printFacture()" nz-button nzType="primary">
+    <button *ngIf="venteSelected?.lignes_vente.length > 0 && ROLE_ADD_FACTURE" (click)="printFacture()" nz-button
+      nzType="primary">
       Imprimer
     </button>
   </div>
@@ -445,7 +419,8 @@
               </td>
             </tr>
             <tr [nzExpand]="data.expand">
-              <nz-table #innerTable [nzData]="data.lignes_facture" nzSize="middle" [nzShowPagination]="false" [nzScroll]="{ x: '800px' }">
+              <nz-table #innerTable [nzData]="data.lignes_facture" nzSize="middle" [nzShowPagination]="false"
+                [nzScroll]="{ x: '800px' }">
                 <thead>
                   <tr>
                     <th>Article</th>
@@ -455,19 +430,19 @@
                     <th class="text-center">Total</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr *ngFor="let data of innerTable.data">
-                    <td>{{ data.article?.reference }}</td>
-                    <td class="text-center">{{ data.quantite_facture }}</td>
-                    <td class="text-center">{{ data.prix_vente_avec_remise | priceFormat }} DH</td>
-                    <td class="text-center">{{ data.remise }}</td>
-                    <td class="text-center">{{ data.total_with_remise | priceFormat }} DH</td>
-                  </tr>
-                </tbody>
-              </nz-table>
-            </tr>
-          </ng-template>
+        <tbody>
+          <tr *ngFor="let data of innerTable.data">
+            <td>{{ data.article?.reference }}</td>
+            <td class="text-center">{{ data.quantite_facture }}</td>
+            <td class="text-center">{{ data.prix_vente_avec_remise | priceFormat }} DH</td>
+            <td class="text-center">{{ data.remise }}</td>
+            <td class="text-center">{{ data.total_with_remise | priceFormat }} DH</td>
+          </tr>
         </tbody>
+      </nz-table>
+      </tr>
+      </ng-template>
+      </tbody>
       </nz-table>
     </div>
   </div>

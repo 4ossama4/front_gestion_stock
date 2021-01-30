@@ -7,8 +7,8 @@ export const environment = {
   production: false,
   useHash: true,
   hmr: false,
-  apiUrl: 'http://127.0.0.1:8000/api',
-  // apiUrl: 'http://pieces_auto.test/api',
+  // apiUrl: 'http://127.0.0.1:8000/api',
+  apiUrl: 'http://pieces_auto.test/api',
   cheminPFDs: 'http://localhost:4200/assets/factures/',
 };
 
