@@ -560,4 +560,17 @@ export class venteListComponent extends baseComponent implements OnInit {
       },
     );
   }
+
+  public bonRammasage(data: any) {
+    this.ventesService.bonRamassage(data).subscribe(
+      (response: any) => {
+        var downloadURL = window.URL.createObjectURL(response);
+        var link = document.createElement('a');
+        link.href = downloadURL;
+        window.open(downloadURL);
+        this.notificationService.createNotification('success', 'Bon de ramassage a été téléchargé avec succes', null);
+      },
+      (error) => { },
+    );
+  }
 }

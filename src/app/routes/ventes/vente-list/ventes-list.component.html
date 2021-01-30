@@ -161,22 +161,19 @@
                     Supprimer Vente
                   </div>
                   <div class="c-green" (click)="goToView(data)" nz-menu-item>
-                    <i (click)="goToView(data)" class="fal fa-eye my-btn-edit mr-2 c-green"></i>
+                    <i class="fal fa-eye my-btn-edit mr-2 c-green"></i>
                     Détails Vente
                   </div>
                   <div class="c-print" (click)="exportAsPDF(data)" *ngIf="ROLE_PRINT_BL" nz-menu-item>
-                    <i *ngIf="ROLE_PRINT_BL" (click)="exportAsPDF(data)"
-                      class="fal fa-print my-btn-edit mr-2 c-print"></i>
+                    <i *ngIf="ROLE_PRINT_BL" class="fal fa-print my-btn-edit mr-2 c-print"></i>
                     Imprimer BL
                   </div>
                   <div style="color: #eb2f96" (click)="exportAsPDFOuther(data)" *ngIf="ROLE_SHOW_FACTURE" nz-menu-item>
-                    <i *ngIf="ROLE_SHOW_FACTURE" (click)="exportAsPDFOuther(data)"
-                      class="fal fa-file-alt my-btn-edit mr-2" style="color: #eb2f96"></i>
+                    <i *ngIf="ROLE_SHOW_FACTURE" class="fal fa-file-alt my-btn-edit mr-2" style="color: #eb2f96"></i>
                     Imprimer Facture
                   </div>
-                  <div style="color: #722ed1" (click)="exportAsPDFOuther(data)" nz-menu-item>
-                    <i *ngIf="ROLE_SHOW_FACTURE" (click)="exportAsPDFOuther(data)"
-                      class="fal fa-file-code my-btn-edit mr-2" style="color: #722ed1"></i>
+                  <div style="color: #722ed1" (click)="bonRammasage(data)" nz-menu-item>
+                    <i *ngIf="ROLE_SHOW_FACTURE" class="fal fa-file-code my-btn-edit mr-2" style="color: #722ed1"></i>
                     Bon ramassage
                   </div>
                 </div>

@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class VentesService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   public getVentes() {
     return this.http.get(environment.apiUrl + `/ventes`);
@@ -64,6 +64,14 @@ export class VentesService {
     };
 
     return this.http.post(environment.apiUrl + `/print_vente_facture`, { vente: vente }, httpOptions);
+  }
+
+  public bonRamassage(vente: any) {
+    const httpOptions = {
+      responseType: 'blob' as 'json',
+    };
+
+    return this.http.post(environment.apiUrl + `/print_vente_bon_ramassage`, { id: vente.id }, httpOptions);
   }
 
   public getVenteFactureById(venteId: number) {
