@@ -168,7 +168,7 @@ export class StockComponent extends baseComponent implements OnInit {
             this.notificationService.createNotification('success', 'Stock a été modifié avec succes', null);
             this.getStocksByCriteria();
           },
-          (error) => {},
+          (error) => { },
         );
       } else {
         this.stockService.store(this.stockForm.value).subscribe(
@@ -177,7 +177,7 @@ export class StockComponent extends baseComponent implements OnInit {
             this.notificationService.createNotification('success', 'Stock a été ajouté avec succes', null);
             this.getStocksByCriteria();
           },
-          (error) => {},
+          (error) => { },
         );
       }
     }
@@ -259,7 +259,7 @@ export class StockComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listOfFamille = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -274,7 +274,7 @@ export class StockComponent extends baseComponent implements OnInit {
           (response: any) => {
             this.listOfSousFamille = response;
           },
-          (error) => {},
+          (error) => { },
         );
       }
     } else {
@@ -289,7 +289,7 @@ export class StockComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listOfMarque = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -303,7 +303,7 @@ export class StockComponent extends baseComponent implements OnInit {
           marque.value = '';
           this.notificationService.createNotification('success', 'Marque a été ajouté avec succes', null);
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -315,7 +315,7 @@ export class StockComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listOfTva = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -328,7 +328,7 @@ export class StockComponent extends baseComponent implements OnInit {
           // this.stockForm.patchValue({ m: response.id })
           this.notificationService.createNotification('success', 'Tva a été ajouté avec succes', null);
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -340,7 +340,7 @@ export class StockComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listOfReference = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -353,7 +353,7 @@ export class StockComponent extends baseComponent implements OnInit {
           ref.value = '';
           this.notificationService.createNotification('success', 'Reference a été ajouté avec succes', null);
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -365,7 +365,7 @@ export class StockComponent extends baseComponent implements OnInit {
         (response: any) => {
           this.listOfReference = response;
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -393,7 +393,7 @@ export class StockComponent extends baseComponent implements OnInit {
     if (parseInt(this.stockForm.value.prix_achat_new) > 0 && parseInt(this.stockForm.value.quantite_add) > 0) {
       var avg =
         (this.stockSelected.quantite ? parseInt(this.stockSelected.quantite) : 0) *
-          (this.stockSelected.prix_achat ? parseInt(this.stockSelected.prix_achat) : 0) +
+        (this.stockSelected.prix_achat ? parseInt(this.stockSelected.prix_achat) : 0) +
         parseInt(this.stockForm.value.quantite_add) * parseInt(this.stockForm.value.prix_achat_new);
       this.stockForm.patchValue({
         prix_achat:
@@ -583,7 +583,7 @@ export class StockComponent extends baseComponent implements OnInit {
         }
         this.notificationService.createNotification('success', 'Stocks a été exporté avec succes', null);
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -600,7 +600,7 @@ export class StockComponent extends baseComponent implements OnInit {
         this.printPDFS(downloadURL);
         this.notificationService.createNotification('success', 'Stocks a été imprimer avec succes', null);
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -691,6 +691,12 @@ export class StockComponent extends baseComponent implements OnInit {
     this.loadHistoryArticle();
   }
   private listHistoryOfarticle: any[] = [];
+  private total_achtas = 0;
+  private total_achats_qte = 0;
+  private total_avoirs = 0;
+  private total_avoirs_qte = 0;
+  private total_ventes = 0;
+  private total_ventes_qte = 0;
   private produitSelected: any;
   private isSpinning: boolean = false;
   public loadHistoryArticle() {
@@ -698,6 +704,12 @@ export class StockComponent extends baseComponent implements OnInit {
     this.stockService.getHistoryArticle(this.historyForm.value).subscribe(
       (response: any) => {
         this.produitSelected = response.article;
+        this.total_achtas = response.total_achtas
+        this.total_achats_qte = response.total_achats_qte
+        this.total_avoirs = response.total_avoirs
+        this.total_avoirs_qte = response.total_avoirs_qte
+        this.total_ventes = response.total_ventes
+        this.total_ventes_qte = response.total_ventes_qte
         console.log('this.produitSelected', this.produitSelected);
         if (response.data) {
           this.listHistoryOfarticle = response.data;

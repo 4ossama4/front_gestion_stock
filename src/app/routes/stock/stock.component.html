@@ -14,48 +14,25 @@
   <div class="row">
     <div class="col-md-10 filter-rupture">
       <nz-input-group [nzSize]="'small'" style="width: 100%" [nzAddOnAfter]="searchFamille">
-        <nz-select
-          (ngModelChange)="getSousFamille($event.id)"
-          [nzPlaceHolder]="'Chercher par famille'"
-          [(ngModel)]="articleCriteria.famille"
-          nzAllowClear
-          nzShowSearch
-          class="w-20"
-        >
+        <nz-select (ngModelChange)="getSousFamille($event.id)" [nzPlaceHolder]="'Chercher par famille'"
+          [(ngModel)]="articleCriteria.famille" nzAllowClear nzShowSearch class="w-20">
           <nz-option *ngFor="let famille of listOfFamille" [nzLabel]="famille.label" [nzValue]="famille"> </nz-option>
         </nz-select>
-        <nz-select
-          [(ngModel)]="articleCriteria.sous_famille"
-          nzAllowClear
-          nzShowSearch
-          class="w-20"
-          [nzPlaceHolder]="'Chercher par sous famille'"
-        >
-          <nz-option *ngFor="let sous_famille of listOfSousFamille" [nzLabel]="sous_famille.label" [nzValue]="sous_famille"> </nz-option>
+        <nz-select [(ngModel)]="articleCriteria.sous_famille" nzAllowClear nzShowSearch class="w-20"
+          [nzPlaceHolder]="'Chercher par sous famille'">
+          <nz-option *ngFor="let sous_famille of listOfSousFamille" [nzLabel]="sous_famille.label"
+            [nzValue]="sous_famille"> </nz-option>
         </nz-select>
-        <nz-select
-          name="multiplemarque"
-          id="multiplemarque"
-          [nzPlaceHolder]="'Chercher par marque'"
-          [(ngModel)]="articleCriteria.marqueIds"
-          nzMode="multiple"
-          nzAllowClear
-          nzShowSearch
-          class="w-20"
-        >
+        <nz-select name="multiplemarque" id="multiplemarque" [nzPlaceHolder]="'Chercher par marque'"
+          [(ngModel)]="articleCriteria.marqueIds" nzMode="multiple" nzAllowClear nzShowSearch class="w-20">
           <nz-option *ngFor="let marque of listOfMarque" [nzLabel]="marque.label" [nzValue]="marque.id"> </nz-option>
         </nz-select>
         <!-- <span style="width: 20%; display: inline-flex">
           <input placeholder="chercher par Réf-Original" [(ngModel)]="articleCriteria.referencesLike" nz-input type="text" />
         </span> -->
         <span class="w-40" style="display: inline-flex">
-          <input
-            (keyup)="onKey($event)"
-            placeholder="chercher par Réf-Original / Référence  "
-            [(ngModel)]="articleCriteria.refOrgAndreferenceLike"
-            nz-input
-            type="text"
-          />
+          <input (keyup)="onKey($event)" placeholder="chercher par Réf-Original / Référence  "
+            [(ngModel)]="articleCriteria.refOrgAndreferenceLike" nz-input type="text" />
         </span>
       </nz-input-group>
       <ng-template #searchFamille>
@@ -63,26 +40,24 @@
       </ng-template>
     </div>
     <div style="padding-right: 3.5rem !important" class="col-md-2 pt-2 text-right">
-      <i (click)="exportData('excel')" style="font-size: 22px; color: green; cursor: pointer" class="fal fa-file-excel mr-2"></i>
-      <i (click)="exportData('pdf')" style="font-size: 22px; color: magenta; cursor: pointer" class="fal fa-file-pdf mr-2"></i>
+      <i (click)="exportData('excel')" style="font-size: 22px; color: green; cursor: pointer"
+        class="fal fa-file-excel mr-2"></i>
+      <i (click)="exportData('pdf')" style="font-size: 22px; color: magenta; cursor: pointer"
+        class="fal fa-file-pdf mr-2"></i>
       <!-- <i (click)="printData('pdf')" style="font-size: 22px; color: purple; cursor: pointer" class="fal fa-print"></i> -->
     </div>
   </div>
   <div *ngIf="filterApplyList.length > 0" class="row pt-3 pb-1">
     <div class="col-md-10">
-      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués : </span>
-      <nz-tag
-        *ngFor="let filter of filterApplyList; let index = index"
-        (nzOnClose)="deleteFilter(index, filter)"
-        [nzMode]="'closeable'"
-        [nzColor]="filter.color"
-        >{{ filter.label }} : {{ filter.name ? filter.name : filter.value }}</nz-tag
-      >
+      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués :
+      </span>
+      <nz-tag *ngFor="let filter of filterApplyList; let index = index" (nzOnClose)="deleteFilter(index, filter)"
+        [nzMode]="'closeable'" [nzColor]="filter.color">{{ filter.label }} : {{ filter.name ? filter.name : filter.value
+        }}</nz-tag>
     </div>
     <div class="col-md-2 text-right">
-      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button nzType="link"
-        >Supprimer les filters</a
-      >
+      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button
+        nzType="link">Supprimer les filters</a>
       <i style="color: #e01372" class="fal fa-trash"></i>
     </div>
   </div>
@@ -95,25 +70,11 @@
         </span>
       </ng-template>
 
-      <nz-table
-        [nzShowTotal]="datasize"
-        class="pt-1"
-        [nzTotal]="totalArticle"
-        [nzFrontPagination]="false"
-        (nzPageSizeChange)="currentPageDataChange($event)"
-        [(nzPageIndex)]="firstArticle"
-        [nzPageSizeOptions]="[10, 50, 100]"
-        [(nzPageSize)]="maxResults"
-        [nzShowPagination]="true"
-        nzShowSizeChanger
-        nzOuterBordered
-        [nzLoading]="loading"
-        [nzSize]="'middle'"
-        #basicTable
-        [nzData]="listOfStock"
-        (nzQueryParams)="sort($event)"
-        [nzScroll]="{ x: '900px' }"
-      >
+      <nz-table [nzShowTotal]="datasize" class="pt-1" [nzTotal]="totalArticle" [nzFrontPagination]="false"
+        (nzPageSizeChange)="currentPageDataChange($event)" [(nzPageIndex)]="firstArticle"
+        [nzPageSizeOptions]="[10, 50, 100]" [(nzPageSize)]="maxResults" [nzShowPagination]="true" nzShowSizeChanger
+        nzOuterBordered [nzLoading]="loading" [nzSize]="'middle'" #basicTable [nzData]="listOfStock"
+        (nzQueryParams)="sort($event)" [nzScroll]="{ x: '900px' }">
         <thead>
           <tr>
             <th>
@@ -160,22 +121,10 @@
             <td>{{ data.designation }}</td>
             <td>{{ data.prix_vente | priceFormat }} DH</td>
             <td class="text-center">
-              <nz-badge
-                *ngIf="data.quantite"
-                nzShowZero
-                nzStandalone
-                [nzOverflowCount]="data.quantite"
-                [nzCount]="data.quantite"
-                [nzStyle]="{ backgroundColor: '#52c41a' }"
-              ></nz-badge>
-              <nz-badge
-                *ngIf="!data.quantite"
-                nzShowZero
-                nzStandalone
-                [nzOverflowCount]="0"
-                [nzCount]="0"
-                [nzStyle]="{ backgroundColor: 'red' }"
-              ></nz-badge>
+              <nz-badge *ngIf="data.quantite" nzShowZero nzStandalone [nzOverflowCount]="data.quantite"
+                [nzCount]="data.quantite" [nzStyle]="{ backgroundColor: '#52c41a' }"></nz-badge>
+              <nz-badge *ngIf="!data.quantite" nzShowZero nzStandalone [nzOverflowCount]="0" [nzCount]="0"
+                [nzStyle]="{ backgroundColor: 'red' }"></nz-badge>
               <!-- {{ data.quantite }} -->
             </td>
             <td>{{ data.rayon }}</td>
@@ -191,29 +140,19 @@
   </div>
 </nz-card>
 
-<nz-modal
-  [nzMaskClosable]="false"
-  [(nzVisible)]="stockModal"
-  [nzTitle]="isUpdate == false ? 'Ajouter Stock' : 'Modifier Stock'"
-  (nzOnCancel)="closeModalAdd()"
->
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="stockModal"
+  [nzTitle]="isUpdate == false ? 'Ajouter Stock' : 'Modifier Stock'" (nzOnCancel)="closeModalAdd()">
   <form [formGroup]="stockForm">
     <div nz-row [nzGutter]="24">
       <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
         <nz-form-item>
           <nz-form-label [nzSpan]="8" nzFor="Famille">Famille</nz-form-label>
           <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
-            <nz-select
-              nzAllowClear
-              nzShowSearch
-              (ngModelChange)="getSousFamille($event)"
-              [nzDropdownRender]="renderTemplate"
-              style="width: 100%"
-              formControlName="famille"
-              name="famille"
-              id="famille"
-            >
-              <nz-option *ngFor="let famille of listOfFamille" [nzLabel]="famille.label" [nzValue]="famille.id"> </nz-option>
+            <nz-select nzAllowClear nzShowSearch (ngModelChange)="getSousFamille($event)"
+              [nzDropdownRender]="renderTemplate" style="width: 100%" formControlName="famille" name="famille"
+              id="famille">
+              <nz-option *ngFor="let famille of listOfFamille" [nzLabel]="famille.label" [nzValue]="famille.id">
+              </nz-option>
             </nz-select>
             <ng-template #renderTemplate>
               <nz-divider class="mt-2 mb-2"></nz-divider>
@@ -236,16 +175,10 @@
           <nz-form-label [nzSpan]="8" nzFor="sous_famille">Sous Famille </nz-form-label>
           <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
             <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-              <nz-select
-                nzAllowClear
-                nzShowSearch
-                style="width: 100%"
-                [nzDropdownRender]="renderTemplateSousFamille"
-                formControlName="sous_famille"
-                name="sous_famille"
-                id="sous_famille"
-              >
-                <nz-option *ngFor="let sous_famille of listOfSousFamille" [nzLabel]="sous_famille.label" [nzValue]="sous_famille.id">
+              <nz-select nzAllowClear nzShowSearch style="width: 100%" [nzDropdownRender]="renderTemplateSousFamille"
+                formControlName="sous_famille" name="sous_famille" id="sous_famille">
+                <nz-option *ngFor="let sous_famille of listOfSousFamille" [nzLabel]="sous_famille.label"
+                  [nzValue]="sous_famille.id">
                 </nz-option>
               </nz-select>
               <ng-template #renderTemplateSousFamille>
@@ -280,16 +213,10 @@
           <nz-form-label [nzSpan]="8" nzFor="marque">Marque</nz-form-label>
           <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
             <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-              <nz-select
-                nzAllowClear
-                nzShowSearch
-                style="width: 100%"
-                [nzDropdownRender]="renderTemplateMarque"
-                formControlName="marque"
-                name="marque"
-                id="marque"
-              >
-                <nz-option *ngFor="let marque of listOfMarque" [nzLabel]="marque.label" [nzValue]="marque.id"> </nz-option>
+              <nz-select nzAllowClear nzShowSearch style="width: 100%" [nzDropdownRender]="renderTemplateMarque"
+                formControlName="marque" name="marque" id="marque">
+                <nz-option *ngFor="let marque of listOfMarque" [nzLabel]="marque.label" [nzValue]="marque.id">
+                </nz-option>
               </nz-select>
               <ng-template #renderTemplateMarque>
                 <nz-divider class="mt-2 mb-2"></nz-divider>
@@ -324,18 +251,9 @@
           <nz-form-label [nzSpan]="8" nzFor="original_refs">Référence Originale </nz-form-label>
           <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
             <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-              <nz-select
-                nzMode="multiple"
-                nzAllowClear
-                (nzOnSearch)="chercheRefOriginal($event)"
-                nzShowSearch
-                style="width: 100%"
-                [nzDropdownRender]="renderTemplateReference"
-                formControlName="original_refs"
-                name="original_refs"
-                [nzServerSearch]="true"
-                id="original_refs"
-              >
+              <nz-select nzMode="multiple" nzAllowClear (nzOnSearch)="chercheRefOriginal($event)" nzShowSearch
+                style="width: 100%" [nzDropdownRender]="renderTemplateReference" formControlName="original_refs"
+                name="original_refs" [nzServerSearch]="true" id="original_refs">
                 <nz-option *ngFor="let ref of listOfReference" [nzLabel]="ref.label" [nzValue]="ref.id"> </nz-option>
               </nz-select>
               <ng-template #renderTemplateReference>
@@ -364,16 +282,8 @@
             <input [min]="0" formControlName="quantite" nz-input name="quantite" type="number" id="quantite" />
           </nz-form-control>
           <nz-form-control *ngIf="isUpdate" [nzSpan]="4">
-            <input
-              (mouseup)="changeQuantit($event)"
-              (keyup)="changeQuantit($event)"
-              [min]="0"
-              formControlName="quantite_add"
-              nz-input
-              name="quantite_add"
-              type="number"
-              id="quantite_add"
-            />
+            <input (mouseup)="changeQuantit($event)" (keyup)="changeQuantit($event)" [min]="0"
+              formControlName="quantite_add" nz-input name="quantite_add" type="number" id="quantite_add" />
           </nz-form-control>
           <nz-form-control class="text-center" *ngIf="isUpdate" [nzSpan]="2"> + </nz-form-control>
           <nz-form-control *ngIf="isUpdate" [nzSpan]="4">
@@ -390,7 +300,8 @@
         <nz-form-item>
           <nz-form-label [nzSpan]="8" nzFor="quantite_min">Quantité Minimale </nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <input [min]="0" formControlName="quantite_min" nz-input name="quantite_min" type="number" id="quantite_min" />
+            <input [min]="0" formControlName="quantite_min" nz-input name="quantite_min" type="number"
+              id="quantite_min" />
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -414,16 +325,8 @@
           <nz-form-label [nzSpan]="16" nzFor="prix_achat">Prix Achat nouveau stock </nz-form-label>
           <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="8">
             <nz-input-group nzAddOnAfter="DH">
-              <input
-                [min]="0"
-                (mouseup)="calculAveragePrice($event)"
-                (keyup)="calculAveragePrice($event)"
-                formControlName="prix_achat_new"
-                nz-input
-                name="prix_achat_new"
-                type="number"
-                id="prix_achat_new"
-              />
+              <input [min]="0" (mouseup)="calculAveragePrice($event)" (keyup)="calculAveragePrice($event)"
+                formControlName="prix_achat_new" nz-input name="prix_achat_new" type="number" id="prix_achat_new" />
             </nz-input-group>
           </nz-form-control>
           <br />
@@ -466,13 +369,8 @@
         <nz-form-item>
           <nz-form-label [nzSpan]="8" nzFor="remarques">Remarque </nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <textarea
-              nz-input
-              formControlName="remarques"
-              name="remarques"
-              id="remarques"
-              [nzAutosize]="{ minRows: 2, maxRows: 6 }"
-            ></textarea>
+            <textarea nz-input formControlName="remarques" name="remarques" id="remarques"
+              [nzAutosize]="{ minRows: 2, maxRows: 6 }"></textarea>
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -490,28 +388,14 @@
 <nz-dropdown-menu #menu="nzDropdownMenu">
   <div class="ant-table-filter-dropdown p-2">
     <div style="width: 313px" class="search-box">
-      <nz-select
-        *ngIf="visibleMarque"
-        name="multiplemarque"
-        id="multiplemarque"
-        placeholder="Selectionner"
-        [(ngModel)]="articleCriteria.marqueIds"
-        nzMode="multiple"
-        nzAllowClear
-        nzShowSearch
-        style="width: 100%"
-      >
+      <nz-select *ngIf="visibleMarque" name="multiplemarque" id="multiplemarque" placeholder="Selectionner"
+        [(ngModel)]="articleCriteria.marqueIds" nzMode="multiple" nzAllowClear nzShowSearch style="width: 100%">
         <nz-option *ngFor="let marque of listOfMarque" [nzLabel]="marque.label" [nzValue]="marque.id"> </nz-option>
       </nz-select>
       <div class="pt-2 d-flex justify-content-end">
         <button nz-button nzSize="small" (click)="resetSearch('marqueIds')">Réinitialiser</button>
-        <button
-          nz-button
-          nzSize="small"
-          nzType="primary"
-          (click)="search('Marque', articleCriteria.marqueIds, 'purple', 'marqueIds')"
-          class="search-button"
-        >
+        <button nz-button nzSize="small" nzType="primary"
+          (click)="search('Marque', articleCriteria.marqueIds, 'purple', 'marqueIds')" class="search-button">
           Chercher
         </button>
       </div>
@@ -525,7 +409,8 @@
       <input placeholder="désignation" [(ngModel)]="articleCriteria.designationLike" nz-input type="text" />
       <div class="pt-2 d-flex justify-content-end">
         <button nz-button nzSize="small" (click)="resetSearch('designationLike')">Réinitialiser</button>
-        <button nz-button nzSize="small" nzType="primary" (click)="searchGlobal()" class="search-button">Chercher</button>
+        <button nz-button nzSize="small" nzType="primary" (click)="searchGlobal()"
+          class="search-button">Chercher</button>
       </div>
     </div>
   </div>
@@ -537,13 +422,8 @@
       <input placeholder="référence" [(ngModel)]="articleCriteria.referenceLike" nz-input type="text" />
       <div class="pt-2 d-flex justify-content-end">
         <button nz-button nzSize="small" (click)="resetSearch('referenceLike')">Réinitialiser</button>
-        <button
-          nz-button
-          nzSize="small"
-          nzType="primary"
-          (click)="search('Référence', articleCriteria.referenceLike, 'green', 'referenceLike')"
-          class="search-button"
-        >
+        <button nz-button nzSize="small" nzType="primary"
+          (click)="search('Référence', articleCriteria.referenceLike, 'green', 'referenceLike')" class="search-button">
           Chercher
         </button>
       </div>
@@ -569,13 +449,9 @@
       </nz-select> -->
       <div class="pt-2 d-flex justify-content-end">
         <button nz-button nzSize="small" (click)="resetSearch('referencesLike')">Réinitialiser</button>
-        <button
-          nz-button
-          nzSize="small"
-          nzType="primary"
+        <button nz-button nzSize="small" nzType="primary"
           (click)="search('Réf-Original', articleCriteria.referencesLike, 'magenta', 'referencesLike')"
-          class="search-button"
-        >
+          class="search-button">
           Chercher
         </button>
       </div>
@@ -583,45 +459,28 @@
   </div>
 </nz-dropdown-menu>
 
-<nz-modal [nzMaskClosable]="false" [(nzVisible)]="historyModal" [nzTitle]="titleHistory" (nzOnCancel)="hideModalHistory()">
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="historyModal" [nzTitle]="titleHistory"
+  (nzOnCancel)="hideModalHistory()">
   <ng-template #titleHistory>
     <span>
-      Historique de produit <nz-tag class="ml-3"> {{ produitSelected?.reference }} &nbsp; {{ produitSelected?.designation }} </nz-tag>
+      Historique de produit <nz-tag class="ml-3"> {{ produitSelected?.reference }} &nbsp; {{
+        produitSelected?.designation }} </nz-tag>
     </span>
   </ng-template>
   <form [formGroup]="historyForm">
     <div class="row">
       <div class="col-md-6 pb-2">
-        <nz-range-picker
-          style="height: 31px !important"
-          #rangePicker
-          formControlName="date"
-          (ngModelChange)="onChange($event)"
-        ></nz-range-picker>
+        <nz-range-picker style="height: 31px !important" #rangePicker formControlName="date"
+          (ngModelChange)="onChange($event)"></nz-range-picker>
       </div>
       <div class="col-md-6 text-right pb-2">
         <nz-radio-group class="ml-2">
-          <label
-            [ngClass]="{ 'btn-active-history': historyForm.value.isVente == true ? true : false }"
-            (click)="searchHistory('vente')"
-            nz-radio-button
-            nzValue="smccall"
-            >Ventes</label
-          >
-          <label
-            [ngClass]="{ 'btn-active-history': historyForm.value.isAchat == true ? true : false }"
-            (click)="searchHistory('achat')"
-            nz-radio-button
-            nzValue="small"
-            >Achats</label
-          >
-          <label
-            [ngClass]="{ 'btn-active-history': historyForm.value.isAvoir == true ? true : false }"
-            (click)="searchHistory('avoir')"
-            nz-radio-button
-            nzValue="default"
-            >Avoirs</label
-          >
+          <label [ngClass]="{ 'btn-active-history': historyForm.value.isVente == true ? true : false }"
+            (click)="searchHistory('vente')" nz-radio-button nzValue="smccall">Ventes</label>
+          <label [ngClass]="{ 'btn-active-history': historyForm.value.isAchat == true ? true : false }"
+            (click)="searchHistory('achat')" nz-radio-button nzValue="small">Achats</label>
+          <label [ngClass]="{ 'btn-active-history': historyForm.value.isAvoir == true ? true : false }"
+            (click)="searchHistory('avoir')" nz-radio-button nzValue="default">Avoirs</label>
         </nz-radio-group>
       </div>
     </div>
@@ -630,7 +489,8 @@
       <div class="col-md-12">
         <div class="row ml-4">
           <div class="col-md-12">
-            <nz-spin [ngClass]="{ 'pt-5': isSpinning == true ? true : false }" [nzSpinning]="isSpinning" [nzDelay]="500">
+            <nz-spin [ngClass]="{ 'pt-5': isSpinning == true ? true : false }" [nzSpinning]="isSpinning"
+              [nzDelay]="500">
               <nz-timeline *ngIf="listHistoryOfarticle && listHistoryOfarticle.length > 0 && !isSpinning">
                 <ng-container *ngFor="let item of listHistoryOfarticle">
                   <nz-timeline-item [nzDot]="icontime">
@@ -639,17 +499,16 @@
                         <span class="pr-2" style="border-right: 1px solid #d9d9d9">
                           {{ item.date }}
                         </span>
-                        <span class="ml-2 pr-2" style="border-right: 1px solid #d9d9d9">Réference : {{ item.reference }}</span>
-                        <span class="ml-2 pr-2" style="border-right: 1px solid #d9d9d9">Quantité : {{ item.quantite }}</span>
+                        <span class="ml-2 pr-2" style="border-right: 1px solid #d9d9d9">Réference : {{ item.reference
+                          }}</span>
+                        <span class="ml-2 pr-2" style="border-right: 1px solid #d9d9d9">Quantité : {{ item.quantite
+                          }}</span>
                         <span *ngIf="item.type != 'achat'" class="ml-2"> Client : {{ item.client }}</span>
                         <span *ngIf="item.type == 'achat'" class="ml-2"> Fournisseur : {{ item.fournisseur }}</span>
                         <span style="float: right">
                           Total :
-                          <button
-                            [nzSize]="'small'"
-                            nz-button
-                            style="background-color: green; color: #fff; border-color: green; border-radius: 17px"
-                          >
+                          <button [nzSize]="'small'" nz-button
+                            style="background-color: green; color: #fff; border-color: green; border-radius: 17px">
                             {{ item.prix | priceFormat }} DH
                           </button>
                         </span>
@@ -668,9 +527,50 @@
                   </ng-template>
                 </ng-container>
               </nz-timeline>
-              <nz-empty *ngIf="(!listHistoryOfarticle || (listHistoryOfarticle && listHistoryOfarticle.length == 0)) && !isSpinning">
+              <nz-empty
+                *ngIf="(!listHistoryOfarticle || (listHistoryOfarticle && listHistoryOfarticle.length == 0)) && !isSpinning">
               </nz-empty>
             </nz-spin>
+          </div>
+          <div class="col-md-12 ">
+            <div class="box-history" style="width: 330px;float:right;">
+              <div>
+                <span style="font-weight: 600;font-size: 20px;">Total vente : </span>
+
+                <span style="float: right;">
+                  <span style="font-weight: 600; color: green;font-size: 20px;">
+                    {{total_ventes | priceFormat}} DH
+                  </span>
+                  / {{total_ventes_qte}} pièces
+                </span>
+
+              </div>
+              <hr class="mt-2 mb-2">
+              <div>
+                <span style="font-weight: 600;font-size: 20px;">Total achats : </span>
+                <span style="float: right;">
+                  <span style="font-weight: 600;color: #722ed1;font-size: 20px;">{{total_achtas |
+                    priceFormat}} DH
+                  </span>
+                  / {{total_achats_qte}} pièces
+                </span>
+
+
+
+              </div>
+              <hr class="mt-2 mb-2">
+              <div>
+                <span style="font-weight: 600;font-size: 20px;">Total avoirs : </span>
+
+                <span style="float: right;">
+                  <span style="font-weight: 600;color:red ;font-size: 20px;">{{total_avoirs | priceFormat}}
+                    DH </span>
+                  /
+                  {{total_avoirs_qte}} pièces
+
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
