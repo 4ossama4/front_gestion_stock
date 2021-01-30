@@ -1,0 +1,24 @@
+<div class="alain-default__header-logo">
+  <a [routerLink]="['/']" class="alain-default__header-logo-link">
+    <span style="color: #e01372; font-weight: 600" class="alain-default__header-logo-expanded mr-2"> SPRT ZILTPHON </span>
+    <span style="font-weight: bold; color: white; font-size: 12px" class="alain-default__header-logo-expanded pt-1"> MAROC</span>
+    <!-- <img class="alain-default__header-logo-expanded" src="./assets/logo-full.png" [attr.alt]="app.name" style="max-height: 55px" /> -->
+    <img class="alain-default__header-logo-collapsed" src="./assets/logo.svg" [attr.alt]="app.name" style="max-height: 30px" />
+  </a>
+</div>
+<div class="alain-default__nav-wrap">
+  <ul class="alain-default__nav">
+    <!-- Menu -->
+    <li>
+      <div class="alain-default__nav-item" (click)="toggleCollapsedSidebar()">
+        <i nz-icon nzType="menu-{{ collapsed ? 'unfold' : 'fold' }}"></i>
+      </div>
+    </li>
+  </ul>
+  <!-- <header-search class="alain-default__search" [toggleChange]="searchToggleStatus"></header-search> -->
+  <ul class="alain-default__nav">
+    <li class="hidden-mobile">
+      <header-user></header-user>
+    </li>
+  </ul>
+</div>

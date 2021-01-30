@@ -1,0 +1,143 @@
+<page-header [title]="''"></page-header>
+<nz-card [nzBodyStyle]="{ padding: '18px' }" class="mt-5" style="border-radius: 5px" [nzBordered]="true">
+  <div class="row d-flex align-items-center">
+    <div class="col-md-6">
+      <h4 class="mb-0 title-page">Liste des avoirs</h4>
+    </div>
+    <div class="col-md-6 d-flex justify-content-end">
+      <button *ngIf="ROLE_ADD" (click)="openModalAdd()" class="d-flex align-items-center" nz-button nzType="primary">
+        Avoir <i nz-icon nzType="plus"></i>
+      </button>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col-md-10 filter-rupture">
+      <nz-input-group [nzSize]="'small'" style="width: 70%" [nzAddOnAfter]="searchClient">
+        <nz-select
+          (ngModelChange)="changeClientFilter($event)"
+          [nzPlaceHolder]="'Chercher par Client'"
+          [(ngModel)]="avoirCriteria.client"
+          nzAllowClear
+          nzShowSearch
+          style="width: 50%"
+        >
+          <nz-option *ngFor="let client of listOfClients" [nzLabel]="client.name" [nzValue]="client"> </nz-option>
+        </nz-select>
+        <nz-range-picker
+          style="width: 50% !important"
+          #rangePicker
+          [nzRenderExtraFooter]="extraDate"
+          [(ngModel)]="avoirCriteria.date"
+          (ngModelChange)="onChange($event)"
+        ></nz-range-picker>
+        <ng-template #extraDate>
+          <div class="text-center">
+            <button [nzSize]="'small'" (click)="toDay('30J')" nz-button nzType="primary"><< 30 jours</button>
+            <button [nzSize]="'small'" (click)="toDay('7J')" nz-button nzType="primary"><< 7 jours</button>
+            <button [nzSize]="'small'" (click)="toDay('HIER')" nz-button nzType="primary"><< Hier</button>
+            <button [nzSize]="'small'" (click)="toDay('TODAY')" nz-button nzType="primary">aujourd'hui</button>
+          </div>
+        </ng-template>
+      </nz-input-group>
+      <ng-template #searchClient>
+        <i style="cursor: pointer" (click)="searchClientMode()" class="fal fa-search bg-purple"></i>
+      </ng-template>
+    </div>
+    <div class="col-md-2 pt-2 text-right">
+      <!-- <i (click)="exportData('excel')" style="font-size: 22px; color: magenta; cursor: pointer" class="fal fa-file-excel mr-2"></i>
+      <i (click)="exportData('pdf')" style="font-size: 22px; color: green; cursor: pointer" class="fal fa-file-pdf"></i> -->
+    </div>
+  </div>
+  <div *ngIf="filterApplyList.length > 0" class="row pt-3 pb-1">
+    <div class="col-md-10">
+      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués : </span>
+      <span *ngFor="let filter of filterApplyList; let index = index">
+        <nz-tag (nzOnClose)="deleteFilter(index, filter)" [nzMode]="'closeable'" [nzColor]="filter.color">
+          {{ filter.label }} : {{ filter.name ? filter.name : filter.value }}</nz-tag
+        >
+      </span>
+    </div>
+    <div class="col-md-2 text-right">
+      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button nzType="link"
+        >Supprimer les filters</a
+      >
+      <i style="color: #e01372" class="fal fa-trash"></i>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-md-12">
+      <ng-template #datasize>
+        <span class="mr-3">
+          Affichage {{ from }} à {{ to }} de <strong>{{ totalAvoirs }}</strong> avoirs
+        </span>
+      </ng-template>
+      <nz-table
+        [nzShowTotal]="datasize"
+        [nzTotal]="totalAvoirs"
+        [nzFrontPagination]="false"
+        [(nzPageIndex)]="firstAvoirs"
+        [nzPageSizeOptions]="[10, 50, 100]"
+        [(nzPageSize)]="maxResults"
+        [nzShowPagination]="true"
+        nzShowSizeChanger
+        nzOuterBordered
+        [nzLoading]="loading"
+        [nzSize]="'middle'"
+        #basicTable
+        [nzData]="listOfAvoirs"
+        (nzQueryParams)="sort($event)"
+      >
+        <thead>
+          <tr>
+            <th></th>
+            <th>Date</th>
+            <th>N° avoir</th>
+            <th>Client</th>
+            <th>Montant</th>
+            <th class="text-center pl-3 pr-3">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let data of basicTable.data">
+            <tr>
+              <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+              <td>{{ data.date_avoir }}</td>
+              <td>{{ data.reference_avoir }}</td>
+              <td>{{ data.client?.name }}</td>
+              <td>{{ data.prix_avoir_ttc_with_remise | priceFormat }} DH</td>
+              <td class="text-center">
+                <i *ngIf="ROLE_DELETE" (click)="deleteAvoir(data.id)" class="fal fa-trash-alt mr-2 my-btn-delete"></i>
+                <!-- <i *ngIf="ROLE_UPDATE" (click)="openModalUpdate(data)" class="fal fa-pen my-btn-edit mr-2"></i> -->
+                <i *ngIf="ROLE_PRINT" (click)="exportAsPDF(data)" class="fal fa-print my-btn-edit c-print"></i>
+                <!-- <i (click)="view(data)" class="fal fa-eye my-btn-edit c-green"></i> -->
+              </td>
+            </tr>
+            <tr [nzExpand]="expandSet.has(data.id)">
+              <nz-table [nzHideOnSinglePage]="true" nzOuterBordered [nzSize]="'middle'" #tableLigneAvoir [nzData]="data.lignes_avoir">
+                <thead>
+                  <tr>
+                    <th>Article</th>
+                    <th>Qte</th>
+                    <th>P.U</th>
+                    <th>Remise %</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of tableLigneAvoir.data">
+                    <td>{{ data.article?.reference }}</td>
+                    <td>{{ data.quantite }}</td>
+                    <td>{{ data.prix_avoir_avec_remise | priceFormat }} DH</td>
+                    <td>{{ data.remise }}</td>
+                    <td>{{ data.total_with_remise | priceFormat }} DH</td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </tr>
+          </ng-container>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</nz-card>

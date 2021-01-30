@@ -1,0 +1,232 @@
+<page-header [title]="''"></page-header>
+<nz-card [nzBodyStyle]="{ padding: '18px' }" class="mt-5" style="border-radius: 5px" [nzBordered]="true">
+  <div class="row d-flex align-items-center">
+    <div class="col-md-6 col-6">
+      <h4 class="mb-0 title-page">Liste Rupture stock</h4>
+    </div>
+    <div class="col-md-6 col-6 d-flex justify-content-end">
+      <button (click)="gotoAchat()" class="d-flex align-items-center" nz-button nzType="primary">
+        Achat <i nz-icon nzType="plus"></i>
+      </button>
+    </div>
+  </div>
+  <hr />
+
+  <div class="row pt-3">
+    <div class="col-md-10 filter-rupture">
+      <nz-input-group [nzSize]="'small'" style="width: 100%" [nzAddOnAfter]="searchRupture">
+        <nz-select
+          [nzPlaceHolder]="'Chercher par Fournisseur'"
+          [(ngModel)]="articleCriteria.fournisseurId"
+          nzAllowClear
+          nzShowSearch
+          style="width: 25%"
+        >
+          <nz-option *ngFor="let fornisseur of listOfFournisseur" [nzLabel]="fornisseur.name" [nzValue]="fornisseur.id"> </nz-option>
+        </nz-select>
+        <nz-select
+          name="multiplemarque"
+          id="multiplemarque"
+          nzPlaceHolder="Chercher par marque"
+          [(ngModel)]="articleCriteria.marqueIds"
+          nzMode="multiple"
+          nzAllowClear
+          nzShowSearch
+          style="width: 25%"
+        >
+          <nz-option *ngFor="let marque of listOfMarque" [nzLabel]="marque.label" [nzValue]="marque.id"> </nz-option>
+        </nz-select>
+        <span style="width: 25%; display: inline-flex">
+          <input placeholder="chercher par Réf-Original" [(ngModel)]="articleCriteria.referencesLike" nz-input type="text" />
+        </span>
+
+        <span style="width: 25%; display: inline-flex">
+          <input placeholder="charcher par référence" [(ngModel)]="articleCriteria.referenceLike" nz-input type="text" />
+        </span>
+      </nz-input-group>
+      <ng-template #searchRupture>
+        <i style="cursor: pointer" (click)="searchGlobal()" class="fal fa-search bg-purple"></i>
+      </ng-template>
+    </div>
+    <div style="padding-right: 3.5rem !important" class="col-md-2 pt-2 text-right">
+      <i (click)="exportData('excel')" style="font-size: 22px; color: green; cursor: pointer" class="fal fa-file-excel mr-2"></i>
+      <i (click)="exportData('pdf')" style="font-size: 22px; color: magenta; cursor: pointer" class="fal fa-file-pdf"></i>
+    </div>
+    <div class="col-md-12 pt-2">
+      <ng-template #datasize>
+        <span class="mr-3">
+          Affichage {{ from }} à {{ to }} de <strong>{{ totalArticle }}</strong> articles
+        </span>
+      </ng-template>
+      <nz-table
+        [nzShowTotal]="datasize"
+        class="pt-1"
+        [nzTotal]="totalArticle"
+        [nzFrontPagination]="false"
+        (nzPageSizeChange)="currentPageDataChange($event)"
+        [(nzPageIndex)]="firstArticle"
+        [nzPageSizeOptions]="[10, 50, 100]"
+        [(nzPageSize)]="maxResults"
+        [nzShowPagination]="true"
+        nzShowSizeChanger
+        nzOuterBordered
+        [nzLoading]="loading"
+        [nzSize]="'middle'"
+        #basicTable
+        [nzData]="listOfStock"
+        (nzQueryParams)="sort($event)"
+        [nzScroll]="{ x: '800px' }"
+      >
+        <thead>
+          <tr>
+            <th>
+              Réf-Original
+              <!-- <nz-filter-trigger [(nzVisible)]="visibleRefOR" [nzDropdownMenu]="menuRefOrginnal">
+                <i nz-icon nzType="search"></i>
+              </nz-filter-trigger> -->
+            </th>
+            <th [nzSortFn]="true" nzColumnKey="reference" [nzSortFn]="true">
+              Réference
+              <nz-filter-trigger [nzDropdownMenu]="menuRef">
+                <i nz-icon nzType="search"></i>
+              </nz-filter-trigger>
+            </th>
+            <th [nzSortFn]="true" nzColumnKey="marque.label" [nzSortFn]="true">
+              Marque
+              <nz-filter-trigger [nzDropdownMenu]="menu">
+                <i nz-icon nzType="search"></i>
+              </nz-filter-trigger>
+            </th>
+            <th [nzSortFn]="true" nzCustomFilter nzColumnKey="designation" [nzSortFn]="true">
+              Désignation
+              <nz-filter-trigger [nzDropdownMenu]="menuDesig">
+                <i nz-icon nzType="search"></i>
+              </nz-filter-trigger>
+            </th>
+            <th [nzSortFn]="true" [nzSortFn]="true" nzColumnKey="prix_achat">Prix Vente</th>
+            <th class="text-center" [nzSortFn]="true" [nzSortFn]="true" nzColumnKey="quantite">Quantité</th>
+            <!-- <th class="text-center pl-3 pr-3">Action</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>
+              <nz-tag [nzMode]="'default'">
+                {{ data.references[0]?.label }}
+              </nz-tag>
+            </td>
+            <td>{{ data.reference }}</td>
+            <td>{{ data.marque?.label }}</td>
+            <td>{{ data.designation }}</td>
+            <td>{{ data.prix_vente | priceFormat }} DH</td>
+            <td class="text-center">
+              <nz-badge
+                nzStandalone
+                *ngIf="data.quantite"
+                nzShowZero
+                [nzOverflowCount]="data.quantite"
+                [nzCount]="data.quantite"
+                [nzStyle]="{ backgroundColor: 'red' }"
+              ></nz-badge>
+              <nz-badge
+                nzStandalone
+                *ngIf="!data.quantite"
+                nzShowZero
+                [nzOverflowCount]="0"
+                [nzCount]="0"
+                [nzStyle]="{ backgroundColor: 'red' }"
+              ></nz-badge>
+              <!-- {{ data.quantite }} -->
+            </td>
+            <!-- <td class="text-center">
+              <i (click)="openModalUpdate(data)" class="fal fa-plus my-btn-edit mr-2"></i>
+            </td> -->
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</nz-card>
+
+<nz-dropdown-menu #menuRefOrginnal="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown p-2">
+    <div style="width: 313px" class="search-box">
+      <input placeholder="référence" [(ngModel)]="articleCriteria.referencesLike" nz-input type="text" />
+      <div class="pt-2 d-flex justify-content-end">
+        <button nz-button nzSize="small" (click)="resetSearch('referencesLike')">Réinitialiser</button>
+        <button
+          nz-button
+          nzSize="small"
+          nzType="primary"
+          (click)="search('Réf-Original', articleCriteria.referencesLike, 'magenta', 'referencesLike')"
+          class="search-button"
+        >
+          Chercher
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuRef="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown p-2">
+    <div style="width: 313px" class="search-box">
+      <input placeholder="référence" [(ngModel)]="articleCriteria.referenceLike" nz-input type="text" />
+      <div class="pt-2 d-flex justify-content-end">
+        <button nz-button nzSize="small" (click)="resetSearch('referenceLike')">Réinitialiser</button>
+        <button
+          nz-button
+          nzSize="small"
+          nzType="primary"
+          (click)="search('Référence', articleCriteria.referenceLike, 'green', 'referenceLike')"
+          class="search-button"
+        >
+          Chercher
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuDesig="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown p-2">
+    <div style="width: 313px" class="search-box">
+      <input placeholder="désignation" [(ngModel)]="articleCriteria.designationLike" nz-input type="text" />
+      <div class="pt-2 d-flex justify-content-end">
+        <button nz-button nzSize="small" (click)="resetSearch('designationLike')">Réinitialiser</button>
+        <button nz-button nzSize="small" nzType="primary" (click)="searchGlobal()" class="search-button">Chercher</button>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown p-2">
+    <div style="width: 313px" class="search-box">
+      <nz-select
+        name="multiplemarque"
+        id="multiplemarque"
+        placeholder="Selectionner"
+        [(ngModel)]="articleCriteria.marqueIds"
+        nzMode="multiple"
+        nzAllowClear
+        nzShowSearch
+        style="width: 100%"
+      >
+        <nz-option *ngFor="let marque of listOfMarque" [nzLabel]="marque.label" [nzValue]="marque.id"> </nz-option>
+      </nz-select>
+      <div class="pt-2 d-flex justify-content-end">
+        <button nz-button nzSize="small" (click)="resetSearch('marqueIds')">Réinitialiser</button>
+        <button
+          nz-button
+          nzSize="small"
+          nzType="primary"
+          (click)="search('Marque', articleCriteria.marqueIds, 'purple', 'marqueIds')"
+          class="search-button"
+        >
+          Chercher
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>

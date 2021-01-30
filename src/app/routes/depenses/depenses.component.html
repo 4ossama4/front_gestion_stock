@@ -1,0 +1,240 @@
+<page-header [title]="''"></page-header>
+<nz-card [nzBodyStyle]="{ padding: '18px' }" class="mt-5" style="border-radius: 5px" [nzBordered]="true">
+  <div class="row d-flex align-items-center">
+    <div class="col-md-6 col-6">
+      <h4 class="mb-0 title-page">Liste des dépenses</h4>
+    </div>
+    <div class="col-md-6 col-6 d-flex justify-content-end">
+      <button *ngIf="ROLE_ADD" (click)="openModalAdd()" class="d-flex align-items-center" nz-button nzType="primary">
+        Dépense <i nz-icon nzType="plus"></i>
+      </button>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col-lg-8 col-md-12 col-12 filter-rupture">
+      <nz-input-group [nzSize]="'small'" style="width: 100%" [nzAddOnAfter]="searchnd">
+        <nz-select
+          (ngModelChange)="changeNatureFilter($event)"
+          [nzPlaceHolder]="'Chercher par Nature'"
+          [(ngModel)]="depenseCriteria.natureId"
+          nzAllowClear
+          nzShowSearch
+          style="width: 30%"
+        >
+          <nz-option *ngFor="let nature of listOfNatures" [nzLabel]="nature.label" [nzValue]="nature.id"> </nz-option>
+        </nz-select>
+        <nz-select
+          (ngModelChange)="changeModePaimentFilter($event)"
+          [nzPlaceHolder]="'Chercher par Mode'"
+          [(ngModel)]="depenseCriteria.paymentMethodId"
+          nzAllowClear
+          nzShowSearch
+          style="width: 30%"
+        >
+          <ng-container *ngFor="let mode of listOfPaymentsMode">
+            <nz-option *ngIf="mode.id != 3" [nzLabel]="mode.label" [nzValue]="mode.id"> </nz-option>
+          </ng-container>
+        </nz-select>
+        <nz-range-picker
+          style="width: 40% !important"
+          #rangePicker
+          [nzRenderExtraFooter]="extraDate"
+          [(ngModel)]="depenseCriteria.date"
+          (ngModelChange)="onChange($event)"
+        ></nz-range-picker>
+      </nz-input-group>
+      <ng-template #searchnd>
+        <i style="cursor: pointer" (click)="searchNMode()" class="fal fa-search bg-purple"></i>
+      </ng-template>
+    </div>
+  </div>
+  <div *ngIf="filterApplyList.length > 0" class="row pt-3 pb-1">
+    <div class="col-md-10">
+      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués : </span>
+      <span *ngFor="let filter of filterApplyList; let index = index">
+        <nz-tag (nzOnClose)="deleteFilter(index, filter)" [nzMode]="'closeable'" [nzColor]="filter.color">
+          {{ filter.label }} : {{ filter.value }}</nz-tag
+        >
+      </span>
+    </div>
+    <div class="col-md-2 text-right">
+      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button nzType="link"
+        >Supprimer les filters</a
+      >
+      <i style="color: #e01372" class="fal fa-trash"></i>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-md-12">
+      <ng-template #datasize>
+        <span class="mr-3">
+          Affichage {{ from }} à {{ to }} de <strong>{{ totalDepense }}</strong> dépenses
+        </span>
+      </ng-template>
+      <nz-table
+        [nzShowTotal]="datasize"
+        [nzTotal]="totalDepense"
+        [nzFrontPagination]="false"
+        [(nzPageIndex)]="firstDepense"
+        [nzPageSizeOptions]="[10, 50, 100]"
+        [(nzPageSize)]="maxResults"
+        [nzShowPagination]="true"
+        nzShowSizeChanger
+        nzOuterBordered
+        [nzLoading]="loading"
+        [nzSize]="'middle'"
+        #basicTable
+        [nzData]="listOfDepenses"
+        (nzQueryParams)="sort($event)"
+        [nzScroll]="{ x: '800px' }"
+      >
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Nature</th>
+            <th>Objet</th>
+            <th>Mode Paiement</th>
+            <th>Montant</th>
+            <th nzRight class="text-center pl-3 pr-3">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{ data.date }}</td>
+            <td>{{ data.nature?.label }}</td>
+            <td>{{ data.object }}</td>
+            <td>{{ data.payment_mode?.label }}</td>
+            <td>{{ data.montant | priceFormat }} DH</td>
+            <td nzRight class="text-center">
+              <i *ngIf="ROLE_DELETE" (click)="deleteDepense(data.id)" class="fal fa-trash-alt mr-2 my-btn-delete"></i>
+              <i *ngIf="ROLE_UPDATE" (click)="openModalUpdate(data)" class="fal fa-pen my-btn-edit mr-2"></i>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</nz-card>
+
+<nz-modal
+  [nzMaskClosable]="false"
+  [(nzVisible)]="depenseModal"
+  [nzTitle]="isUpdate == false ? 'Ajouter Dépense' : 'Modifier Dépense '"
+  (nzOnCancel)="closeModalAdd()"
+>
+  <form [formGroup]="depenseForm">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="date">Date </nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <nz-date-picker formControlName="date"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="name">Nature</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <nz-select
+              [nzDropdownRender]="renderTemplateNature"
+              nzAllowClear
+              nzShowSearch
+              style="width: 100%"
+              formControlName="nature_id"
+              name="nature"
+              id="nature"
+            >
+              <nz-option *ngFor="let nature of listOfNatures" [nzLabel]="nature.label" [nzValue]="nature.id"> </nz-option>
+            </nz-select>
+            <ng-template #renderTemplateNature>
+              <nz-divider class="mt-2 mb-2"></nz-divider>
+              <div class="row m-0">
+                <div class="col-md-10">
+                  <input [nzSize]="'small'" type="text" nz-input #inputElementNature />
+                </div>
+                <div class="col-md-1">
+                  <a class="add-item" (click)="saveNature(inputElementNature)">
+                    <i nz-icon nzType="plus" class="c-green" nzTheme="outline"></i>
+                  </a>
+                </div>
+              </div>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="payment_mode_id">Mode de paiment </nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <nz-select
+              nzAllowClear
+              nzShowSearch
+              style="width: 100%"
+              (ngModelChange)="changeModePaiment($event)"
+              formControlName="payment_mode_id"
+              name="payment_mode_id"
+              id="payment_mode_id"
+            >
+              <ng-container *ngFor="let mode of listOfPaymentsMode">
+                <nz-option *ngIf="mode.id != 3" [nzLabel]="mode.label" [nzValue]="mode.id"> </nz-option>
+              </ng-container>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="date">Montant </nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <nz-input-number style="width: 100%" formControlName="montant" [nzMin]="0"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div
+      class="p-3 mb-2"
+      style="background: #d9d9d9; border-radius: 3px"
+      nz-row
+      [nzGutter]="24"
+      formGroupName="chequeInfo"
+      *ngIf="modalCheque"
+    >
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item class="mb-0">
+          <nz-form-label [nzSpan]="8" nzFor="date">Date d'échéance</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <nz-date-picker formControlName="date"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item class="mb-0">
+          <nz-form-label [nzSpan]="8" nzFor="date">Réference</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input nz-input formControlName="reference" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="object">Objet </nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <textarea rows="3" nz-input formControlName="object"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div *nzModalFooter>
+      <button (click)="closeModalAdd()" nz-button nzType="default">Annuler</button>
+
+      <button *ngIf="!isUpdate" (click)="saveDepense()" nz-button nzType="primary">Enregistrer</button>
+      <button *ngIf="isUpdate" (click)="saveDepense()" nz-button nzType="primary">Modifier</button>
+    </div>
+  </form>
+</nz-modal>

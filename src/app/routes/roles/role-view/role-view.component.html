@@ -1,0 +1,68 @@
+<page-header [title]="'Roles ' + role?.name"></page-header>
+<nz-card nzTitle="Information du Role" [nzBodyStyle]="{ padding: '18px' }" class="mt-5" style="border-radius: 5px" [nzBordered]="true">
+  <div class="row">
+    <div class="col-md-6 col-6">
+      <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="24">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="8" nzFor="name">Nom de Role </nz-form-label>
+            <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+              {{ role?.name }}
+              <!-- <input nz-input formControlName="name" /> -->
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-6">
+      <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="24">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="8" nzFor="label">Description</nz-form-label>
+            <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+              {{ role?.label }}
+              <!-- <input nz-input formControlName="label" /> -->
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-card>
+
+<nz-card nzTitle="Les permissions du role" [nzBodyStyle]="{ padding: '18px' }" class="mt-5" style="border-radius: 5px" [nzBordered]="true">
+  <div class="row">
+    <div class="col-md-4 mb-2" *ngFor="let categorie of role?.permissions; let i = index">
+      <ul class="p-2 div-category" style="list-style: none; height: 100%">
+        <li class="pb-1" style="border-bottom: 1px solid #e8e8e8">
+          <span style="font-weight: 600; color: #150485">{{ categorie[0].category?.label }}</span>
+        </li>
+        <ul class="pt-2 pl-4" style="list-style: none">
+          <ng-container *ngFor="let permission of categorie; let j = index">
+            <li>
+              <label [ngModel]="true" nzDisabled nz-checkbox> {{ permission.label }}</label>
+            </li>
+          </ng-container>
+        </ul>
+      </ul>
+    </div>
+    <div class="text-center col-md-12" *ngIf="role && role?.permissions?.length == 0">
+      <nz-empty></nz-empty>
+    </div>
+  </div>
+</nz-card>
+
+<nz-card
+  [nzBodyStyle]="{ 'padding-left': '18px', 'padding-right': '18px', 'padding-top': '6px', 'padding-bottom': '6px' }"
+  class="mt-5"
+  style="border-radius: 5px"
+  [nzBordered]="true"
+>
+  <div class="row">
+    <div class="col-md-12">
+      <button style="float: right" (click)="gotoListe()" class="d-flex align-items-center" nz-button nzType="default">
+        <i class="fal fa-reply mr-3"></i> Retour
+      </button>
+    </div>
+  </div>
+</nz-card>

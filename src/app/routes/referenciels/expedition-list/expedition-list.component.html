@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-md-6 col-6 pr-0">
+    <div class="demo-infinite-container">
+      <ul style="background: lightgray" nz-list [nzLoading]="initLoading" [nzDataSource]="data" nzSize="large">
+        <nz-list-header class="pl-2">
+          <h4 style="color: #242582">Liste des expéditions</h4>
+        </nz-list-header>
+        <li class="pl-2" nz-list-item *ngFor="let item of data" nzNoFlex>
+          <ul nz-list-item-actions>
+            <nz-list-item-action>
+              <a (click)="toEditData(item)" class="text-info">
+                <i class="fal fa-pen"></i>
+              </a>
+              <a (click)="delete(item)" class="ml-2 text-danger">
+                <i class="fal fa-trash-alt"></i>
+              </a>
+            </nz-list-item-action>
+          </ul>
+          {{ item.label }}
+        </li>
+        <!-- <nz-list-footer class="pl-2"></nz-list-footer> -->
+      </ul>
+    </div>
+  </div>
+  <div style="border: 1px solid #d9d9d9" class="col-md-5 col-5">
+    <div style="padding-top: 0.75rem !important">
+      <h4 *ngIf="!modeEdit" style="color: #242582">Nouveau expédition</h4>
+      <h4 *ngIf="modeEdit" style="color: #242582">Modifier expédition</h4>
+    </div>
+    <hr />
+    <form nz-form [formGroup]="refForm" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-label [nzSm]="24" [nzXs]="24" nzRequired nzFor="label">Nom </nz-form-label>
+        <nz-form-control [nzSm]="24" [nzXs]="24" nzErrorTip="Ce champs est Obligatoire">
+          <input nz-input formControlName="label" id="label" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control class="text-right" [nzSm]="24" [nzXs]="24">
+          <button nz-button nzType="primary">Enregistrer</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</div>

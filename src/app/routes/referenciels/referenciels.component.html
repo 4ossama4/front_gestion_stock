@@ -1,0 +1,42 @@
+<page-header [title]="'Gestion des Réferenciels'"></page-header>
+<!-- <nz-card [nzBodyStyle]="{ padding: '18px' }" class="mt-5" style="border-radius: 5px" [nzBordered]="true"> -->
+<div class="card-container">
+  <nz-tabset [nzSize]="'small'" nzLinkRouter [nzType]="'card'">
+    <nz-tab>
+      <a nz-tab-link [routerLink]="['.']" [queryParams]="{ tab: 'ref_original' }" queryParamsHandling="merge">Ref. Original</a>
+      <app-ref-list></app-ref-list>
+    </nz-tab>
+    <nz-tab>
+      <a nz-tab-link [routerLink]="['.']" [queryParams]="{ tab: 'familles' }" queryParamsHandling="merge">Familles </a>
+      <app-familles-list></app-familles-list>
+    </nz-tab>
+    <nz-tab>
+      <a nz-tab-link [routerLink]="['.']" [queryParams]="{ tab: 'sous_famille' }" queryParamsHandling="merge">Sous famille </a>
+      <app-sous-famille-list></app-sous-famille-list>
+    </nz-tab>
+    <nz-tab>
+      <a nz-tab-link [routerLink]="['.']" [queryParams]="{ tab: 'marques' }" queryParamsHandling="merge">Marques </a>
+      <app-marques-list></app-marques-list>
+    </nz-tab>
+    <nz-tab>
+      <a nz-tab-link [routerLink]="['.']" [queryParams]="{ tab: 'mode_paiement' }" queryParamsHandling="merge">Mode paiement </a>
+      <app-mode-p></app-mode-p>
+    </nz-tab>
+    <nz-tab>
+      <a nz-tab-link [routerLink]="['.']" [queryParams]="{ tab: 'villes' }" queryParamsHandling="merge">Villes </a>
+      <app-villes-list></app-villes-list>
+    </nz-tab>
+    <nz-tab>
+      <a nz-tab-link [routerLink]="['.']" [queryParams]="{ tab: 'natures' }" queryParamsHandling="merge">Natures </a>
+      <app-natures-list></app-natures-list>
+    </nz-tab>
+    <nz-tab>
+      <a nz-tab-link [routerLink]="['.']" [queryParams]="{ tab: 'expedition' }" queryParamsHandling="merge">Expédition </a>
+      <app-expedition-list></app-expedition-list>
+    </nz-tab>
+  </nz-tabset>
+</div>
+<div class="row pt-1">
+  <div class="col-md-12"></div>
+</div>
+<!-- </nz-card> -->

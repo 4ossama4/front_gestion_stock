@@ -1,0 +1,604 @@
+<page-header [title]="'Ajouter un achat'"></page-header>
+
+<nz-card
+  [nzBodyStyle]="{ 'padding-top': '.5rem', 'padding-bottom': '.5rem', 'padding-left': '18px', 'padding-right': '18px' }"
+  class="mt-5"
+  style="border-radius: 5px"
+  [nzBordered]="true"
+>
+  <div class="row">
+    <div class="col-md-12">
+      <button (click)="goToList()" nz-button nzType="default"><i class="fal fa-chevron-left pr-2"></i>Liste des achats</button>
+    </div>
+  </div>
+</nz-card>
+
+<nz-card class="mt-4" style="border-radius: 5px" [nzBordered]="true">
+  <form [formGroup]="achatForm">
+    <div class="row">
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="reference_achat">Numéro Facture/BL </nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <input formControlName="reference_achat" nz-input name="reference_achat" type="text" id="reference_achat" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="name">Fournisseur</nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <nz-input-group style="width: 100%" [nzAddOnAfter]="addFournisseurTemplate">
+                  <nz-select
+                    nzAllowClear
+                    nzShowSearch
+                    style="width: 100%"
+                    formControlName="fournisseur_id"
+                    name="fournisseur_id"
+                    id="fournisseur_id"
+                  >
+                    <nz-option *ngFor="let fournisseur of listOfFournisseur" [nzLabel]="fournisseur.name" [nzValue]="fournisseur.id">
+                    </nz-option>
+                  </nz-select>
+                </nz-input-group>
+                <ng-template #addFournisseurTemplate>
+                  <i
+                    nzTooltipTitle="Ajouter un fournisseur"
+                    nzTooltipPlacement="top"
+                    nz-tooltip
+                    (click)="addFournisseur()"
+                    class="fal fa-plus c-pointer"
+                  ></i>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="name">Achat par devise </nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="4">
+                <nz-switch (ngModelChange)="activeDevise($event)" formControlName="type_devise"></nz-switch>
+              </nz-form-control>
+              <nz-form-label *ngIf="achatForm.value.type_devise == true" [nzSpan]="8" nzFor="taux_change">Taux de change </nz-form-label>
+              <nz-form-control *ngIf="achatForm.value.type_devise == true" nzErrorTip="Ce champs est obligatoire" [nzSpan]="4">
+                <input
+                  (mouseup)="changeTaux($event)"
+                  (keyup)="changeTaux($event)"
+                  formControlName="taux_change"
+                  nz-input
+                  name="taux_change"
+                  type="number"
+                  id="taux_change"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="name">Date d'achat </nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <nz-date-picker formControlName="date_achat"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="payment_mode_id">Mode de paiment </nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <nz-select
+                  [nzDropdownRender]="addmodeTemplate"
+                  nzAllowClear
+                  nzShowSearch
+                  style="width: 100%"
+                  (ngModelChange)="changeModePaiment($event)"
+                  formControlName="payment_mode_id"
+                  name="payment_mode_id"
+                  id="payment_mode_id"
+                >
+                  <nz-option *ngFor="let mode of listOfPaymentsMode" [nzLabel]="mode.label" [nzValue]="mode.id"> </nz-option>
+                </nz-select>
+                <ng-template #addmodeTemplate>
+                  <nz-divider class="mt-2 mb-2"></nz-divider>
+                  <div class="row m-0">
+                    <div class="col-md-10">
+                      <input [nzSize]="'small'" type="text" nz-input #inputModeElement />
+                    </div>
+                    <div class="col-md-1">
+                      <a class="add-item" (click)="saveMode(inputModeElement)">
+                        <i nz-icon nzType="plus" class="c-green" nzTheme="outline"></i>
+                      </a>
+                    </div>
+                  </div>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div *ngIf="achatForm.value.type_devise == true" class="row">
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="taux_change">Taux de change</nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="4">
+                <input (mouseup)="changeTaux($event)" (keyup)="changeTaux($event)" formControlName="taux_change"
+                  nz-input name="taux_change" type="number" id="taux_change" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <div class="row div-articles m-0 pt-2 pb-2">
+      <div class="col-md-7">
+        <label style="font-size: inherit" class="mb-0 title-article">
+          Liste des Articles ({{ achatForm.value.lignes_achat.length }}) :</label
+        >
+      </div>
+      <div class="col-md-3">
+        <nz-input-group
+          *ngIf="achatForm.value.lignes_achat.length > 0"
+          [nzSize]="'small'"
+          style="width: 273px"
+          nzAddOnBefore="Remise Auotmatique"
+        >
+          <nz-input-number style="width: 65%" nz-input formControlName="remiseAuto" type="number" [nzMin]="0"> </nz-input-number>
+          <button
+            style="width: 35%; background-color: #40a9ff; color: white; height: 30px"
+            (click)="applyRemiseAuto()"
+            class="pl-2 pr-2 pb-0"
+            nz-button
+            nzType="default"
+          >
+            <i style="cursor: pointer; font-size: 19px" class="fal fa-check"></i>
+          </button>
+        </nz-input-group>
+        <ng-template #validRemise>
+          <i (click)="applyRemiseAuto()" style="cursor: pointer" class="fal fa-check"></i>
+        </ng-template>
+      </div>
+      <div class="col-md-2 d-flex justify-content-end">
+        <button class="btn-add-article" (click)="addLigneAchat()" [nzSize]="'small'" nz-button>
+          Article <i style="font-size: 13px" class="fal fa-plus pl-3"></i>
+        </button>
+      </div>
+      <div formArrayName="lignes_achat" class="col-md-12" [ngClass]="{ 'pt-3': achatForm.value.lignes_achat.length > 0 ? true : false }">
+        <div *ngIf="achatForm.value.lignes_achat.length > 0" class="row">
+          <div class="col-md-2 col-6">Article :</div>
+          <div class="col-md-2 col-6">Quantite :</div>
+          <div *ngIf="achatForm.value.type_devise == true" class="col-md-2 pr-0 col-6">
+            Prix devise : <nz-tag [nzColor]="'blue'"> {{ achatForm.value.total_devise | priceFormat }} </nz-tag>
+          </div>
+          <div class="col-md-2 pr-0 col-6">
+            Prix d'achat : <nz-tag [nzColor]="'magenta'">{{ achatForm.value.total_ttc | priceFormat }} DH </nz-tag>
+          </div>
+          <div *ngIf="achatForm.value.type_devise == false" class="col-md-2 col-6">Remise :</div>
+          <div *ngIf="achatForm.value.type_devise == false" class="col-md-2 col-6">
+            PA/remise <nz-tag [nzColor]="'green'">{{ achatForm.value.total_ttc_avec_remise | priceFormat }} DH </nz-tag>
+          </div>
+          <div class="col-md-2 pl-0 pr-0 col-6">
+            Total/dh
+            <nz-tag [nzColor]="'purple'"
+              >Frais : ({{ (achatForm.value.total_frais / achatForm.value.total_ttc) * 100 | priceFormat }} %)</nz-tag
+            >
+          </div>
+          <div class="col-md-12">
+            <hr class="mt-1" />
+          </div>
+        </div>
+
+        <ng-container *ngFor="let ligneAchat of achatForm.get('lignes_achat').controls; let i = index">
+          <div class="row pt-2 m-0 mb-2 pb-2 d-flex align-items-center div-ligne-achat" [formGroupName]="i">
+            <div class="col-md-2 col-6">
+              <nz-select
+                [nzDropdownStyle]="{ width: '500px' }"
+                [nzServerSearch]="true"
+                (ngModelChange)="onChangeArticle($event, i)"
+                (nzOnSearch)="getArticles($event, i)"
+                style="width: 100%"
+                nzShowSearch
+                formControlName="article_id"
+                nzAllowClear
+                [nzDropdownRender]="renderTemplateArticle"
+              >
+                <nz-option nzCustomContent *ngFor="let article of listeOfArticles" [nzValue]="article.id" [nzLabel]="article.reference">
+                  <strong>
+                    {{ article.reference }}
+                  </strong>
+                  {{ article.designation }}
+                  <nz-tag>{{ article.marque.label }}</nz-tag>
+                  <nz-badge
+                    nzStandalone
+                    *ngIf="article.quantite"
+                    nzShowZero
+                    [nzOverflowCount]="article.quantite"
+                    [nzCount]="article.quantite"
+                    [nzStyle]="{ backgroundColor: 'green' }"
+                  ></nz-badge>
+                  <nz-badge
+                    nzStandalone
+                    nzShowZero
+                    *ngIf="!article.quantite"
+                    [nzOverflowCount]="0"
+                    [nzCount]="0"
+                    [nzStyle]="{ backgroundColor: 'red' }"
+                  ></nz-badge>
+                </nz-option>
+              </nz-select>
+              <span *ngIf="ligneAchat.value.articleExiste == null" style="color: red; font-size: 11px"> Article déja existe </span>
+              <ng-template #renderTemplateArticle>
+                <nz-divider class="mt-2 mb-2"></nz-divider>
+                <div style="background: #efefef" class="text-center pb-2 pt-2">
+                  <i nz-icon nzType="plus"></i>
+                </div>
+              </ng-template>
+            </div>
+            <div class="col-md-2 col-6">
+              <nz-input-group style="width: 100%" [nzAddOnBefore]="btnMinus" [nzAddOnAfter]="btnPlus">
+                <input
+                  style="text-align: center"
+                  nz-input
+                  formControlName="quantite"
+                  type="number"
+                  (mouseup)="refreshPriceTTC()"
+                  (keyup)="refreshPriceTTC()"
+                  [min]="0"
+                  (keypress)="onlyNumberKey($event)"
+                />
+              </nz-input-group>
+              <ng-template #btnPlus>
+                <i (click)="plusQte(i)" class="fal fa-plus c-pointer"></i>
+              </ng-template>
+              <ng-template #btnMinus>
+                <i (click)="minQte(i)" class="fal fa-minus c-pointer"></i>
+              </ng-template>
+            </div>
+            <div *ngIf="achatForm.value.type_devise == true" class="col-md-2 col-6">
+              <nz-input-group style="width: 100%" nzAddOnAfter="">
+                <input
+                  nz-input
+                  formControlName="price_devise"
+                  type="number"
+                  [min]="0"
+                  (mouseup)="changePriceDevise($event, i)"
+                  (keyup)="changePriceDevise($event, i)"
+                />
+              </nz-input-group>
+              <span
+                class="text-danger"
+                *ngIf="
+                  achatForm.controls.lignes_achat.controls[i].controls.price_devise.hasError('required') &&
+                  (achatForm.controls.lignes_achat.controls[i].controls.price_devise.dirty ||
+                    achatForm.controls.lignes_achat.controls[i].controls.price_devise.touched)
+                "
+              >
+                Ce champs est obligatoire
+              </span>
+            </div>
+            <div class="col-md-2 col-2 col-6">
+              <nz-input-group style="width: 100%" nzAddOnAfter="DH">
+                <nz-input-number
+                  style="width: 100%"
+                  (ngModelChange)="changePriceAchat($event, i)"
+                  nz-input
+                  formControlName="price_achat"
+                  type="number"
+                  [nzMin]="0"
+                  [nzDisabled]="achatForm.value.type_devise"
+                >
+                </nz-input-number>
+              </nz-input-group>
+              <span
+                class="text-danger"
+                *ngIf="
+                  achatForm.controls.lignes_achat.controls[i].controls.price_achat.hasError('required') &&
+                  (achatForm.controls.lignes_achat.controls[i].controls.price_achat.dirty ||
+                    achatForm.controls.lignes_achat.controls[i].controls.price_achat.touched)
+                "
+              >
+                Ce champs est obligatoire
+              </span>
+            </div>
+            <div *ngIf="achatForm.value.type_devise == false" class="col-md-2 col-6">
+              <nz-input-group style="width: 100%" nzAddOnAfter="%">
+                <nz-input-number
+                  style="width: 100%"
+                  nz-input
+                  formControlName="remise"
+                  type="number"
+                  (ngModelChange)="changeRemise($event, i)"
+                  [nzMin]="0"
+                >
+                </nz-input-number>
+              </nz-input-group>
+            </div>
+            <div *ngIf="achatForm.value.type_devise == false" class="col-md-2 col-6">
+              {{ ligneAchat.value.price_achat_avec_remise | priceFormat }} DH
+            </div>
+            <div class="col-md-1 pl-0 pr-0 text-center col-6">
+              <span> {{ ligneAchat.value.pu_frais | priceFormat }} DH</span>
+            </div>
+            <div class="col-md-1 text-right col-12">
+              <i (click)="deleteLigneAchat(i)" nz-icon nzType="close" class="c-pointer" nzTheme="outline"></i>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="row div-articles m-0 mt-5 pt-3 pb-3 pr-3">
+      <div class="col-md-6 col-12">
+        <div class="row">
+          <div class="col-md-10 col-9">
+            <label class="mb-1" style="font-weight: 600">
+              Les Frais supplémentaire :
+              <nz-tag [nzColor]="'blue'"> Total :{{ achatForm.value.total_frais | priceFormat }} DH </nz-tag>
+            </label>
+          </div>
+          <div class="col-md-2 col-3">
+            <button style="float: right" class="btn-add-article" (click)="addLigneFrais()" [nzSize]="'small'" nz-button>
+              Frais <i style="font-size: 13px" class="fal fa-plus pl-3"></i>
+            </button>
+          </div>
+        </div>
+
+        <div formArrayName="list_frais">
+          <ng-container *ngFor="let ligneFrais of achatForm.get('list_frais').controls; let i = index">
+            <div class="row pb-1" [formGroupName]="i">
+              <div class="col-md-5 col-12">
+                <input formControlName="label" placeholder="Nom de Frais" nz-input name="label" type="text" id="label" />
+              </div>
+              <div class="col-md-5 col-10">
+                <input
+                  [min]="0"
+                  formControlName="valeur"
+                  placeholder="Montant"
+                  nz-input
+                  name="valeur"
+                  type="number"
+                  id="valeur"
+                  (mouseup)="changeMontantFrais($event, i)"
+                  (keyup)="changeMontantFrais($event, i)"
+                />
+              </div>
+              <div class="col-md-2 col-2 text-right">
+                <i (click)="deleteLigneFrais(i)" nz-icon nzType="close" class="c-pointer pt-2" nzTheme="outline"></i>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div class="col-md-2"></div>
+      <div class="col-md-4 pt-3 pb-3" style="background: white; border-radius: 5px">
+        <div>
+          <span>Total En DH </span>
+          <span style="float: right">{{ achatForm.value.total_ttc | priceFormat }} DH </span>
+        </div>
+        <div *ngIf="achatForm.value.type_devise == false">
+          <span>Total En DH avec remise </span>
+          <span style="float: right">{{ achatForm.value.total_ttc_avec_remise | priceFormat }} DH </span>
+        </div>
+        <div>
+          <span>Total Frais </span>
+          <span style="float: right">{{ achatForm.value.total_frais | priceFormat }} DH </span>
+        </div>
+        <div>
+          <hr class="mt-2 mb-2" />
+        </div>
+        <div>
+          <span>Total </span>
+          <br />
+          <span style="font-weight: 600; font-size: 22px; color: #e01372"
+            >{{ achatForm.value.total_frais + achatForm.value.total_ttc | priceFormat }} DH
+          </span>
+        </div>
+        <div class="pt-3">
+          <button style="width: 100%" (click)="showConfirmSaveAchat()" nz-button nzType="primary">
+            <span style="float: left"> Enregistrer </span>
+            <span *ngIf="achatForm.value.type_devise == true" style="float: right">
+              {{ achatForm.value.total_frais + achatForm.value.total_ttc | priceFormat }}
+              DH
+            </span>
+            <span *ngIf="achatForm.value.type_devise == false" style="float: right">
+              {{ achatForm.value.total_frais + achatForm.value.total_ttc_avec_remise | priceFormat }}
+              DH
+            </span>
+          </button>
+          <label class="mt-1" nz-checkbox formControlName="miseEnStock">Mise en stock</label>
+        </div>
+      </div>
+    </div>
+  </form>
+</nz-card>
+
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="modalFournisseur" nzTitle="Ajouter fournisseur" (nzOnCancel)="hideModalFournisseur()">
+  <form [formGroup]="fournisseurForm">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="name">Fournisseur</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input formControlName="name" nz-input name="name" type="text" id="name" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="email">Email</nz-form-label>
+          <nz-form-control nzErrorTip="Email invalide" [nzSpan]="16">
+            <input email formControlName="email" nz-input name="email" type="email" id="email" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="telephone">Télephone</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input formControlName="telephone" nz-input name="telephone" type="text" id="telephone" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="fixe">Fixe</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input formControlName="fixe" nz-input name="fixe" type="text" id="fixe" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="addresse">Addresse</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <textarea
+              nz-input
+              formControlName="addresse"
+              name="addresse"
+              id="addresse"
+              [nzAutosize]="{ minRows: 2, maxRows: 6 }"
+            ></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div *nzModalFooter>
+      <button (click)="hideModalFournisseur()" nz-button nzType="default">Annuler</button>
+      <button (click)="saveFournisseurs()" nz-button nzType="primary">Enregistrer</button>
+    </div>
+  </form>
+</nz-modal>
+
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="modalConfirm" [nzTitle]="'Confirmer Votre Achat'" (nzOnCancel)="modalConfirm = false">
+  <div class="row">
+    <div class="col-md-12">
+      <label style="font-size: inherit" class="mb-0 title-article"> Liste des Articles ({{ achatForm.value.lignes_achat.length }}) :</label>
+    </div>
+    <div class="col-md-12 pt-2">
+      <nz-table [nzSize]="'small'" [nzShowPagination]="false" nzOuterBordered #articleTable [nzData]="achatForm.value.lignes_achat">
+        <thead>
+          <tr>
+            <th>Article</th>
+            <th>Quantite</th>
+            <th>Prix achat</th>
+            <th>Total/dh</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of articleTable.data">
+            <td>{{ data.article_id }}</td>
+            <td>{{ data.quantite }}</td>
+            <td>{{ data.price_achat | priceFormat }}</td>
+            <td>{{ data.pu_frais | priceFormat }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div class="col-md-6 pt-2">
+      <label style="font-size: inherit" class="title-article">Les Frais supplémentaire :</label>
+      <nz-table [nzSize]="'small'" [nzShowPagination]="false" nzOuterBordered #fraistable [nzData]="achatForm.value.list_frais">
+        <thead>
+          <tr>
+            <th>Frais</th>
+            <th>Montant</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of fraistable.data">
+            <td>{{ data.label }}</td>
+            <td>{{ data.valeur | priceFormat }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div class="col-md-6 pt-2">
+      <div class="p-2 mt-4" style="border: 1px solid #f0f0f0; border-radius: 3px">
+        <div>
+          <span>Total En DH </span>
+          <span style="float: right">{{ achatForm.value.total_ttc | priceFormat }} DH </span>
+        </div>
+        <div *ngIf="achatForm.value.type_devise == false">
+          <span>Total En DH avec remise </span>
+          <span style="float: right">{{ achatForm.value.total_ttc_avec_remise | priceFormat }} DH </span>
+        </div>
+        <div>
+          <span>Total Frais </span>
+          <span style="float: right">{{ achatForm.value.total_frais | priceFormat }} DH </span>
+        </div>
+        <div>
+          <hr class="mt-2 mb-2" />
+        </div>
+        <div>
+          <span>Total </span>
+          <span style="float: right">{{ achatForm.value.price_total | priceFormat }} DH </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter>
+    <button (click)="modalConfirm = false" nz-button nzType="default">Modifier les informations</button>
+    <button (click)="saveAchat()" nz-button nzType="primary">Enregistrer</button>
+  </div>
+</nz-modal>
+
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="modalCheque" [nzTitle]="'Saisir les informations '" (nzOnCancel)="hideModalCheque()">
+  <form [formGroup]="achatForm">
+    <div formGroupName="chequeInfo" class="row">
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="date">Date d'échéance</nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <nz-date-picker formControlName="date"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="date">Réference</nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <input nz-input formControlName="reference" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *nzModalFooter>
+      <button (click)="hideModalCheque()" nz-button nzType="default">Annuler</button>
+
+      <button (click)="saveInfoCheque()" nz-button nzType="primary">Enregistrer</button>
+    </div>
+  </form>
+</nz-modal>

@@ -1,0 +1,213 @@
+<page-header [title]="'Ajouter un avoir'"></page-header>
+
+<nz-card
+  [nzBodyStyle]="{ 'padding-top': '.5rem', 'padding-bottom': '.5rem', 'padding-left': '18px', 'padding-right': '18px' }"
+  class="mt-5"
+  style="border-radius: 5px"
+  [nzBordered]="true"
+>
+  <div class="row d-flex align-items-center">
+    <div class="col-md-6">
+      <button (click)="goToList()" nz-button nzType="default"><i class="fal fa-chevron-left pr-2"></i>Liste des avoirs</button>
+    </div>
+    <div class="col-md-6 text-right">Numéro avoir : {{ avoirForm.value.reference }}</div>
+  </div>
+</nz-card>
+
+<nz-card class="mt-4" style="border-radius: 5px" [nzBordered]="true">
+  <form [formGroup]="avoirForm">
+    <div class="row">
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="date">Date </nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <nz-date-picker (nzOnOpenChange)="nzOnOpenChangeDate($event)" formControlName="date"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="name">Client</nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <nz-select
+                  (ngModelChange)="selectClient($event)"
+                  nzAllowClear
+                  nzShowSearch
+                  style="width: 100%"
+                  formControlName="client"
+                  name="client"
+                  id="client"
+                >
+                  <nz-option *ngFor="let client of listOfClients" [nzLabel]="client.name" [nzValue]="client"> </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="avoirForm.value.client_id" class="row">
+      <div class="col-md-12 filter-rupture d-flex align-items-center">
+        <label style="font-size: inherit" class="mb-0 title-article mr-3"> Liste des ventes ({{ totalVente }}) :</label>
+        <nz-input-group [nzSize]="'small'" style="width: 35%" [nzAddOnAfter]="searchVente">
+          <input nz-input style="width: 35%; height: 31px" placeholder="Réference vente" formControlName="referenceVenteCriteria" />
+          <nz-range-picker
+            formControlName="dateVenteCriteria"
+            style="width: 65% !important"
+            #rangePicker
+            [nzRenderExtraFooter]="extraDate"
+            (ngModelChange)="onChange($event)"
+          ></nz-range-picker>
+        </nz-input-group>
+        <ng-template #searchVente>
+          <i style="cursor: pointer" (click)="searchVenteByCriteria()" class="fal fa-search bg-purple"></i>
+        </ng-template>
+      </div>
+      <div class="col-md-12">
+        <nz-table
+          class="mt-3"
+          [nzTotal]="totalVente"
+          [nzFrontPagination]="false"
+          [(nzPageIndex)]="firstVente"
+          [nzPageSizeOptions]="[10, 50, 100]"
+          (nzPageSizeChange)="currentPageDataChange($event)"
+          [(nzPageSize)]="maxResultsVente"
+          [nzShowPagination]="true"
+          nzShowSizeChanger
+          nzOuterBordered
+          [nzLoading]="loadingVente"
+          [nzSize]="'middle'"
+          #basicTableVente
+          [nzData]="listeOfVente"
+          (nzQueryParams)="sort($event)"
+        >
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>N° Vente</th>
+              <th>Client</th>
+              <th>Commerciale</th>
+              <th>Montant</th>
+              <th class="text-center">Mode Paiment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let data of basicTableVente.data">
+              <tr [ngClass]="{ 'tr-selected': venteSelected == data ? true : false }" style="cursor: pointer">
+                <td (click)="selectVente(data)">{{ data.date_vente }}</td>
+                <td (click)="selectVente(data)">{{ data.reference_vente }}</td>
+                <td (click)="selectVente(data)">{{ data.client?.name }}</td>
+                <td (click)="selectVente(data)">{{ data.commercial?.name }}</td>
+                <td (click)="selectVente(data)">{{ data.prix_vente_ttc_with_remise | priceFormat }} DH</td>
+                <td (click)="selectVente(data)" class="text-center">{{ data.payment_mode?.label }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </nz-table>
+      </div>
+      <div></div>
+    </div>
+  </form>
+</nz-card>
+
+<nz-card *ngIf="venteSelected" class="mt-4" style="border-radius: 5px" [nzBordered]="true">
+  <div class="row">
+    <div class="col-md-12">
+      <label style="font-size: inherit" class="title-article mr-3"> Sélectionner Les articles retour vente :</label>
+      <nz-transfer
+        [nzDataSource]="venteSelected.lignes_vente"
+        [nzShowSearch]="showSearch"
+        [nzRenderList]="[renderList, renderAvoir]"
+        (nzChange)="avoirArticle($event)"
+        (nzSelectChange)="selectArticle($event)"
+      >
+        <ng-template #renderList let-items let-onItemSelect="onItemSelect">
+          <nz-table #t [nzData]="items" nzSize="small">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Article</th>
+                <th>QTE</th>
+                <th>P.U</th>
+                <th>Remise %</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let data of items">
+                <tr (click)="onItemSelect(data)">
+                  <td [nzChecked]="data.checked" (nzCheckedChange)="onItemSelect(data)"></td>
+                  <td>{{ data.article?.reference }}</td>
+                  <td>{{ data.quantite_restante }}</td>
+                  <td>{{ data.prix_vente | priceFormat }} DH</td>
+                  <td>{{ data.remise }}</td>
+                  <td>{{ data.prix_vente_avec_remise * data.quantite_restante | priceFormat }} DH</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </nz-table>
+        </ng-template>
+        <ng-template let-items #renderAvoir let-onItemSelect="onItemSelect">
+          <nz-table #tavoir [nzData]="items" nzSize="small">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Article</th>
+                <th>QTE</th>
+                <th>P.U</th>
+                <th>Remise %</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of items; let index = index">
+                <td [nzChecked]="data.checked" (nzCheckedChange)="onItemSelect(data)"></td>
+                <td>{{ data.article?.reference }}</td>
+                <td>
+                  <div class="editable-cell" [hidden]="editId == index" (click)="startEdit(index)">
+                    {{ data.quantite }}
+                  </div>
+                  <nz-input-number
+                    style="width: 73px"
+                    [hidden]="editId != index"
+                    [(ngModel)]="data.quantite"
+                    (nzBlur)="stopEdit(index)"
+                    [nzMin]="0"
+                    [nzMax]="data.quantite_restante"
+                  ></nz-input-number>
+                </td>
+                <td>{{ data.prix_vente | priceFormat }} DH</td>
+                <td>{{ data.remise }}</td>
+                <td>{{ data.prix_vente_avec_remise * data.qte | priceFormat }} DH</td>
+                <!-- <td>{{ data.total_with_remise | priceFormat }} DH</td> -->
+              </tr>
+            </tbody>
+          </nz-table>
+        </ng-template>
+      </nz-transfer>
+      <div class="text-right pt-2">
+        <label style="font-size: inherit" class="title-article mr-3">
+          Total : {{ avoirForm.value.prix_avoir_ttc_with_remise | priceFormat }} DH</label
+        >
+      </div>
+    </div>
+  </div>
+</nz-card>
+<nz-card
+  [nzBodyStyle]="{ 'padding-top': '.5rem', 'padding-bottom': '.5rem', 'padding-left': '18px', 'padding-right': '18px' }"
+  style="border-radius: 5px"
+  [nzBordered]="true"
+>
+  <div class="row">
+    <div class="col-md-12 text-right">
+      <button (click)="goToList()" nz-button nzType="default">Annuler</button>
+      <button [disabled]="listeOfAvoir.length == 0" (click)="saveAvoir()" nz-button nzType="primary">Enregistrer</button>
+    </div>
+  </div>
+</nz-card>

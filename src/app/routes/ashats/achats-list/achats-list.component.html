@@ -1,0 +1,228 @@
+<page-header [title]="''"></page-header>
+<nz-card [nzBodyStyle]="{ padding: '18px' }" class="mt-5" style="border-radius: 5px" [nzBordered]="true">
+  <div class="row d-flex align-items-center">
+    <div class="col-md-6 col-6">
+      <h4 class="mb-0 title-page">Liste des achats</h4>
+    </div>
+    <div class="col-md-6 col-6 d-flex justify-content-end">
+      <button *ngIf="ROLE_ADD" (click)="addAchat()" class="d-flex align-items-center" nz-button nzType="primary">
+        achat <i nz-icon nzType="plus"></i>
+      </button>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col-md-12 col-12 filter-rupture">
+      <nz-input-group [nzSize]="'small'" style="width: 100%" [nzAddOnAfter]="searchachat">
+        <nz-range-picker
+          style="width: 40% !important"
+          #rangePicker
+          [nzRenderExtraFooter]="extraDate"
+          [(ngModel)]="achatCriteria.date"
+          (ngModelChange)="onChange($event)"
+        ></nz-range-picker>
+        <ng-template #extraDate>
+          <div class="text-center">
+            <button [nzSize]="'small'" (click)="toDay('30J')" nz-button nzType="primary"><< 30 jours</button>
+            <button [nzSize]="'small'" (click)="toDay('7J')" nz-button nzType="primary"><< 7 jours</button>
+            <button [nzSize]="'small'" (click)="toDay('HIER')" nz-button nzType="primary"><< Hier</button>
+            <button [nzSize]="'small'" (click)="toDay('TODAY')" nz-button nzType="primary">aujourd'hui</button>
+          </div>
+        </ng-template>
+        <span style="width: 25%; display: inline-flex">
+          <input placeholder="chercher par référence" [(ngModel)]="achatCriteria.referenceLike" nz-input type="text" />
+        </span>
+        <nz-select
+          nzPlaceHolder="Chercher par fournisseur"
+          nzAllowClear
+          nzShowSearch
+          style="width: 35%"
+          [(ngModel)]="achatCriteria.fournisseur"
+        >
+          <nz-option *ngFor="let fournisseur of listeOfFournisseurs" [nzLabel]="fournisseur.name" [nzValue]="fournisseur"> </nz-option>
+        </nz-select>
+      </nz-input-group>
+      <ng-template #searchachat>
+        <i style="cursor: pointer" (click)="searchGlobal()" class="fal fa-search bg-purple"></i>
+      </ng-template>
+    </div>
+    <!-- <div style="padding-right: 3.5rem !important" class="col-md-2 pt-2 text-right">
+      <i (click)="exportData('excel')" style="font-size: 22px; color: magenta; cursor: pointer" class="fal fa-file-excel mr-2"></i>
+      <i (click)="exportData('pdf')" style="font-size: 22px; color: green; cursor: pointer" class="fal fa-file-pdf"></i>
+    </div> -->
+  </div>
+  <div *ngIf="filterApplyList.length > 0" class="row pt-2 pb-1">
+    <div class="col-md-10">
+      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués : </span>
+      <nz-tag
+        *ngFor="let filter of filterApplyList; let index = index"
+        (nzOnClose)="deleteFilter(index, filter)"
+        [nzMode]="'closeable'"
+        [nzColor]="filter.color"
+        >{{ filter.label }} : {{ filter.name ? filter.name : filter.value }}</nz-tag
+      >
+    </div>
+    <div class="col-md-2 text-right">
+      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button nzType="link"
+        >Supprimer les filters</a
+      >
+      <i style="color: #e01372" class="fal fa-trash"></i>
+    </div>
+  </div>
+  <div class="row pt-2">
+    <div class="col-md-12">
+      <ng-template #datasize>
+        <span class="mr-3">
+          Affichage {{ from }} à {{ to }} de <strong>{{ totalAchats }}</strong> achats
+        </span>
+      </ng-template>
+      <div class="text-center mb-1" *ngIf="listeOfAchat.length > 0">
+        <span style="font-weight: 600">Total : </span>
+        <nz-tag [nzColor]="'green'">{{ somme_achats | priceFormat }} DH</nz-tag>
+      </div>
+      <nz-table
+        [nzTotal]="totalAchats"
+        [nzShowTotal]="datasize"
+        [nzFrontPagination]="false"
+        [(nzPageIndex)]="firstAchat"
+        [nzPageSizeOptions]="[10, 50, 100]"
+        (nzPageSizeChange)="currentPageDataChange($event)"
+        [(nzPageSize)]="maxResults"
+        [nzShowPagination]="true"
+        nzShowSizeChanger
+        nzOuterBordered
+        [nzLoading]="loading"
+        [nzSize]="'middle'"
+        #basicTable
+        [nzData]="listeOfAchat"
+        (nzQueryParams)="sort($event)"
+        [nzScroll]="{ x: '800px' }"
+      >
+        <thead>
+          <tr>
+            <th>
+              Date
+              <!-- <nz-filter-trigger [nzVisible]="isVisibleChercheDate" [nzDropdownMenu]="menuDate">
+                <i nz-icon nzType="search"></i>
+              </nz-filter-trigger> -->
+            </th>
+            <th>
+              N° Doc
+              <!-- <nz-filter-trigger [nzDropdownMenu]="menuRef">
+                <i nz-icon nzType="search"></i>
+              </nz-filter-trigger> -->
+            </th>
+            <th>
+              Fournisseur
+              <!-- <nz-filter-trigger [nzDropdownMenu]="menuFournisseur">
+                <i nz-icon nzType="search"></i>
+              </nz-filter-trigger> -->
+            </th>
+            <th>Montant</th>
+            <th [nzFilters]="listOfTypesAchat" [nzFilterMultiple]="true" [nzFilterFn]="filterByType" class="text-center">Type Achat</th>
+            <th class="text-center">Mise en stock</th>
+            <th class="text-center">Facture</th>
+            <th class="text-center pl-3 pr-3">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{ data.date_achat }}</td>
+            <td>{{ data.reference_achat }}</td>
+            <td>{{ data.fournisseur?.name }}</td>
+            <td>{{ data.price_total | priceFormat }} DH</td>
+            <td class="text-center">
+              <span *ngIf="data.type_devise == 1 || data.type_devise == '1' || data.type_devise == 'true'"> Devise </span>
+              <span *ngIf="data.type_devise == 0 || data.type_devise == '0' || data.type_devise == 'false'"> DH </span>
+            </td>
+            <td class="text-center">
+              <i style="color: green" *ngIf="data.miseEnStock == '1'" class="fa fa-circle"></i>
+              <i style="color: red" *ngIf="data.miseEnStock == '0'" class="fa fa-circle"></i>
+            </td>
+            <td class="text-center">
+              <nz-tag *ngIf="!data.is_facture || data.is_facture == '0' || data.is_facture == 'false'" [nzColor]="'red'"> Non</nz-tag>
+              <nz-tag *ngIf="data.is_facture == '1' || data.is_facture == 'true'" [nzColor]="'green'">Oui</nz-tag>
+            </td>
+            <td class="text-center">
+              <i *ngIf="ROLE_UPDATE" (click)="editAchat(data)" class="fal fa-pen my-btn-edit mr-2"></i>
+              <i (click)="goToView(data)" class="fal fa-eye my-btn-edit mr-2 c-green"></i>
+              <i *ngIf="ROLE_DELETE" (click)="deleteAchat(data)" class="fal fa-trash-alt my-btn-edit mr-2 c-red"></i>
+              <i *ngIf="ROLE_PRINT" (click)="exportAsPDF(data)" class="fal fa-print my-btn-edit c-print"></i>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</nz-card>
+
+<nz-dropdown-menu #menuRef="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown p-2">
+    <div style="width: 313px" class="search-box">
+      <input placeholder="référence" [(ngModel)]="achatCriteria.referenceLike" nz-input type="text" />
+      <div class="pt-2 d-flex justify-content-end">
+        <button nz-button nzSize="small" (click)="resetSearch('referenceLike')">Réinitialiser</button>
+        <button
+          nz-button
+          nzSize="small"
+          nzType="primary"
+          (click)="search('Réference', achatCriteria.referenceLike, 'orange', 'referenceLike')"
+          class="search-button"
+        >
+          Chercher
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+<nz-dropdown-menu #menuFournisseur="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown p-2">
+    <div style="width: 313px" class="search-box">
+      <nz-select nzAllowClear nzShowSearch style="width: 100%" [(ngModel)]="achatCriteria.fournisseurId">
+        <nz-option *ngFor="let fournisseur of listeOfFournisseurs" [nzLabel]="fournisseur.name" [nzValue]="fournisseur.id"> </nz-option>
+      </nz-select>
+      <div class="pt-2 d-flex justify-content-end">
+        <button nz-button nzSize="small" (click)="resetSearch('fournisseurId')">Réinitialiser</button>
+        <button
+          nz-button
+          nzSize="small"
+          nzType="primary"
+          (click)="search('Fournisseur', achatCriteria.fournisseurId, 'green', 'fournisseurId')"
+          class="search-button"
+        >
+          Chercher
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuDate="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown p-2">
+    <div style="width: 313px" class="search-box">
+      <nz-range-picker
+        #rangePicker
+        [nzRenderExtraFooter]="extraDate"
+        [(ngModel)]="achatCriteria.date"
+        (ngModelChange)="onChange($event)"
+      ></nz-range-picker>
+      <ng-template #extraDate>
+        <div class="text-center">
+          <button [nzSize]="'small'" (click)="toDay()" nz-button nzType="primary">aujourd'hui</button>
+        </div>
+      </ng-template>
+      <div class="pt-2 d-flex justify-content-end">
+        <button nz-button nzSize="small" (click)="resetSearch('date')">Réinitialiser</button>
+        <button
+          nz-button
+          nzSize="small"
+          nzType="primary"
+          (click)="search('Date', achatCriteria.date, 'magenta', 'date')"
+          class="search-button"
+        >
+          Chercher
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>

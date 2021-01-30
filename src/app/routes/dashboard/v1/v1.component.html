@@ -1,0 +1,150 @@
+<page-header [title]="''"> </page-header>
+
+<div class="pt-4" nz-row nzGutter="16">
+  <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" class="mb-md">
+    <div nz-row nzType="flex" class="bg-primary rounded-md">
+      <div nz-col nzSpan="19" class="p-md text-white">
+        <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboard?.ventes?.total | priceFormat }} DH</div>
+        <p class="text-nowrap mb0 fz-12">Ventes totales ({{ listeOfDashboard?.ventes?.nombre }}) / aujourd'hui</p>
+      </div>
+      <div nz-col nzSpan="5" style="padding-top: 0.8rem !important" class="text-center">
+        <i style="color: white" class="fal fa-dollar-sign fa-2x"></i>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" class="mb-md">
+    <div nz-row nzType="flex" class="bg-success rounded-md">
+      <div nz-col nzSpan="19" class="p-md text-white">
+        <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboard?.avoirs?.total | priceFormat }} DH</div>
+        <p class="text-nowrap mb0 fz-12">Avoirs totales ({{ listeOfDashboard?.avoirs?.nombre }}) / aujourd'hui</p>
+      </div>
+      <div nz-col nzSpan="5" style="padding-top: 0.8rem !important" class="text-center">
+        <i style="color: white" class="fal fa-dollar-sign fa-2x"></i>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" class="mb-md">
+    <div nz-row nzType="flex" class="bg-orange rounded-md">
+      <div nz-col nzSpan="19" class="p-md text-white">
+        <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboard?.net_profit | priceFormat }} DH</div>
+        <p class="text-nowrap mb0 fz-12">Net profit / aujourd'hui</p>
+      </div>
+      <div nz-col nzSpan="5" style="padding-top: 0.8rem !important" class="text-center">
+        <i style="color: white" class="fal fa-dollar-sign fa-2x"></i>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" class="mb-md">
+    <div nz-row nzType="flex" class="bg-magenta rounded-md">
+      <div nz-col nzSpan="19" class="p-md text-white">
+        <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboard?.commercial ? listeOfDashboard?.commercial : '&nbsp;' }}</div>
+        <p class="text-nowrap mb0 fz-12">Meilleur commercial</p>
+      </div>
+      <div nz-col nzSpan="5" style="padding-top: 0.8rem !important" class="text-center">
+        <i style="color: white" class="fal fa-user fa-2x"></i>
+      </div>
+    </div>
+  </div>
+</div>
+<nz-card [nzBodyStyle]="{ padding: '18px' }" class="mt-2" style="border-radius: 5px" [nzBordered]="true">
+  <form [formGroup]="dashboardForm">
+    <div class="row filter-dashboard">
+      <div class="col-lg-6 col-md-12 text-right">
+        <nz-range-picker
+          style="width: 100% !important; height: 31px !important"
+          #rangePicker
+          formControlName="date"
+          (ngModelChange)="onChange($event)"
+        ></nz-range-picker>
+      </div>
+      <div class="col-lg-6 col-md-12 text-right">
+        <nz-radio-group formControlName="type" class="ml-2">
+          <label (click)="searchBydate('30J')" nz-radio-button nzValue="30J">30 derniers jours</label>
+          <label (click)="searchBydate('7J')" nz-radio-button nzValue="7J">7 derniers jours</label>
+          <label (click)="searchBydate('HIER')" nz-radio-button nzValue="HIER">Hier</label>
+          <label (click)="searchBydate('TODAY')" nz-radio-button nzValue="TODAY">Aujourd'hui</label>
+        </nz-radio-group>
+      </div>
+    </div>
+  </form>
+</nz-card>
+<div class="row">
+  <div *ngIf="salesPieDataVilleClient.length > 0" class="col-lg-6 col-md-12 dashboard">
+    <div class="ant-card-body">
+      <nz-card [nzBordered]="false" [nzTitle]="'Villes / Clients'" [nzBodyStyle]="{ 'padding.px': 24 }" class="sales-card mb-0">
+        <!-- <h4 class="margin:8px 0 32px 0;">{{ 'app.analysis.sales' | translate }}</h4> -->
+        <g2-pie
+          class="pt-4"
+          *ngIf="salesPieDataVilleClient"
+          [data]="salesPieDataVilleClient"
+          [hasLegend]="true"
+          [subTitle]="'Clients'"
+          [height]="248"
+          [lineWidth]="4"
+          [total]="salesTotalClientVille"
+        >
+        </g2-pie>
+      </nz-card>
+    </div>
+  </div>
+  <div *ngIf="salesPieDataClientVente.length > 0" class="col-lg-6 col-md-12 dashboard">
+    <div class="ant-card-body">
+      <nz-card [nzBordered]="false" [nzTitle]="'Clients / Ventes'" [nzBodyStyle]="{ 'padding.px': 24 }" class="sales-card mb-0">
+        <!-- <h4 class="margin:8px 0 32px 0;">{{ 'app.analysis.sales' | translate }}</h4> -->
+        <g2-pie
+          class="pt-4"
+          *ngIf="salesPieDataClientVente"
+          [data]="salesPieDataClientVente"
+          [hasLegend]="true"
+          [subTitle]="'Ventes'"
+          [height]="248"
+          [lineWidth]="4"
+          [total]="salesTotalClientVente"
+        >
+        </g2-pie>
+      </nz-card>
+    </div>
+  </div>
+  <div *ngIf="salesPieDataCommercialVente.length > 0" class="col-lg-6 col-md-12 pt-3 dashboard">
+    <div class="ant-card-body">
+      <nz-card [nzBordered]="false" [nzTitle]="'Commerciaux / Ventes'" [nzBodyStyle]="{ 'padding.px': 24 }" class="sales-card mb-0">
+        <!-- <h4 class="margin:8px 0 32px 0;">{{ 'app.analysis.sales' | translate }}</h4> -->
+        <g2-pie
+          class="pt-4"
+          *ngIf="salesPieDataCommercialVente"
+          [data]="salesPieDataCommercialVente"
+          [hasLegend]="true"
+          [subTitle]="'Ventes'"
+          [height]="248"
+          [lineWidth]="4"
+          [total]="salesTotalCommercialVente"
+        >
+        </g2-pie>
+      </nz-card>
+    </div>
+  </div>
+  <div *ngIf="listeOfArticleTop.length > 0" class="col-lg-6 col-md-12 pt-3 dashboard">
+    <div class="ant-card-body">
+      <nz-card [nzBordered]="false" [nzTitle]="'Meilleurs articles'" [nzBodyStyle]="{ 'padding.px': 24 }" class="sales-card mb-0">
+        <!-- <div *ngFor="let item of listeOfArticleTop" class="row">
+          <div class="col-md-12">{{ item.article?.designation }} {{ item.quantite }}</div>
+        </div> -->
+        <div
+          *ngFor="let item of listeOfArticleTop; let idx = index"
+          style="border-bottom: 1px solid #d9d9d9"
+          class="row m-0 mb-2 mt-2 ml-3 mr-3 pb-2"
+        >
+          <div class="col-md-1 col-1 pl-0">
+            <button class="number-class" nz-button nzType="primary" nzShape="circle">{{ idx + 1 }}</button>
+          </div>
+          <div class="col-md-8 col-8">
+            <span class="title-article-top">{{ item.article?.reference }} | {{ item.article?.designation }}</span>
+          </div>
+          <div class="col-md-3 col-3 text-right pr-0">
+            <span class="title-article-top">{{ item.quantite }} </span>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+</div>

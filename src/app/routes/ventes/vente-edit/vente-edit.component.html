@@ -1,0 +1,784 @@
+<page-header [title]="'Modifier la vente ' + venteForm.value.reference"></page-header>
+
+<nz-card
+  [nzBodyStyle]="{ 'padding-top': '.5rem', 'padding-bottom': '.5rem', 'padding-left': '18px', 'padding-right': '18px' }"
+  class="mt-5"
+  style="border-radius: 5px"
+  [nzBordered]="true"
+>
+  <div class="row d-flex align-items-center">
+    <div class="col-md-6 col-6">
+      <button (click)="goToList()" nz-button nzType="default"><i class="fal fa-chevron-left pr-2"></i>Liste des ventes</button>
+    </div>
+    <div class="col-md-6 col-6 text-right">Numéro BL : {{ venteForm.value.reference }}</div>
+  </div>
+</nz-card>
+<nz-alert
+  *ngIf="clientInvalid"
+  nzShowIcon
+  nzType="error"
+  [nzMessage]="'Votre client est dépassé le plafond crédit ( crédit = ' + venteForm.value.client?.credit + ' DH )'"
+>
+</nz-alert>
+<nz-card class="mt-4" style="border-radius: 5px" [nzBordered]="true">
+  <form [formGroup]="venteForm">
+    <div class="row">
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="date">Date </nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <nz-date-picker (nzOnOpenChange)="nzOnOpenChangeDate($event)" formControlName="date"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="name">Client</nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <nz-input-group style="width: 100%" [nzAddOnAfter]="addclientTemplate">
+                  <nz-select
+                    [compareWith]="nzCompareSelectedByID"
+                    (ngModelChange)="selectClient($event)"
+                    nzAllowClear
+                    nzShowSearch
+                    style="width: 100%"
+                    formControlName="client"
+                    name="client"
+                    id="client"
+                  >
+                    <nz-option *ngFor="let client of listOfClients" [nzLabel]="client.name" [nzValue]="client"> </nz-option>
+                  </nz-select>
+                </nz-input-group>
+                <ng-template #addclientTemplate>
+                  <i
+                    nzTooltipTitle="Ajouter un client"
+                    nzTooltipPlacement="top"
+                    nz-tooltip
+                    (click)="addClient()"
+                    class="fal fa-plus c-pointer"
+                  ></i>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="payment_mode_id">Mode de paiment </nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <nz-select
+                  [nzDropdownRender]="addmodeTemplate"
+                  nzAllowClear
+                  (ngModelChange)="changeModePaiment($event)"
+                  nzShowSearch
+                  style="width: 100%"
+                  formControlName="payment_mode_id"
+                  name="payment_mode_id"
+                  id="payment_mode_id"
+                >
+                  <nz-option *ngFor="let mode of listOfPaymentsMode" [nzLabel]="mode.label" [nzValue]="mode.id"> </nz-option>
+                </nz-select>
+                <ng-template #addmodeTemplate>
+                  <nz-divider class="mt-2 mb-2"></nz-divider>
+                  <div class="row m-0">
+                    <div class="col-md-10">
+                      <input [nzSize]="'small'" type="text" nz-input #inputModeElement />
+                    </div>
+                    <div class="col-md-1">
+                      <a class="add-item" (click)="saveMode(inputModeElement)">
+                        <i nz-icon nzType="plus" class="c-green" nzTheme="outline"></i>
+                      </a>
+                    </div>
+                  </div>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="name">Commerciale</nz-form-label>
+              <nz-form-control [nzSpan]="16">
+                <nz-input-group style="width: 100%" [nzAddOnAfter]="addcommercialeTemplate">
+                  <nz-select
+                    [compareWith]="nzCompareSelectedByID"
+                    (ngModelChange)="selectCommerciale($event)"
+                    nzAllowClear
+                    nzShowSearch
+                    style="width: 100%"
+                    formControlName="commerciale"
+                    name="commerciale"
+                    id="commerciale"
+                  >
+                    <nz-option *ngFor="let commerciale of listOfCommerciaux" [nzLabel]="commerciale.name" [nzValue]="commerciale">
+                    </nz-option>
+                  </nz-select>
+                </nz-input-group>
+                <ng-template #addcommercialeTemplate>
+                  <i
+                    nzTooltipTitle="Ajouter un Commerciale"
+                    nzTooltipPlacement="top"
+                    nz-tooltip
+                    (click)="addCommerciale()"
+                    class="fal fa-plus c-pointer"
+                  ></i>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row div-articles m-0 pt-2 pb-2 d-flex align-items-center">
+      <div class="col-lg-4 col-md-12">
+        <label style="font-size: inherit" class="mb-0 title-article">
+          Liste des Articles ({{ venteForm.value.lignes_vente.length }}) :
+        </label>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <nz-input-group
+          *ngIf="venteForm.value.lignes_vente.length > 0"
+          [nzSize]="'small'"
+          style="width: 273px"
+          nzAddOnBefore="Remise Auotmatique"
+        >
+          <nz-input-number style="width: 65%" nz-input formControlName="remiseAuto" type="number" [nzMin]="0"> </nz-input-number>
+          <button
+            style="width: 35%; background-color: #40a9ff; color: white; height: 30px"
+            (click)="applyRemiseAuto()"
+            class="pl-2 pr-2 pb-0"
+            nz-button
+            nzType="default"
+          >
+            <i style="cursor: pointer; font-size: 19px" class="fal fa-check"></i>
+          </button>
+        </nz-input-group>
+
+        <ng-template #validRemise>
+          <i (click)="applyRemiseAuto()" style="cursor: pointer" class="fal fa-check"></i>
+        </ng-template>
+      </div>
+      <div class="col-lg-2 col-md-6 d-flex justify-content-end">
+        <button class="btn-add-article" (click)="addLigneVente()" [nzSize]="'small'" nz-button>
+          Article <i style="font-size: 13px" class="fal fa-plus pl-3"></i>
+        </button>
+      </div>
+      <div formArrayName="lignes_vente" class="col-md-12" [ngClass]="{ 'pt-3': venteForm.value.lignes_vente.length > 0 ? true : false }">
+        <div *ngIf="venteForm.value.lignes_vente.length > 0" class="row">
+          <div class="col-md-4 col-6 pr-0">Article :</div>
+          <!-- <div class="col-md-2 col-2">Désignation :</div> -->
+          <div class="col-md-2 col-6 pl-0 pr-0">Quantite :</div>
+          <div class="col-md-2 col-6 pl-0 pr-0">Prix-U :</div>
+          <div class="col-md-2 col-6 pl-0 pr-0">Remise :</div>
+          <div class="col-md-2 col-12 pl-0 pr-0">Total :</div>
+          <div class="col-md-12">
+            <hr class="mt-1" />
+          </div>
+        </div>
+
+        <ng-container *ngFor="let ligne_vente of venteForm.get('lignes_vente').controls; let i = index">
+          <div class="row pt-2 m-0 mb-2 pb-2 d-flex align-items-center div-ligne-achat" [formGroupName]="i">
+            <!-- article -->
+            <div class="col-md-4 col-6 pr-0">
+              <nz-select
+                [nzServerSearch]="true"
+                [compareWith]="nzCompareSelectedByreference"
+                (ngModelChange)="onChangeArticle($event, i)"
+                (nzOnSearch)="getArticles($event, i)"
+                style="width: 100%"
+                nzShowSearch
+                formControlName="article"
+                nzAllowClear
+                [nzDropdownRender]="renderTemplateArticle"
+              >
+                <nz-option nzCustomContent *ngFor="let article of listeOfArticles" [nzValue]="article" [nzLabel]="article.reference">
+                  <strong>
+                    {{ article.reference }}
+                  </strong>
+                  {{ article.designation }}
+                  <nz-tag>{{ article.marque.label }}</nz-tag>
+                  <nz-badge
+                    *ngIf="article.quantite"
+                    nzStandalone
+                    nzShowZero
+                    [nzOverflowCount]="article.quantite"
+                    [nzCount]="article.quantite"
+                    [nzStyle]="{ backgroundColor: 'green' }"
+                  ></nz-badge>
+                  <nz-badge
+                    *ngIf="!article.quantite"
+                    nzStandalone
+                    nzShowZero
+                    [nzOverflowCount]="0"
+                    [nzCount]="0"
+                    [nzStyle]="{ backgroundColor: 'red' }"
+                  ></nz-badge>
+                </nz-option>
+              </nz-select>
+              <span *ngIf="ligne_vente.value.articleExiste == null" style="color: red; font-size: 11px"> Article déja existe </span>
+              <ng-template #renderTemplateArticle>
+                <nz-divider class="mt-2 mb-2"></nz-divider>
+                <div style="background: #efefef" class="text-center pb-2 pt-2">
+                  <i nz-icon nzType="plus"></i>
+                </div>
+              </ng-template>
+            </div>
+            <!-- designation -->
+            <!-- <div class="col-md-2 col-2">
+              <textarea rows="1" formControlName="designation" nz-input style="background-color: #f5f5f5" readonly></textarea>
+            </div> -->
+            <!-- quantite -->
+            <div class="col-md-2 col-6 pl-0 pr-0">
+              <nz-input-group style="width: 100%">
+                <nz-input-number
+                  style="width: 100%; text-align: center"
+                  [ngClass]="{ 'border-qte-error': ligne_vente.value.articleValid == null }"
+                  nz-input
+                  formControlName="quantite"
+                  type="number"
+                  [nzMin]="0"
+                  (mouseup)="onMouseupQte(i)"
+                  (keyup)="onMouseupQte(i)"
+                >
+                </nz-input-number>
+              </nz-input-group>
+              <span *ngIf="ligne_vente.value.articleValid == null" style="color: red; font-size: 11px">
+                Quantité de stock est insuffisant
+              </span>
+              <ng-template #btnPlus>
+                <i (click)="plusQte(i)" class="fal fa-plus c-pointer"></i>
+              </ng-template>
+              <ng-template #btnMinus>
+                <i (click)="minQte(i)" class="fal fa-minus c-pointer"></i>
+              </ng-template>
+            </div>
+            <!-- prix vente -->
+            <div class="col-md-2 col-6 pl-0 pr-0">
+              <nz-input-group style="width: 100%" nzAddOnAfter="DH">
+                <nz-input-number
+                  (ngModelChange)="changePriceVente($event, i)"
+                  style="width: 100%"
+                  nz-input
+                  formControlName="prix_vente"
+                  type="number"
+                  [nzMin]="0"
+                >
+                </nz-input-number>
+              </nz-input-group>
+            </div>
+            <!-- remise -->
+            <div class="col-md-2 col-6 pl-0 pr-0">
+              <nz-input-group style="width: 100%" nzAddOnAfter="%">
+                <nz-input-number
+                  style="width: 100%"
+                  (mouseup)="onMouseupRemise(i)"
+                  (keyup)="onMouseupRemise(i)"
+                  nz-input
+                  formControlName="remise"
+                  type="number"
+                  [nzMin]="0"
+                >
+                </nz-input-number>
+              </nz-input-group>
+            </div>
+            <!-- Total -->
+            <div class="col-md-2 col-12 pl-0 pr-0">
+              <nz-input-group style="width: 86%" nzAddOnAfter="DH">
+                <nz-input-number
+                  [nzDisabled]="true"
+                  style="width: 100%"
+                  nz-input
+                  formControlName="total_with_remise"
+                  type="number"
+                  [nzMin]="0"
+                >
+                </nz-input-number>
+              </nz-input-group>
+              <i
+                style="width: 14%; color: red"
+                (click)="deleteLigneVente(i)"
+                nz-icon
+                nzType="close"
+                class="c-pointer"
+                nzTheme="outline"
+              ></i>
+            </div>
+            <!-- <div class="col-md-1 col-1 text-right">
+              <i (click)="deleteLigneVente(i)" nz-icon nzType="close" class="c-pointer" nzTheme="outline"></i>
+            </div> -->
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="row div-articles m-0 mt-5 pt-3 pb-3 pr-3">
+      <div class="col-md-5 col-12">
+        <div class="pb-2">
+          <label class="mb-0" style="font-weight: 600"> Mode Exp :</label>
+          <nz-select
+            class="ml-3"
+            [nzDropdownRender]="addmodeTemplateModeexp"
+            nzAllowClear
+            nzShowSearch
+            style="width: 75%"
+            formControlName="mode_exp_id"
+            name="mode_exp"
+            id="mode_exp"
+          >
+            <nz-option *ngFor="let mode of listOfModeExp" [nzLabel]="mode.label" [nzValue]="mode.id"> </nz-option>
+          </nz-select>
+          <ng-template #addmodeTemplateModeexp>
+            <nz-divider class="mt-2 mb-2"></nz-divider>
+            <div class="row m-0">
+              <div class="col-md-10">
+                <input [nzSize]="'small'" type="text" nz-input #inputModeexp />
+              </div>
+              <div class="col-md-1">
+                <a class="add-item" (click)="saveModeExp(inputModeexp)">
+                  <i nz-icon nzType="plus" class="c-green" nzTheme="outline"></i>
+                </a>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+        <label class="mb-0" style="font-weight: 600"> Les Informations supplémentaire :</label>
+        <hr />
+        <textarea class="mb-2" rows="2" nz-input formControlName="remarques"></textarea>
+      </div>
+      <div class="col-md-3 col-12">
+        <nz-alert
+          *ngIf="venteForm.value.lignes_vente.length == 0 && clickSave"
+          nzType="warning"
+          nzMessage="Attention"
+          nzDescription="il faut saisir au moins un article"
+          nzShowIcon
+        >
+        </nz-alert>
+      </div>
+      <div style="background: white; border-radius: 5px" class="col-md-4 col-12 pt-3 pb-3">
+        <div>
+          <span>Total : </span>
+          <br />
+          <span style="font-weight: 600; font-size: 22px; color: #242582">{{ venteForm.value.prix_vente_ttc | priceFormat }} DH </span>
+        </div>
+        <div *ngIf="venteForm.value.prix_vente_ttc > venteForm.value.prix_vente_ttc_with_remise">
+          <span>Remise : </span>
+          <br />
+          <span style="font-weight: 600; font-size: 22px"
+            >{{ venteForm.value.prix_vente_ttc - venteForm.value.prix_vente_ttc_with_remise | priceFormat }}
+            DH
+          </span>
+        </div>
+        <div *ngIf="venteForm.value.prix_vente_ttc > venteForm.value.prix_vente_ttc_with_remise">
+          <span>Total avec remise : </span>
+          <br />
+          <span style="font-weight: 600; font-size: 22px; color: #e01372"
+            >{{ venteForm.value.prix_vente_ttc_with_remise | priceFormat }} DH
+          </span>
+        </div>
+
+        <!-- <div *ngIf="venteForm.value.commercial_id">
+          <span>Commission commerciale : </span>
+          <span style="float: right">{{ venteForm.value.commercial_total | priceFormat }} DH </span>
+        </div> -->
+        <div>
+          <hr class="mt-2 mb-2" />
+        </div>
+        <!-- <div *ngIf="venteForm.value.commercial_id">
+          <span>Total : </span>
+          <span style="float: right">{{ venteForm.value.net_vente | priceFormat }} DH </span>
+        </div> -->
+
+        <div class="pt-3">
+          <button style="width: 100%" (click)="confirmVente()" nz-button nzType="primary">
+            <span style="float: left"> Enregistrer </span>
+            <span *ngIf="venteForm.value.prix_vente_ttc == venteForm.value.prix_vente_ttc_with_remise" style="float: right">
+              {{ venteForm.value.prix_vente_ttc | priceFormat }}
+              DH
+            </span>
+            <span *ngIf="venteForm.value.prix_vente_ttc > venteForm.value.prix_vente_ttc_with_remise" style="float: right">
+              {{ venteForm.value.prix_vente_ttc_with_remise | priceFormat }}
+              DH
+            </span>
+          </button>
+          <!-- <label class="mt-1" nz-checkbox formControlName="is_paid">Vente payé</label>
+          <br />
+          <label *ngIf="venteForm.value.is_paid == false" for="avance"> Saisir le montant qui payé le client : </label>
+          <nz-input-group *ngIf="venteForm.value.is_paid == false" style="width: 100%" nzAddOnAfter="DH">
+            <nz-input-number style="width: 100%" formControlName="avance" [nzMin]="0"> </nz-input-number>
+          </nz-input-group> -->
+        </div>
+      </div>
+    </div>
+  </form>
+</nz-card>
+
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="modalClient" nzTitle="Ajouter un Client" (nzOnCancel)="hideModalClient()">
+  <form [formGroup]="clientForm">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="name">Client</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input formControlName="name" nz-input name="name" type="text" id="name" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="email">Email</nz-form-label>
+          <nz-form-control nzErrorTip="Email invalide" [nzSpan]="16">
+            <input formControlName="email" nz-input name="email" type="email" email id="email" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="telephone">Télephone</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input formControlName="telephone" nz-input name="telephone" type="text" id="telephone" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="fixe">Fixe</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input formControlName="fixe" nz-input name="fixe" type="text" id="fixe" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="max_credit">Plafond Crédit</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input formControlName="max_credit" [min]="0" nz-input name="max_credit" type="number" id="max_credit" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="remise">Remise %</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input formControlName="remise" [min]="0" nz-input name="remise" type="number" id="remise" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="credit">Crédit</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input formControlName="credit" [min]="0" nz-input name="credit" type="number" id="credit" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="ville_id">Ville</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
+              <nz-select
+                nzAllowClear
+                nzShowSearch
+                style="width: 100%"
+                [nzDropdownRender]="renderTemplateVille"
+                formControlName="ville_id"
+                name="ville_id"
+                id="ville_id"
+              >
+                <nz-option *ngFor="let ville of listOfVille" [nzLabel]="ville.label" [nzValue]="ville.id"> </nz-option>
+              </nz-select>
+              <ng-template #renderTemplateVille>
+                <nz-divider class="mt-2 mb-2"></nz-divider>
+                <div class="row m-0">
+                  <div class="col-md-10">
+                    <input [nzSize]="'small'" type="text" nz-input #inputElementVille />
+                  </div>
+                  <div class="col-md-1">
+                    <a class="add-item" (click)="saveVille(inputElementVille)">
+                      <i nz-icon nzType="plus" class="c-green" nzTheme="outline"></i>
+                    </a>
+                  </div>
+                </div>
+              </ng-template>
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="addresse">Addresse</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <textarea
+              nz-input
+              formControlName="addresse"
+              name="addresse"
+              id="addresse"
+              [nzAutosize]="{ minRows: 2, maxRows: 6 }"
+            ></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div *nzModalFooter>
+      <button (click)="hideModalClient()" nz-button nzType="default">Annuler</button>
+
+      <button (click)="saveClient()" nz-button nzType="primary">Enregistrer</button>
+    </div>
+  </form>
+</nz-modal>
+
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="modalCommerciale" nzTitle="Ajouter Commerciale" (nzOnCancel)="hideModalCommerciale()">
+  <form [formGroup]="commercialeForm">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="name">Commerciale</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input formControlName="name" nz-input name="name" type="text" id="name" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="email">Email</nz-form-label>
+          <nz-form-control nzErrorTip="Email invalide" [nzSpan]="16">
+            <input formControlName="email" nz-input name="email" type="email" email id="email" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="telephone">Télephone</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input formControlName="telephone" nz-input name="telephone" type="text" id="telephone" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="fixe">Fixe</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input formControlName="fixe" nz-input name="fixe" type="text" id="fixe" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="ville_id">Ville</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
+              <nz-select
+                nzAllowClear
+                nzShowSearch
+                style="width: 100%"
+                [nzDropdownRender]="renderTemplateVille"
+                formControlName="ville_id"
+                name="ville_id"
+                id="ville_id"
+              >
+                <nz-option *ngFor="let ville of listOfVille" [nzLabel]="ville.label" [nzValue]="ville.id"> </nz-option>
+              </nz-select>
+              <ng-template #renderTemplateVille>
+                <nz-divider class="mt-2 mb-2"></nz-divider>
+                <div class="row m-0">
+                  <div class="col-md-10">
+                    <input [nzSize]="'small'" type="text" nz-input #inputElementVille />
+                  </div>
+                  <div class="col-md-1">
+                    <a class="add-item" (click)="saveVille(inputElementVille)">
+                      <i nz-icon nzType="plus" class="c-green" nzTheme="outline"></i>
+                    </a>
+                  </div>
+                </div>
+              </ng-template>
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="addresse">Commission</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-input-group nzAddOnAfter="%">
+              <nz-input-number style="width: 100%" formControlName="commission" [nzMin]="0" [nzMax]="100"> </nz-input-number>
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="addresse">Addresse</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <textarea
+              nz-input
+              formControlName="addresse"
+              name="addresse"
+              id="addresse"
+              [nzAutosize]="{ minRows: 2, maxRows: 6 }"
+            ></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div *nzModalFooter>
+      <button (click)="hideModalCommerciale()" nz-button nzType="default">Annuler</button>
+
+      <button (click)="saveCommerciale()" nz-button nzType="primary">Enregistrer</button>
+    </div>
+  </form>
+</nz-modal>
+
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="modalConfirm" [nzTitle]="'Confirmer Votre Vente'" (nzOnCancel)="modalConfirm = false">
+  <div class="row">
+    <div class="col-md-12">
+      <label style="font-size: inherit" class="mb-0 title-article"> Liste des Articles ({{ venteForm.value.lignes_vente.length }}) :</label>
+    </div>
+    <div class="col-md-12 pt-2">
+      <nz-table [nzSize]="'small'" [nzShowPagination]="false" nzOuterBordered #articleTable [nzData]="venteForm.value.lignes_vente">
+        <thead>
+          <tr>
+            <th>Article</th>
+            <th>Quantite</th>
+            <th>Prix Vente</th>
+            <th>Total/dh</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of articleTable.data">
+            <td>{{ data.designation }}</td>
+            <td>{{ data.quantite }}</td>
+            <td>{{ data.prix_vente | priceFormat }}</td>
+            <td>{{ data.total_with_remise | priceFormat }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div class="col-md-6">
+      <nz-divider style="font-size: 14px" class="mt-2" nzText="Les Informations supplémentaire " nzOrientation="left"> </nz-divider>
+      <!-- <label style="font-size: inherit" class="title-article">Les Informations supplémentaire :</label> -->
+      <div>
+        {{ venteForm.value.remarques }}
+      </div>
+      <!-- <div>
+        <nz-badge class="pt-3" *ngIf="venteForm.value.is_paid == true" nzStatus="success" nzText="Vente payé"> </nz-badge>
+      </div>
+      <div>
+        <nz-badge class="pt-3" *ngIf="venteForm.value.is_paid == false" nzStatus="warning" nzText="Vente n'est pas payé"></nz-badge>
+      </div> -->
+      <!-- <div class="pt-2" *ngIf="venteForm.value.is_paid == false && venteForm.value.avance > 0">
+        L'avance de client : {{ venteForm.value.avance | priceFormat }} DH
+      </div> -->
+    </div>
+    <div class="col-md-6">
+      <nz-divider style="font-size: 14px" class="mt-2" nzText="Détails de la vente" nzOrientation="left"></nz-divider>
+      <div class="row">
+        <div class="col-md-6 col-6">
+          <span>Total En DH : </span>
+        </div>
+        <div class="col-md-6 col-6 text-right">
+          <span> {{ venteForm.value.prix_vente_ttc | priceFormat }} DH </span>
+        </div>
+      </div>
+      <div class="row" *ngIf="venteForm.value.prix_vente_ttc > venteForm.value.prix_vente_ttc_with_remise">
+        <div class="col-md-6 col-6">
+          <span>Remise : </span>
+        </div>
+        <div class="col-md-6 col-6 text-right">
+          <span
+            >{{ venteForm.value.prix_vente_ttc - venteForm.value.prix_vente_ttc_with_remise | priceFormat }}
+            DH
+          </span>
+        </div>
+      </div>
+      <div class="row" *ngIf="venteForm.value.prix_vente_ttc > venteForm.value.prix_vente_ttc_with_remise">
+        <div class="col-md-6 col-6">
+          <span>Total En DH avec remise : </span>
+        </div>
+        <div class="col-md-6 col-6 text-right">
+          <span>{{ venteForm.value.prix_vente_ttc_with_remise | priceFormat }} DH </span>
+        </div>
+      </div>
+
+      <!-- <div class="row" *ngIf="venteForm.value.commercial_id">
+        <div class="col-md-6 col-6">
+          <span>Commerciale : </span>
+        </div>
+        <div class="col-md-6 col-6 text-right">
+          <span>{{ venteForm.value.commercial_total | priceFormat }} DH </span>
+        </div>
+      </div> -->
+      <hr class="mt-2 mb-2" />
+    </div>
+  </div>
+  <div *nzModalFooter>
+    <button (click)="modalConfirm = false" nz-button nzType="default">Modifier les informations</button>
+    <button (click)="saveVente()" nz-button nzType="primary">
+      Enregistrer {{ venteForm.value.prix_vente_ttc_with_remise | priceFormat }} DH
+    </button>
+  </div>
+</nz-modal>
+
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="modalCheque" nzTitle="les informations de chèque" (nzOnCancel)="hideModalCheque()">
+  <form [formGroup]="venteForm">
+    <div formGroupName="chequeInfo" class="row">
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="date">Date d'échéance</nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <nz-date-picker formControlName="date"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8" nzFor="date">Réference</nz-form-label>
+              <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                <input nz-input formControlName="reference" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *nzModalFooter>
+      <button (click)="hideModalCheque()" nz-button nzType="default">Annuler</button>
+
+      <button (click)="saveInfoCheque()" nz-button nzType="primary">Enregistrer</button>
+    </div>
+  </form>
+</nz-modal>

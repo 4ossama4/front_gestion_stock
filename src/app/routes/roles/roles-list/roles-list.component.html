@@ -1,0 +1,88 @@
+<page-header [title]="'Gestion des roles'"></page-header>
+<nz-card [nzBodyStyle]="{ padding: '18px' }" class="mt-5" style="border-radius: 5px" [nzBordered]="true">
+  <div class="row d-flex align-items-center">
+    <div class="col-md-6">
+      <h4 class="mb-0 title-page">Liste des roles</h4>
+    </div>
+    <div class="col-md-6 d-flex justify-content-end">
+      <button (click)="addRole()" class="d-flex align-items-center" nz-button nzType="primary">
+        Role <i class="ml-3" nz-icon nzType="plus"></i>
+      </button>
+    </div>
+  </div>
+  <hr />
+  <!-- <div class="row">
+    <div class="col-md-12 filter-rupture">
+      <nz-input-group [nzSize]="'small'" style="width: 30%" [nzAddOnAfter]="searchnd">
+        <span style="width: 100%; display: inline-flex">
+          <input placeholder="charcher par référence" [(ngModel)]="roleCriteria.labelLike" nz-input type="text" />
+        </span>
+      </nz-input-group>
+      <ng-template #searchnd>
+        <i style="cursor: pointer" (click)="searchNMode()" class="fal fa-search bg-purple"></i>
+      </ng-template>
+    </div>
+  </div> -->
+  <div *ngIf="filterApplyList.length > 0" class="row pt-3 pb-1">
+    <div class="col-md-10">
+      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués : </span>
+      <span *ngFor="let filter of filterApplyList; let index = index">
+        <nz-tag (nzOnClose)="deleteFilter(index, filter)" [nzMode]="'closeable'" [nzColor]="filter.color">
+          {{ filter.label }} : {{ filter.value }}</nz-tag
+        >
+      </span>
+    </div>
+    <div class="col-md-2 text-right">
+      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button nzType="link"
+        >Supprimer les filters</a
+      >
+      <i style="color: #e01372" class="fal fa-trash"></i>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-md-12">
+      <ng-template #datasize>
+        <span class="mr-3">
+          Affichage {{ from }} à {{ to }} de <strong>{{ totalRole }}</strong> roles
+        </span>
+      </ng-template>
+      <nz-table
+        [nzShowTotal]="datasize"
+        [nzTotal]="totalRole"
+        [nzFrontPagination]="false"
+        [(nzPageIndex)]="firstRole"
+        [nzPageSizeOptions]="[10, 50, 100]"
+        [(nzPageSize)]="maxResults"
+        [nzShowPagination]="true"
+        nzShowSizeChanger
+        nzOuterBordered
+        [nzLoading]="loading"
+        [nzSize]="'middle'"
+        #basicTable
+        [nzData]="listOfRoles"
+        (nzQueryParams)="sort($event)"
+      >
+        <thead>
+          <tr>
+            <th>N° Role</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th class="text-center pl-3 pr-3">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{ data.id }}</td>
+            <td>{{ data.name }}</td>
+            <td>{{ data.label }}</td>
+            <td class="text-center">
+              <i (click)="editRole(data)" class="fal fa-pen my-btn-edit mr-2"></i>
+              <i (click)="goToView(data)" class="fal fa-eye my-btn-edit c-green mr-2"></i>
+              <i (click)="deleteRole(data.id)" class="fal fa-trash-alt my-btn-edit c-red"></i>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</nz-card>

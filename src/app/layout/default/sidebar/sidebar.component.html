@@ -1,0 +1,35 @@
+<div class="alain-default__aside-inner">
+  <div class="mt-4 text-center">
+    <nz-avatar style="width: 50px; height: 50px" class="alain-default__aside-user-avatar mr-0 mb-2" [nzSrc]="user.avatar"> </nz-avatar>
+    <div class="alain-default__aside-user-info">
+      <strong>{{ user.name }}</strong>
+      <p class="mb0">{{ user.email }}</p>
+    </div>
+  </div>
+  <nz-dropdown-menu #userMenu="nzDropdownMenu">
+    <ul nz-menu>
+      <li nz-menu-item routerLink="/pro/account/center">{{ 'menu.account.center' | translate }}</li>
+      <li nz-menu-item routerLink="/pro/account/settings">{{ 'menu.account.settings' | translate }}</li>
+    </ul>
+  </nz-dropdown-menu>
+  <div class="d-block py-lg mt-5">
+    <li class="sidebar-nav__item sidebar-nav__group-title ng-star-inserted"><span>Menu</span></li>
+    <ul *ngFor="let menu of menus" nz-menu nzMode="inline">
+      <li [nzMatchRouter]="true" [routerLink]="menu.link" *ngIf="!menu.children" nz-menu-item>
+        <i class="{{ menu.icon }} mr-1"></i>
+        {{ menu.text }}
+      </li>
+      <li *ngIf="menu.children" nz-submenu [nzTitle]="titleMenu">
+        <ng-template #titleMenu>
+          <i class="{{ menu.icon }} mr-1"></i><span class="ml-1">{{ menu.text }}</span>
+        </ng-template>
+        <ul *ngFor="let submenu of menu.children">
+          <li [nzMatchRouter]="true" [routerLink]="submenu.link" nz-menu-item>
+            <i class="{{ submenu.icon }} mr-1"></i>
+            {{ submenu.text }}
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>

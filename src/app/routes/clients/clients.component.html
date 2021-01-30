@@ -1,0 +1,397 @@
+<page-header [title]="''"></page-header>
+<nz-card [nzBodyStyle]="{ padding: '18px' }" class="mt-5" style="border-radius: 5px" [nzBordered]="true">
+  <div class="row d-flex align-items-center">
+    <div class="col-md-6 col-6">
+      <h4 class="mb-0 title-page">Liste des clients</h4>
+    </div>
+    <div class="col-md-6 col-6 d-flex justify-content-end">
+      <button *ngIf="ROLE_ADD" (click)="openModalAdd()" class="d-flex align-items-center" nz-button nzType="primary">
+        Client <i nz-icon nzType="plus"></i>
+      </button>
+    </div>
+  </div>
+  <hr />
+  <div class="col-md-12 pt-2 text-right">
+    <i (click)="exportData('excel')" style="font-size: 22px; color: green; cursor: pointer" class="fal fa-file-excel mr-2"></i>
+    <i (click)="exportData('pdf')" style="font-size: 22px; color: magenta; cursor: pointer" class="fal fa-file-pdf"></i>
+  </div>
+  <div class="row pt-1">
+    <div class="col-md-12">
+      <nz-table
+        [nzTotal]="totalClients"
+        [nzFrontPagination]="false"
+        [(nzPageIndex)]="firstClient"
+        [nzPageSizeOptions]="[10, 50, 100]"
+        [(nzPageSize)]="maxResults"
+        [nzShowPagination]="true"
+        nzShowSizeChanger
+        nzOuterBordered
+        [nzLoading]="loading"
+        [nzSize]="'middle'"
+        #basicTable
+        [nzData]="listOfClients"
+        (nzQueryParams)="sort($event)"
+        [nzScroll]="{ x: '800px' }"
+      >
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th nzCustomFilter>
+              Client
+              <nz-filter-trigger [nzDropdownMenu]="menuName">
+                <i nz-icon nzType="search"></i>
+              </nz-filter-trigger>
+            </th>
+            <th nzCustomFilter>
+              Télephone
+              <nz-filter-trigger [nzDropdownMenu]="menuTel">
+                <i nz-icon nzType="search"></i>
+              </nz-filter-trigger>
+            </th>
+            <th nzCustomFilter>
+              Fixe
+              <nz-filter-trigger [nzDropdownMenu]="menuFixe">
+                <i nz-icon nzType="search"></i>
+              </nz-filter-trigger>
+            </th>
+            <th>Email</th>
+            <th nzCustomFilter>
+              Ville
+              <nz-filter-trigger [nzDropdownMenu]="menuVille">
+                <i nz-icon nzType="search"></i>
+              </nz-filter-trigger>
+            </th>
+            <th nzCustomFilter>
+              Adresse
+              <nz-filter-trigger [nzDropdownMenu]="menuAddress">
+                <i nz-icon nzType="search"></i>
+              </nz-filter-trigger>
+            </th>
+            <th>
+              Crédit <nz-tag class="ml-1" [nzColor]="'magenta'">{{ somme_credit | priceFormat }} DH</nz-tag>
+            </th>
+            <th>Commerciale</th>
+            <th nzRight class="text-center pl-3 pr-3">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{ data.id }}</td>
+            <td>{{ data.name }}</td>
+            <td>{{ data.telephone }}</td>
+            <td>{{ data.fixe }}</td>
+            <td>{{ data.email }}</td>
+            <td>{{ data.ville?.label }}</td>
+            <td>{{ data.addresse }}</td>
+            <td>{{ data.credit | priceFormat }} DH</td>
+            <td>{{ data.ventes ? data.ventes[0]?.commercial?.name : null }}</td>
+            <td nzRight class="text-center">
+              <i *ngIf="ROLE_DELETE" (click)="deleteClient(data.id)" class="fal fa-trash-alt mr-2 my-btn-delete"></i>
+              <i *ngIf="ROLE_UPDATE" (click)="openModalUpdate(data)" class="fal fa-pen my-btn-edit mr-2"></i>
+              <i *ngIf="ROLE_RELEVER" (click)="showTimeLineModal(data)" class="fal fa-file-alt my-btn-edit c-print"></i>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</nz-card>
+
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="clientModal" nzTitle="Ajouter Client" (nzOnCancel)="closeModalAdd()">
+  <form [formGroup]="clientForm">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="name">Client</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input formControlName="name" nz-input name="name" type="text" id="name" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="email">Email</nz-form-label>
+          <nz-form-control nzErrorTip="Email invalide" [nzSpan]="16">
+            <input formControlName="email" nz-input name="email" type="email" email id="email" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="telephone">Télephone</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input formControlName="telephone" nz-input name="telephone" type="text" id="telephone" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="fixe">Fixe</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input formControlName="fixe" nz-input name="fixe" type="text" id="fixe" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="max_credit">Plafond Crédit</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input formControlName="max_credit" [min]="0" nz-input name="max_credit" type="number" id="max_credit" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="remise">Remise %</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input formControlName="remise" [min]="0" nz-input name="remise" type="number" id="remise" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="credit">Crédit</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input formControlName="credit" [min]="0" nz-input name="credit" type="number" id="credit" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="ville_id">Ville</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
+              <nz-select
+                nzAllowClear
+                nzShowSearch
+                style="width: 100%"
+                [nzDropdownRender]="renderTemplateVille"
+                formControlName="ville_id"
+                name="ville_id"
+                id="ville_id"
+              >
+                <nz-option *ngFor="let ville of listOfVille" [nzLabel]="ville.label" [nzValue]="ville.id"> </nz-option>
+              </nz-select>
+              <ng-template #renderTemplateVille>
+                <nz-divider class="mt-2 mb-2"></nz-divider>
+                <div class="row m-0">
+                  <div class="col-md-10">
+                    <input [nzSize]="'small'" type="text" nz-input #inputElementVille />
+                  </div>
+                  <div class="col-md-1">
+                    <a class="add-item" (click)="saveVille(inputElementVille)">
+                      <i nz-icon nzType="plus" class="c-green" nzTheme="outline"></i>
+                    </a>
+                  </div>
+                </div>
+              </ng-template>
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="addresse">Addresse</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <textarea
+              nz-input
+              formControlName="addresse"
+              name="addresse"
+              id="addresse"
+              [nzAutosize]="{ minRows: 2, maxRows: 6 }"
+            ></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div *nzModalFooter>
+      <button (click)="closeModalAdd()" nz-button nzType="default">Annuler</button>
+
+      <button *ngIf="!isUpdate" (click)="saveClient()" nz-button nzType="primary">Enregistrer</button>
+      <button *ngIf="isUpdate" (click)="saveClient()" nz-button nzType="primary">Modifier</button>
+    </div>
+  </form>
+</nz-modal>
+
+<nz-dropdown-menu #menuName="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown p-2">
+    <div style="width: 313px" class="search-box">
+      <input placeholder="Nom" [(ngModel)]="clientCriteria.nameLike" nz-input type="text" />
+      <div class="pt-2 d-flex justify-content-end">
+        <button nz-button nzSize="small" (click)="resetSearch('nameLike')">Réinitialiser</button>
+        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">Chercher</button>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuTel="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown p-2">
+    <div style="width: 313px" class="search-box">
+      <input placeholder="Téléphone" [(ngModel)]="clientCriteria.telephoneLike" nz-input type="text" />
+      <div class="pt-2 d-flex justify-content-end">
+        <button nz-button nzSize="small" (click)="resetSearch('telephoneLike')">Réinitialiser</button>
+        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">Chercher</button>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuFixe="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown p-2">
+    <div style="width: 313px" class="search-box">
+      <input placeholder="Fixe" [(ngModel)]="clientCriteria.fixeLike" nz-input type="text" />
+      <div class="pt-2 d-flex justify-content-end">
+        <button nz-button nzSize="small" (click)="resetSearch('fixeLike')">Réinitialiser</button>
+        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">Chercher</button>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuAddress="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown p-2">
+    <div style="width: 313px" class="search-box">
+      <input placeholder="Adresse" [(ngModel)]="clientCriteria.addressLike" nz-input type="text" />
+      <div class="pt-2 d-flex justify-content-end">
+        <button nz-button nzSize="small" (click)="resetSearch('addressLike')">Réinitialiser</button>
+        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">Chercher</button>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuVille="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown p-2">
+    <div style="width: 313px" class="search-box">
+      <nz-select nzAllowClear nzShowSearch style="width: 100%" [(ngModel)]="clientCriteria.villeId">
+        <nz-option *ngFor="let ville of listOfVille" [nzLabel]="ville.label" [nzValue]="ville.id"> </nz-option>
+      </nz-select>
+      <div class="pt-2 d-flex justify-content-end">
+        <button nz-button nzSize="small" (click)="resetSearch('villeId')">Réinitialiser</button>
+        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">Chercher</button>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="timeLineModal" [nzTitle]="titlzclient" (nzOnCancel)="hideTimeLineModal()">
+  <ng-template #titlzclient>
+    <span>
+      Détails Client {{ clientSelected?.name }}
+      <nz-tag [nzColor]="'magenta'"> SOLD CLIENT : {{ clientSelected?.credit | priceFormat }} DH </nz-tag>
+    </span>
+  </ng-template>
+  <form [formGroup]="releverForm">
+    <div class="row">
+      <div class="col-md-6 filter-rupture pt-1">
+        <nz-input-group [nzSize]="'small'" style="width: 100%" [nzAddOnAfter]="searchrelever">
+          <nz-range-picker
+            style="width: 100% !important"
+            #rangePicker
+            [nzRenderExtraFooter]="extraDate"
+            formControlName="date"
+            (ngModelChange)="onChangeDate($event)"
+          ></nz-range-picker>
+        </nz-input-group>
+        <ng-template #searchrelever>
+          <i style="cursor: pointer" (click)="getRelever()" class="fal fa-search bg-purple"></i>
+        </ng-template>
+      </div>
+      <div class="col-md-6 text-right pt-1">
+        <button (click)="imprimerRelever()" nz-button nzType="primary">Imprimer <i class="fal fa-print ml-3"></i></button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <hr />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <nz-table
+          [nzHideOnSinglePage]="true"
+          nzShowSizeChanger
+          nzOuterBordered
+          [nzLoading]="loadingReleve"
+          [nzSize]="'middle'"
+          #basicTableRelever
+          [nzData]="listeOfrelever.data"
+          [nzScroll]="{ x: '800px' }"
+        >
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Réference</th>
+              <th>Type</th>
+              <th>Mode .P</th>
+              <th>Crédit</th>
+              <th>Débit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of basicTableRelever.data">
+              <td>{{ data.date }}</td>
+              <td>{{ data.ref }}</td>
+              <td>{{ data.type }}</td>
+              <td>
+                <span *ngIf="data.type == 'encaissement' || data.type == 'reglement'">{{ data.payment_mode?.label }} </span>
+                <span
+                  *ngIf="
+                    (data.payment_mode_id == 2 || data.payment_mode_id == 4) &&
+                    data.chequeinfo &&
+                    (data.type == 'encaissement' || data.type == 'reglement')
+                  "
+                  >({{ data.chequeinfo?.reference }})</span
+                >
+              </td>
+              <td>
+                <span *ngIf="data.type != 'vente'"> {{ data.montant | priceFormat }} DH </span>
+                <span *ngIf="data.type == 'vente'"> 0 DH </span>
+              </td>
+              <td>
+                <span *ngIf="data.type == 'vente'"> {{ data.montant | priceFormat }} DH </span>
+                <span *ngIf="data.type != 'vente'"> 0 DH </span>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+      <div class="col-md-12 d-flex justify-content-end">
+        <nz-card style="width: 250px">
+          <div>
+            <span>Total Débit</span> : <span style="float: right">{{ listeOfrelever?.total_ventes | priceFormat }} DH</span>
+          </div>
+          <div>
+            <span>Total Crédit </span> :
+            <span style="float: right">{{ listeOfrelever?.total_encaissements + listeOfrelever?.total_avoirs | priceFormat }}DH</span>
+          </div>
+          <div>
+            <hr class="mt-2 mb-2" />
+          </div>
+          <div>
+            <span class="pt-1">Total Solde</span> :
+            <span style="float: right; color: #e01372; font-size: 18px"
+              >{{
+                listeOfrelever?.total_ventes - (listeOfrelever?.total_encaissements + listeOfrelever?.total_avoirs) | priceFormat
+              }}
+              DH</span
+            >
+          </div>
+        </nz-card>
+      </div>
+    </div>
+  </form>
+
+  <div *nzModalFooter>
+    <button (click)="hideTimeLineModal()" nz-button nzType="default">Annuler</button>
+  </div>
+</nz-modal>
