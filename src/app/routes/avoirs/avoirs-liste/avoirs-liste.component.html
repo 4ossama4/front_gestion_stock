@@ -14,31 +14,25 @@
   <div class="row">
     <div class="col-md-10 filter-rupture">
       <nz-input-group [nzSize]="'small'" style="width: 70%" [nzAddOnAfter]="searchClient">
-        <nz-select
-          (ngModelChange)="changeClientFilter($event)"
-          [nzPlaceHolder]="'Chercher par Client'"
-          [(ngModel)]="avoirCriteria.client"
-          nzAllowClear
-          nzShowSearch
-          style="width: 50%"
-        >
-          <nz-option *ngFor="let client of listOfClients" [nzLabel]="client.name" [nzValue]="client"> </nz-option>
-        </nz-select>
-        <nz-range-picker
-          style="width: 50% !important"
-          #rangePicker
-          [nzRenderExtraFooter]="extraDate"
-          [(ngModel)]="avoirCriteria.date"
-          (ngModelChange)="onChange($event)"
-        ></nz-range-picker>
+        <nz-range-picker style="width: 50% !important" #rangePicker [nzRenderExtraFooter]="extraDate"
+          [(ngModel)]="avoirCriteria.date" (ngModelChange)="onChange($event)"></nz-range-picker>
         <ng-template #extraDate>
           <div class="text-center">
-            <button [nzSize]="'small'" (click)="toDay('30J')" nz-button nzType="primary"><< 30 jours</button>
-            <button [nzSize]="'small'" (click)="toDay('7J')" nz-button nzType="primary"><< 7 jours</button>
-            <button [nzSize]="'small'" (click)="toDay('HIER')" nz-button nzType="primary"><< Hier</button>
-            <button [nzSize]="'small'" (click)="toDay('TODAY')" nz-button nzType="primary">aujourd'hui</button>
+            <button [nzSize]="'small'" (click)="toDay('30J')" nz-button nzType="primary">
+              << 30 jours</button>
+                <button [nzSize]="'small'" (click)="toDay('7J')" nz-button nzType="primary">
+                  << 7 jours</button>
+                    <button [nzSize]="'small'" (click)="toDay('HIER')" nz-button nzType="primary">
+                      << Hier</button>
+                        <button [nzSize]="'small'" (click)="toDay('TODAY')" nz-button
+                          nzType="primary">aujourd'hui</button>
           </div>
         </ng-template>
+        <nz-select (ngModelChange)="changeClientFilter($event)" [nzPlaceHolder]="'Chercher par Client'"
+          [(ngModel)]="avoirCriteria.client" nzAllowClear nzShowSearch style="width: 50%">
+          <nz-option *ngFor="let client of listOfClients" [nzLabel]="client.name" [nzValue]="client"> </nz-option>
+        </nz-select>
+
       </nz-input-group>
       <ng-template #searchClient>
         <i style="cursor: pointer" (click)="searchClientMode()" class="fal fa-search bg-purple"></i>
@@ -51,17 +45,16 @@
   </div>
   <div *ngIf="filterApplyList.length > 0" class="row pt-3 pb-1">
     <div class="col-md-10">
-      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués : </span>
+      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués :
+      </span>
       <span *ngFor="let filter of filterApplyList; let index = index">
         <nz-tag (nzOnClose)="deleteFilter(index, filter)" [nzMode]="'closeable'" [nzColor]="filter.color">
-          {{ filter.label }} : {{ filter.name ? filter.name : filter.value }}</nz-tag
-        >
+          {{ filter.label }} : {{ filter.name ? filter.name : filter.value }}</nz-tag>
       </span>
     </div>
     <div class="col-md-2 text-right">
-      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button nzType="link"
-        >Supprimer les filters</a
-      >
+      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button
+        nzType="link">Supprimer les filters</a>
       <i style="color: #e01372" class="fal fa-trash"></i>
     </div>
   </div>
@@ -72,22 +65,10 @@
           Affichage {{ from }} à {{ to }} de <strong>{{ totalAvoirs }}</strong> avoirs
         </span>
       </ng-template>
-      <nz-table
-        [nzShowTotal]="datasize"
-        [nzTotal]="totalAvoirs"
-        [nzFrontPagination]="false"
-        [(nzPageIndex)]="firstAvoirs"
-        [nzPageSizeOptions]="[10, 50, 100]"
-        [(nzPageSize)]="maxResults"
-        [nzShowPagination]="true"
-        nzShowSizeChanger
-        nzOuterBordered
-        [nzLoading]="loading"
-        [nzSize]="'middle'"
-        #basicTable
-        [nzData]="listOfAvoirs"
-        (nzQueryParams)="sort($event)"
-      >
+      <nz-table [nzShowTotal]="datasize" [nzTotal]="totalAvoirs" [nzFrontPagination]="false"
+        [(nzPageIndex)]="firstAvoirs" [nzPageSizeOptions]="[10, 50, 100]" [(nzPageSize)]="maxResults"
+        [nzShowPagination]="true" nzShowSizeChanger nzOuterBordered [nzLoading]="loading" [nzSize]="'middle'"
+        #basicTable [nzData]="listOfAvoirs" (nzQueryParams)="sort($event)">
         <thead>
           <tr>
             <th></th>
@@ -114,7 +95,8 @@
               </td>
             </tr>
             <tr [nzExpand]="expandSet.has(data.id)">
-              <nz-table [nzHideOnSinglePage]="true" nzOuterBordered [nzSize]="'middle'" #tableLigneAvoir [nzData]="data.lignes_avoir">
+              <nz-table [nzHideOnSinglePage]="true" nzOuterBordered [nzSize]="'middle'" #tableLigneAvoir
+                [nzData]="data.lignes_avoir">
                 <thead>
                   <tr>
                     <th>Article</th>
@@ -124,19 +106,19 @@
                     <th>Total</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr *ngFor="let data of tableLigneAvoir.data">
-                    <td>{{ data.article?.reference }}</td>
-                    <td>{{ data.quantite }}</td>
-                    <td>{{ data.prix_avoir_avec_remise | priceFormat }} DH</td>
-                    <td>{{ data.remise }}</td>
-                    <td>{{ data.total_with_remise | priceFormat }} DH</td>
-                  </tr>
-                </tbody>
-              </nz-table>
-            </tr>
-          </ng-container>
+        <tbody>
+          <tr *ngFor="let data of tableLigneAvoir.data">
+            <td>{{ data.article?.reference }}</td>
+            <td>{{ data.quantite }}</td>
+            <td>{{ data.prix_avoir_avec_remise | priceFormat }} DH</td>
+            <td>{{ data.remise }}</td>
+            <td>{{ data.total_with_remise | priceFormat }} DH</td>
+          </tr>
         </tbody>
+      </nz-table>
+      </tr>
+      </ng-container>
+      </tbody>
       </nz-table>
     </div>
   </div>
