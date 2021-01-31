@@ -14,64 +14,54 @@
   <div class="row">
     <div class="col-lg-10 col-md-10 col-12 filter-rupture">
       <nz-input-group [nzSize]="'small'" style="width: 100%" [nzAddOnAfter]="searchCommerciale">
-        <nz-select
-          (ngModelChange)="changeCommercialeFilter($event)"
-          [nzPlaceHolder]="'Chercher par Commerciale'"
-          [(ngModel)]="reglementCriteria.commercial"
-          nzAllowClear
-          nzShowSearch
-          style="width: 35%"
-        >
-          <nz-option *ngFor="let commerciale of listOfCommerciaux" [nzLabel]="commerciale.name" [nzValue]="commerciale"> </nz-option>
-        </nz-select>
-        <nz-select
-          (ngModelChange)="changeModePaimentFilter($event)"
-          [nzPlaceHolder]="'Chercher par Mode'"
-          [(ngModel)]="reglementCriteria.paymentMethod"
-          nzAllowClear
-          nzShowSearch
-          style="width: 30%"
-        >
-          <nz-option *ngFor="let mode of listOfPaymentsMode" [nzLabel]="mode.label" [nzValue]="mode"> </nz-option>
-        </nz-select>
-        <nz-range-picker
-          style="width: 35% !important"
-          #rangePicker
-          [nzRenderExtraFooter]="extraDate"
-          [(ngModel)]="reglementCriteria.date"
-          (ngModelChange)="onChange($event)"
-        ></nz-range-picker>
+        <nz-range-picker style="width: 35% !important" #rangePicker [nzRenderExtraFooter]="extraDate"
+          [(ngModel)]="reglementCriteria.date" (ngModelChange)="onChange($event)"></nz-range-picker>
         <ng-template #extraDate>
           <div class="text-center">
-            <button [nzSize]="'small'" (click)="toDay('30J')" nz-button nzType="primary"><< 30 jours</button>
-            <button [nzSize]="'small'" (click)="toDay('7J')" nz-button nzType="primary"><< 7 jours</button>
-            <button [nzSize]="'small'" (click)="toDay('HIER')" nz-button nzType="primary"><< Hier</button>
-            <button [nzSize]="'small'" (click)="toDay('TODAY')" nz-button nzType="primary">aujourd'hui</button>
+            <button [nzSize]="'small'" (click)="toDay('30J')" nz-button nzType="primary">
+              << 30 jours</button>
+                <button [nzSize]="'small'" (click)="toDay('7J')" nz-button nzType="primary">
+                  << 7 jours</button>
+                    <button [nzSize]="'small'" (click)="toDay('HIER')" nz-button nzType="primary">
+                      << Hier</button>
+                        <button [nzSize]="'small'" (click)="toDay('TODAY')" nz-button
+                          nzType="primary">aujourd'hui</button>
           </div>
         </ng-template>
+        <nz-select (ngModelChange)="changeCommercialeFilter($event)" [nzPlaceHolder]="'Chercher par Commerciale'"
+          [(ngModel)]="reglementCriteria.commercial" nzAllowClear nzShowSearch style="width: 35%">
+          <nz-option *ngFor="let commerciale of listOfCommerciaux" [nzLabel]="commerciale.name" [nzValue]="commerciale">
+          </nz-option>
+        </nz-select>
+        <nz-select (ngModelChange)="changeModePaimentFilter($event)" [nzPlaceHolder]="'Chercher par Mode'"
+          [(ngModel)]="reglementCriteria.paymentMethod" nzAllowClear nzShowSearch style="width: 30%">
+          <nz-option *ngFor="let mode of listOfPaymentsMode" [nzLabel]="mode.label" [nzValue]="mode"> </nz-option>
+        </nz-select>
+
       </nz-input-group>
       <ng-template #searchCommerciale>
         <i style="cursor: pointer" (click)="searchCommercialeMode()" class="fal fa-search bg-purple"></i>
       </ng-template>
     </div>
     <div style="padding-right: 3.5rem !important" class="col-md-2 col-12 pt-2 text-right">
-      <i (click)="exportData('excel')" style="font-size: 22px; color: green; cursor: pointer" class="fal fa-file-excel mr-2"></i>
-      <i (click)="exportData('pdf')" style="font-size: 22px; color: magenta; cursor: pointer" class="fal fa-file-pdf"></i>
+      <i (click)="exportData('excel')" style="font-size: 22px; color: green; cursor: pointer"
+        class="fal fa-file-excel mr-2"></i>
+      <i (click)="exportData('pdf')" style="font-size: 22px; color: magenta; cursor: pointer"
+        class="fal fa-file-pdf"></i>
     </div>
   </div>
   <div *ngIf="filterApplyList.length > 0" class="row pt-3 pb-1">
     <div class="col-md-10">
-      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués : </span>
+      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués :
+      </span>
       <span *ngFor="let filter of filterApplyList; let index = index">
         <nz-tag (nzOnClose)="deleteFilter(index, filter)" [nzMode]="'closeable'" [nzColor]="filter.color">
-          {{ filter.label }} : {{ filter.name ? filter.name : filter.value }}</nz-tag
-        >
+          {{ filter.label }} : {{ filter.name ? filter.name : filter.value }}</nz-tag>
       </span>
     </div>
     <div class="col-md-2 text-right">
-      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button nzType="link"
-        >Supprimer les filters</a
-      >
+      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button
+        nzType="link">Supprimer les filters</a>
       <i style="color: #e01372" class="fal fa-trash"></i>
     </div>
   </div>
@@ -82,23 +72,10 @@
           Affichage {{ from }} à {{ to }} de <strong>{{ totalReglement }}</strong> réglements
         </span>
       </ng-template>
-      <nz-table
-        [nzShowTotal]="datasize"
-        [nzTotal]="totalReglement"
-        [nzFrontPagination]="false"
-        [(nzPageIndex)]="firstReglement"
-        [nzPageSizeOptions]="[10, 50, 100]"
-        [(nzPageSize)]="maxResults"
-        [nzShowPagination]="true"
-        nzShowSizeChanger
-        nzOuterBordered
-        [nzLoading]="loading"
-        [nzSize]="'middle'"
-        #basicTable
-        [nzData]="listOfReglement"
-        (nzQueryParams)="sort($event)"
-        [nzScroll]="{ x: '800px' }"
-      >
+      <nz-table [nzShowTotal]="datasize" [nzTotal]="totalReglement" [nzFrontPagination]="false"
+        [(nzPageIndex)]="firstReglement" [nzPageSizeOptions]="[10, 50, 100]" [(nzPageSize)]="maxResults"
+        [nzShowPagination]="true" nzShowSizeChanger nzOuterBordered [nzLoading]="loading" [nzSize]="'middle'"
+        #basicTable [nzData]="listOfReglement" (nzQueryParams)="sort($event)" [nzScroll]="{ x: '800px' }">
         <thead>
           <tr>
             <th nzCustomFilter>Date</th>
@@ -126,12 +103,8 @@
   </div>
 </nz-card>
 
-<nz-modal
-  [nzMaskClosable]="false"
-  [(nzVisible)]="reglementModal"
-  [nzTitle]="isUpdate == false ? 'Ajouter Réglement' : 'Modifier Réglement '"
-  (nzOnCancel)="closeModalAdd()"
->
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="reglementModal"
+  [nzTitle]="isUpdate == false ? 'Ajouter Réglement' : 'Modifier Réglement '" (nzOnCancel)="closeModalAdd()">
   <form [formGroup]="reglementForm">
     <div nz-row [nzGutter]="24">
       <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
@@ -146,17 +119,10 @@
         <nz-form-item>
           <nz-form-label [nzSpan]="8" nzFor="name">Commerciale</nz-form-label>
           <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
-            <nz-select
-              [compareWith]="nzCompareSelectedByID"
-              (ngModelChange)="selectCommerciale($event)"
-              nzAllowClear
-              nzShowSearch
-              style="width: 100%"
-              formControlName="commercial"
-              name="commercial"
-              id="commercial"
-            >
-              <nz-option *ngFor="let commercial of listOfCommerciaux" [nzLabel]="commercial.name" [nzValue]="commercial"> </nz-option>
+            <nz-select [compareWith]="nzCompareSelectedByID" (ngModelChange)="selectCommerciale($event)" nzAllowClear
+              nzShowSearch style="width: 100%" formControlName="commercial" name="commercial" id="commercial">
+              <nz-option *ngFor="let commercial of listOfCommerciaux" [nzLabel]="commercial.name"
+                [nzValue]="commercial"> </nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -167,16 +133,10 @@
         <nz-form-item>
           <nz-form-label [nzSpan]="8" nzFor="payment_mode_id">Mode de paiment </nz-form-label>
           <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
-            <nz-select
-              nzAllowClear
-              nzShowSearch
-              style="width: 100%"
-              (ngModelChange)="changeModePaiment($event)"
-              formControlName="payment_mode_id"
-              name="payment_mode_id"
-              id="payment_mode_id"
-            >
-              <nz-option *ngFor="let mode of listOfPaymentsMode" [nzLabel]="mode.label" [nzValue]="mode.id"> </nz-option>
+            <nz-select nzAllowClear nzShowSearch style="width: 100%" (ngModelChange)="changeModePaiment($event)"
+              formControlName="payment_mode_id" name="payment_mode_id" id="payment_mode_id">
+              <nz-option *ngFor="let mode of listOfPaymentsMode" [nzLabel]="mode.label" [nzValue]="mode.id">
+              </nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -190,7 +150,8 @@
         </nz-form-item>
       </div>
     </div>
-    <div class="p-3" style="background: #d9d9d9; border-radius: 3px" nz-row [nzGutter]="24" formGroupName="chequeInfo" *ngIf="modalCheque">
+    <div class="p-3" style="background: #d9d9d9; border-radius: 3px" nz-row [nzGutter]="24" formGroupName="chequeInfo"
+      *ngIf="modalCheque">
       <div nz-col [nzMd]="12" [nzSm]="24" [nzXs]="24">
         <nz-form-item class="mb-0">
           <nz-form-label [nzSpan]="8" nzFor="date">Date d'échéance</nz-form-label>
