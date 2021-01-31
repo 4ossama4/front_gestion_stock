@@ -532,9 +532,11 @@
               </nz-empty>
             </nz-spin>
           </div>
-          <div class="col-md-12 ">
-            <div class="box-history" style="width: 330px;float:right;">
-              <div>
+          <div
+            *ngIf="historyForm?.value?.isVente == true || historyForm?.value?.isAchat == true || historyForm?.value?.isAvoir == true"
+            class="col-md-12 ">
+            <div class="box-history" style="width: 350px;float:right;">
+              <div *ngIf="historyForm?.value?.isVente == true">
                 <span style="font-weight: 600;font-size: 20px;">Total vente : </span>
 
                 <span style="float: right;">
@@ -545,8 +547,8 @@
                 </span>
 
               </div>
-              <hr class="mt-2 mb-2">
-              <div>
+              <hr *ngIf="historyForm?.value?.isVente == true" class="mt-2 mb-2">
+              <div *ngIf="historyForm?.value?.isAchat == true">
                 <span style="font-weight: 600;font-size: 20px;">Total achats : </span>
                 <span style="float: right;">
                   <span style="font-weight: 600;color: #722ed1;font-size: 20px;">{{total_achtas |
@@ -558,8 +560,8 @@
 
 
               </div>
-              <hr class="mt-2 mb-2">
-              <div>
+              <hr *ngIf="historyForm?.value?.isAchat == true" class="mt-2 mb-2">
+              <div *ngIf="historyForm?.value?.isAvoir == true">
                 <span style="font-weight: 600;font-size: 20px;">Total avoirs : </span>
 
                 <span style="float: right;">
