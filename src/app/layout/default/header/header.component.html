@@ -1,9 +1,12 @@
 <div class="alain-default__header-logo">
   <a [routerLink]="['/']" class="alain-default__header-logo-link">
-    <span style="color: #e01372; font-weight: 600" class="alain-default__header-logo-expanded mr-2"> SPRT ZILTPHON </span>
-    <span style="font-weight: bold; color: white; font-size: 12px" class="alain-default__header-logo-expanded pt-1"> MAROC</span>
+    <span style="color: #e01372; font-weight: 600" class="alain-default__header-logo-expanded mr-2"> SPRT ZILTPHON
+    </span>
+    <span style="font-weight: bold; color: white; font-size: 12px" class="alain-default__header-logo-expanded pt-1">
+      MAROC</span>
     <!-- <img class="alain-default__header-logo-expanded" src="./assets/logo-full.png" [attr.alt]="app.name" style="max-height: 55px" /> -->
-    <img class="alain-default__header-logo-collapsed" src="./assets/logo.svg" [attr.alt]="app.name" style="max-height: 30px" />
+    <img class="alain-default__header-logo-collapsed" src="./assets/logo.svg" [attr.alt]="app.name"
+      style="max-height: 30px" />
   </a>
 </div>
 <div class="alain-default__nav-wrap">
@@ -12,6 +15,24 @@
     <li>
       <div class="alain-default__nav-item" (click)="toggleCollapsedSidebar()">
         <i nz-icon nzType="menu-{{ collapsed ? 'unfold' : 'fold' }}"></i>
+      </div>
+    </li>
+    <li class="ml-3">
+      <div class="alain-default__nav-item">
+        <!--  -->
+        <nz-badge [nzCount]="iconTemplate">Demandes </nz-badge>
+        <ng-template #iconTemplate>
+          <sup style="top: -1.25em;color: white;background: #228be6;padding: 3px;border-radius: 3px;">PRO</sup>
+        </ng-template>
+      </div>
+    </li>
+    <li class="ml-3">
+      <div class="alain-default__nav-item">
+        <!--  -->
+        <nz-badge [nzCount]="iconTemplate"><i style="font-size: 22px;" class="fal fa-comment-dots"></i></nz-badge>
+        <ng-template #iconTemplate>
+          <sup style="top: -1.25em;color: white;background: #228be6;padding: 3px;border-radius: 3px;">PRO</sup>
+        </ng-template>
       </div>
     </li>
   </ul>
