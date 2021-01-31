@@ -152,19 +152,17 @@
 
               <nz-dropdown-menu #menuaction="nzDropdownMenu">
                 <div nz-menu class="width-md">
+                  <div class="c-green" (click)="goToView(data)" nz-menu-item>
+                    <i class="fal fa-eye my-btn-edit mr-2 c-green"></i>
+                    Détails Vente
+                  </div>
                   <div style="color: #1890ff;" (click)="editVente(data)" *ngIf="ROLE_UPDATE" nz-menu-item>
                     <i *ngIf="ROLE_UPDATE" class="fal fa-pen my-btn-edit mr-2"></i>
                     Modifier Vente
                   </div>
 
-                  <div class="c-red" (click)="deleteVente(data)" *ngIf="ROLE_DELETE" nz-menu-item>
-                    <i *ngIf="ROLE_DELETE" class="fal fa-trash-alt my-btn-edit mr-2 c-red"></i>
-                    Supprimer Vente
-                  </div>
-                  <div class="c-green" (click)="goToView(data)" nz-menu-item>
-                    <i class="fal fa-eye my-btn-edit mr-2 c-green"></i>
-                    Détails Vente
-                  </div>
+
+
                   <div class="c-print" (click)="exportAsPDF(data)" *ngIf="ROLE_PRINT_BL" nz-menu-item>
                     <i *ngIf="ROLE_PRINT_BL" class="fal fa-print my-btn-edit mr-2 c-print"></i>
                     Imprimer BL
@@ -176,6 +174,10 @@
                   <div style="color: #722ed1" (click)="bonRammasage(data)" nz-menu-item>
                     <i *ngIf="ROLE_SHOW_FACTURE" class="fal fa-file-code my-btn-edit mr-2" style="color: #722ed1"></i>
                     Bon ramassage
+                  </div>
+                  <div class="c-red" (click)="deleteVente(data)" *ngIf="ROLE_DELETE" nz-menu-item>
+                    <i *ngIf="ROLE_DELETE" class="fal fa-trash-alt my-btn-edit mr-2 c-red"></i>
+                    Supprimer Vente
                   </div>
                 </div>
               </nz-dropdown-menu>
