@@ -121,6 +121,7 @@ export class clientComponent extends baseComponent implements OnInit {
 
   public openModalAdd() {
     this.clientModal = true;
+    this.isUpdate = false;
   }
 
   public saveClient() {
@@ -137,7 +138,7 @@ export class clientComponent extends baseComponent implements OnInit {
             this.notificationService.createNotification('success', 'Client a été modifié avec succes', null);
             this.getclientByCriteria();
           },
-          (error) => {},
+          (error) => { },
         );
       } else {
         this.clientService.store(this.clientForm.value).subscribe(
@@ -146,7 +147,7 @@ export class clientComponent extends baseComponent implements OnInit {
             this.notificationService.createNotification('success', 'Client a été ajouté avec succes', null);
             this.getclientByCriteria();
           },
-          (error) => {},
+          (error) => { },
         );
       }
     }
@@ -157,7 +158,7 @@ export class clientComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listOfVille = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -170,7 +171,7 @@ export class clientComponent extends baseComponent implements OnInit {
           this.getVilles();
           this.notificationService.createNotification('success', 'Ville a été ajouté avec succes', null);
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -327,7 +328,7 @@ export class clientComponent extends baseComponent implements OnInit {
           link.href = downloadURL;
           window.open(downloadURL);
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -348,7 +349,7 @@ export class clientComponent extends baseComponent implements OnInit {
         }
         this.notificationService.createNotification('success', 'Clients a été exporté avec succes', null);
       },
-      (error) => {},
+      (error) => { },
     );
   }
 }
