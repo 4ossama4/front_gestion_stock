@@ -85,6 +85,10 @@ import { naturesListComponent } from './referenciels/natures-list/natures-list.c
 import { expeditionListComponent } from './referenciels/expedition-list/expedition-list.component';
 import { famillesListComponent } from './referenciels/familles-list/familles-list.component';
 import { sousFamilleListComponent } from './referenciels/sous-famille-list/sous-famille-list.component';
+import { demandesListComponent } from './demandes/demandes-list/demandes-list.component';
+import { DemandeService } from '../services/demande.service';
+import { TimerComponent } from './demandes/timer/timer/timer.component';
+import { demandesDetailsComponent } from './demandes/demandes-details/demandes-details.component';
 
 const COMPONENTS = [
   DashboardV1Component,
@@ -141,6 +145,10 @@ const COMPONENTS = [
   famillesListComponent,
   sousFamilleListComponent,
 
+  demandesListComponent,
+  demandesDetailsComponent,
+  TimerComponent,
+
   usersComponent,
   depensesComponent,
   baseComponent,
@@ -166,7 +174,8 @@ const COMPONENTS = [
     roleService,
     usersService,
     DevisService,
+    DemandeService,
     reglemntFournissuerService,
   ],
 })
-export class RoutesModule {}
+export class RoutesModule { }

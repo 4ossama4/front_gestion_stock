@@ -1,0 +1,18 @@
+<span >
+    <span [ngClass]="{'blink finish-duree-attent':timerValue?.isFinishdureeAttent}" class="duree-attent">
+        {{timerValue?.hours|number :'2.0'}}
+    </span>
+    <span [ngClass]="{'blink finish-duree-attent':timerValue?.isFinishdureeAttent}" class="ml-1 mr-1 duree-attent blink">
+        :
+    </span>
+    <span [ngClass]="{'blink finish-duree-attent':timerValue?.isFinishdureeAttent}" class="duree-attent">
+        {{timerValue?.minutes|number :'2.0'}}
+    </span>
+    <span [ngClass]="{'blink finish-duree-attent':timerValue?.isFinishdureeAttent}" class="ml-1 mr-1 duree-attent blink">
+        :
+    </span>
+    <span [ngClass]="{'blink finish-duree-attent':timerValue?.isFinishdureeAttent}" class="duree-attent">
+        {{timerValue?.seconds|number :'2.0'}}
+    </span>
+
+</span>

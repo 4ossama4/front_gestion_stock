@@ -20,7 +20,10 @@
     <li class="ml-3">
       <div class="alain-default__nav-item">
         <!--  -->
-        <nz-badge [nzCount]="iconTemplate">Demandes </nz-badge>
+        <a [routerLink]="['/demandes/list']">
+          <nz-badge [nzCount]="iconTemplate">Demandes </nz-badge>
+        </a>
+
         <ng-template #iconTemplate>
           <sup style="top: -1.25em;color: white;background: #228be6;padding: 3px;border-radius: 3px;">PRO</sup>
         </ng-template>

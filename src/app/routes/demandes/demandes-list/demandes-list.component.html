@@ -1,0 +1,116 @@
+<page-header [title]="'Home / Demandes / Liste'"></page-header>
+<nz-card [nzBodyStyle]="{ padding: '18px' }" class="mt-5" style="border-radius: 5px" [nzBordered]="true">
+  <div class="row d-flex align-items-center">
+    <div class="col-md-6">
+      <h4 class="mb-0 title-page">Liste des demandes</h4>
+    </div>
+    <div class="col-md-6 d-flex justify-content-end"></div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col-lg-11 col-md-12 filter-rupture">
+      <nz-input-group [nzSize]="'small'" style="width: 100%" [nzAddOnAfter]="searchDemande">
+        <nz-range-picker style="width: 30% !important" #rangePicker [nzRenderExtraFooter]="extraDate"
+          [(ngModel)]="demandeCriteria.date" (ngModelChange)="onChange($event)"></nz-range-picker>
+        <ng-template #extraDate>
+          <div class="text-center">
+            <button [nzSize]="'small'" (click)="toDay('30J')" nz-button nzType="primary">
+              << 30 jours</button>
+                <button [nzSize]="'small'" (click)="toDay('7J')" nz-button nzType="primary">
+                  << 7 jours</button>
+                    <button [nzSize]="'small'" (click)="toDay('HIER')" nz-button nzType="primary">
+                      << Hier</button>
+                        <button [nzSize]="'small'" (click)="toDay('TODAY')" nz-button
+                          nzType="primary">aujourd'hui</button>
+          </div>
+        </ng-template>
+        <nz-select nzPlaceHolder="Chercher par client" nzAllowClear nzShowSearch style="width: 35%"
+          [(ngModel)]="demandeCriteria.client">
+          <nz-option *ngFor="let client of listeOfClients" [nzLabel]="client.name" [nzValue]="client"> </nz-option>
+        </nz-select>
+        <nz-select nzPlaceHolder="Chercher par etat" nzAllowClear nzShowSearch style="width: 35%"
+          [(ngModel)]="demandeCriteria.commerciale">
+          <nz-option *ngFor="let commerciale of listOfCommerciaux" [nzLabel]="commerciale.name" [nzValue]="commerciale">
+          </nz-option>
+        </nz-select>
+      </nz-input-group>
+      <ng-template #searchDemande>
+        <i style="cursor: pointer" (click)="searchGlobal()" class="fal fa-search bg-purple"></i>
+      </ng-template>
+    </div>
+  </div>
+
+  <div *ngIf="filterApplyList.length > 0" class="row pt-2 pb-1">
+    <div class="col-md-10">
+      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués :
+      </span>
+      <nz-tag *ngFor="let filter of filterApplyList; let index = index" (nzOnClose)="deleteFilter(index, filter)"
+        [nzMode]="'closeable'" [nzColor]="filter.color">{{ filter.label }} : {{ filter.name ? filter.name : filter.value
+        }}</nz-tag>
+    </div>
+    <div class="col-md-2 text-right">
+      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button
+        nzType="link">Supprimer les filters</a>
+      <i style="color: #e01372" class="fal fa-trash"></i>
+    </div>
+  </div>
+  <div class="row pt-2">
+    <div class="col-md-12">
+      <ng-template #datasize>
+        <span class="mr-3">
+          Affichage {{ from }} à {{ to }} de <strong>{{ totalDemandes }}</strong> demandes
+        </span>
+      </ng-template>
+      <nz-table [nzShowTotal]="datasize" class="pt-1" [nzTotal]="totalDemandes" [nzFrontPagination]="false"
+        [(nzPageIndex)]="firstDemandes" [nzPageSizeOptions]="[10, 50, 100]"
+        (nzPageSizeChange)="currentPageDataChange($event)" [(nzPageSize)]="maxResults" [nzShowPagination]="true"
+        nzShowSizeChanger nzOuterBordered [nzLoading]="loading" [nzSize]="'middle'" #basicTable
+        [nzData]="listeOfDemandes" (nzQueryParams)="sort($event)">
+        <thead>
+          <tr>
+            <th>N°</th>
+            <th>Client</th>
+            <th>Date</th>
+            <th>Durée</th>
+            <th class="text-center">Etat</th>
+            <th>Montant</th>
+            <th class="text-center pl-3 pr-3">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{ data.id }}</td>
+            <td>{{ data.client?.name }}</td>
+            <td>{{ data.date_demande }}</td>
+            <td>
+              <timer [dateDeclaration]="data.created_at" [dureeAttent]="27200">
+              </timer>
+              <!-- {{ data.duree }} -->
+            </td>
+
+            <td class="text-center">
+              <nz-tag [nzColor]="data.etat?.color"> {{ data.etat?.label }}</nz-tag>
+            </td>
+            <td style="font-weight: 600;">{{ data.montant | priceFormat }} DH</td>
+
+            <td class="text-center">
+              <i nz-dropdown [nzDropdownMenu]="menu" [nzPlacement]="'bottomRight'"
+                style="color:#111d5e;cursor: pointer;" class="fal fa-ellipsis-v fa-2x"></i>
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul style="width: 250px;" nz-menu>
+                  <li (click)="goToView(data)" style="color:#111d5e" nz-menu-item>Détails demande <i
+                      style="float: right;" class="fal fa-eye pt-1"></i></li>
+                  <li nz-menu-divider></li>
+                  <li style="color: red;" nz-menu-item>Supprimer demande <i style="float: right;"
+                      class="fal fa-trash-alt"></i></li>
+                </ul>
+              </nz-dropdown-menu>
+              <!-- <i *ngIf="ROLE_DELETE" (click)="deleteDemande(data.id)" class="fal fa-trash-alt mr-2 my-btn-delete"></i>
+              <i (click)="getDemande(data)" class="fal fa-eye my-btn-edit mr-2 c-green"></i> -->
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</nz-card>

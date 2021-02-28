@@ -51,6 +51,8 @@ import { reglementsFournisseurComponent } from './reglements-fournisseur/regleme
 import { devisViewComponent } from './devis/devis-view/devis-view.component';
 import { devisEditComponent } from './devis/devis-edit/devis-edit.component';
 import { referencielsComponent } from './referenciels/referenciels.component';
+import { demandesListComponent } from './demandes/demandes-list/demandes-list.component';
+import { demandesDetailsComponent } from './demandes/demandes-details/demandes-details.component';
 
 const routes: Routes = [
   {
@@ -95,6 +97,15 @@ const routes: Routes = [
           { path: 'edit/:id', component: venteEditComponent },
         ],
       },
+      {
+        path: 'demandes',
+        children: [
+          { path: '', redirectTo: 'list', pathMatch: 'full' },
+          { path: 'list', component: demandesListComponent },
+          { path: 'view/:id', component: demandesDetailsComponent },
+        ],
+      },
+
       {
         path: 'devis',
         children: [
@@ -183,4 +194,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule],
 })
-export class RouteRoutingModule {}
+export class RouteRoutingModule { }

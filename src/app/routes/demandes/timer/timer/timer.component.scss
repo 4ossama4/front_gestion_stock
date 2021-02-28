@@ -1,0 +1,20 @@
+.duree-attent {
+  font-weight: 600;
+  font-size: 19px;
+  color: #111d5e;
+
+}
+
+.blink {
+  animation: blinker 1s linear infinite;
+}
+
+.finish-duree-attent {
+  color: red !important;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
