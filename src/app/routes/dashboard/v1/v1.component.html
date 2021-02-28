@@ -4,8 +4,8 @@
   <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" class="mb-md">
     <div nz-row nzType="flex" class="bg-primary rounded-md">
       <div nz-col nzSpan="19" class="p-md text-white">
-        <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboard?.ventes?.total | priceFormat }} DH</div>
-        <p class="text-nowrap mb0 fz-12">Ventes totales ({{ listeOfDashboard?.ventes?.nombre }}) / aujourd'hui</p>
+        <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboardByDate?.ventes?.total | priceFormat }} DH</div>
+        <p class="text-nowrap mb0 fz-12">Ventes totales ({{ listeOfDashboardByDate?.ventes?.nombre }}) / aujourd'hui</p>
       </div>
       <div nz-col nzSpan="5" style="padding-top: 0.8rem !important" class="text-center">
         <i style="color: white" class="fal fa-dollar-sign fa-2x"></i>
@@ -15,8 +15,8 @@
   <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" class="mb-md">
     <div nz-row nzType="flex" class="bg-success rounded-md">
       <div nz-col nzSpan="19" class="p-md text-white">
-        <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboard?.avoirs?.total | priceFormat }} DH</div>
-        <p class="text-nowrap mb0 fz-12">Avoirs totales ({{ listeOfDashboard?.avoirs?.nombre }}) / aujourd'hui</p>
+        <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboardByDate?.avoirs?.total | priceFormat }} DH</div>
+        <p class="text-nowrap mb0 fz-12">Avoirs totales ({{ listeOfDashboardByDate?.avoirs?.nombre }}) / aujourd'hui</p>
       </div>
       <div nz-col nzSpan="5" style="padding-top: 0.8rem !important" class="text-center">
         <i style="color: white" class="fal fa-dollar-sign fa-2x"></i>
@@ -26,7 +26,7 @@
   <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" class="mb-md">
     <div nz-row nzType="flex" class="bg-orange rounded-md">
       <div nz-col nzSpan="19" class="p-md text-white">
-        <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboard?.net_profit | priceFormat }} DH</div>
+        <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboardByDate?.net_profit | priceFormat }} DH</div>
         <p class="text-nowrap mb0 fz-12">Net profit / aujourd'hui</p>
       </div>
       <div nz-col nzSpan="5" style="padding-top: 0.8rem !important" class="text-center">
@@ -37,7 +37,8 @@
   <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" class="mb-md">
     <div nz-row nzType="flex" class="bg-magenta rounded-md">
       <div nz-col nzSpan="19" class="p-md text-white">
-        <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboard?.commercial ? listeOfDashboard?.commercial :
+        <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboardByDate?.commercial ?
+          listeOfDashboardByDate?.commercial :
           '&nbsp;' }}</div>
         <p class="text-nowrap mb0 fz-12">Meilleur commercial</p>
       </div>
