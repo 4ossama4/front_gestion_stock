@@ -29,7 +29,7 @@ export class DashboardV1Component implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadDataDashboard();
+    // this.loadDataDashboard();
     this.searchBydate('TODAY');
   }
 
@@ -47,7 +47,7 @@ export class DashboardV1Component implements OnInit {
       (response: any) => {
         this.listeOfDashboard = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -70,7 +70,7 @@ export class DashboardV1Component implements OnInit {
 
         this.getChart();
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
