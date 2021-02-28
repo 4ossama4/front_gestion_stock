@@ -5,7 +5,7 @@
     <div nz-row nzType="flex" class="bg-primary rounded-md">
       <div nz-col nzSpan="19" class="p-md text-white">
         <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboardByDate?.ventes?.total | priceFormat }} DH</div>
-        <p class="text-nowrap mb0 fz-12">Ventes totales ({{ listeOfDashboardByDate?.ventes?.nombre }}) / aujourd'hui</p>
+        <p class="text-nowrap mb0 fz-12">Ventes totales ({{ listeOfDashboardByDate?.ventes?.nombre }})</p>
       </div>
       <div nz-col nzSpan="5" style="padding-top: 0.8rem !important" class="text-center">
         <i style="color: white" class="fal fa-dollar-sign fa-2x"></i>
@@ -16,7 +16,7 @@
     <div nz-row nzType="flex" class="bg-success rounded-md">
       <div nz-col nzSpan="19" class="p-md text-white">
         <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboardByDate?.avoirs?.total | priceFormat }} DH</div>
-        <p class="text-nowrap mb0 fz-12">Avoirs totales ({{ listeOfDashboardByDate?.avoirs?.nombre }}) / aujourd'hui</p>
+        <p class="text-nowrap mb0 fz-12">Avoirs totales ({{ listeOfDashboardByDate?.avoirs?.nombre }})</p>
       </div>
       <div nz-col nzSpan="5" style="padding-top: 0.8rem !important" class="text-center">
         <i style="color: white" class="fal fa-dollar-sign fa-2x"></i>
@@ -27,7 +27,7 @@
     <div nz-row nzType="flex" class="bg-orange rounded-md">
       <div nz-col nzSpan="19" class="p-md text-white">
         <div style="font-size: 1.5rem" class="h2 mt0">{{ listeOfDashboardByDate?.net_profit | priceFormat }} DH</div>
-        <p class="text-nowrap mb0 fz-12">Net profit / aujourd'hui</p>
+        <p class="text-nowrap mb0 fz-12">Net profit</p>
       </div>
       <div nz-col nzSpan="5" style="padding-top: 0.8rem !important" class="text-center">
         <i style="color: white" class="fal fa-dollar-sign fa-2x"></i>
@@ -67,40 +67,52 @@
   </form>
 </nz-card>
 <div class="row">
-  <div *ngIf="salesPieDataVilleClient.length > 0" class="col-lg-6 col-md-12 dashboard">
+  <div class="col-lg-6 col-md-12 dashboard">
     <div class="ant-card-body">
       <nz-card [nzBordered]="false" [nzTitle]="'Ventes / Villes'" [nzBodyStyle]="{ 'padding.px': 24 }"
         class="sales-card mb-0">
         <!-- <h4 class="margin:8px 0 32px 0;">{{ 'app.analysis.sales' | translate }}</h4> -->
-        <g2-pie class="pt-4" *ngIf="salesPieDataVilleClient" [data]="salesPieDataVilleClient" [hasLegend]="true"
-          [subTitle]="'Ventes'" [height]="248" [lineWidth]="4" [total]="salesTotalClientVille">
+        <g2-pie class="pt-4" *ngIf="salesPieDataVilleClient && salesPieDataVilleClient.length > 0 "
+          [data]="salesPieDataVilleClient" [hasLegend]="true" [subTitle]="'Ventes'" [height]="248" [lineWidth]="4"
+          [total]="salesTotalClientVille">
         </g2-pie>
+        <div class="p-3" *ngIf="!salesPieDataVilleClient || salesPieDataVilleClient?.length == 0">
+          <nz-empty></nz-empty>
+        </div>
       </nz-card>
     </div>
   </div>
-  <div *ngIf="salesPieDataClientVente.length > 0" class="col-lg-6 col-md-12 dashboard">
+  <div class="col-lg-6 col-md-12 dashboard">
     <div class="ant-card-body">
       <nz-card [nzBordered]="false" [nzTitle]="'Ventes / Clients'" [nzBodyStyle]="{ 'padding.px': 24 }"
         class="sales-card mb-0">
         <!-- <h4 class="margin:8px 0 32px 0;">{{ 'app.analysis.sales' | translate }}</h4> -->
-        <g2-pie class="pt-4" *ngIf="salesPieDataClientVente" [data]="salesPieDataClientVente" [hasLegend]="true"
-          [subTitle]="'Ventes'" [height]="248" [lineWidth]="4" [total]="salesTotalClientVente">
+        <g2-pie class="pt-4" *ngIf="salesPieDataClientVente && salesPieDataClientVente.length > 0"
+          [data]="salesPieDataClientVente" [hasLegend]="true" [subTitle]="'Ventes'" [height]="248" [lineWidth]="4"
+          [total]="salesTotalClientVente">
         </g2-pie>
+        <div class="p-3" *ngIf="!salesPieDataClientVente || salesPieDataClientVente?.length == 0">
+          <nz-empty></nz-empty>
+        </div>
       </nz-card>
     </div>
   </div>
-  <div *ngIf="salesPieDataCommercialVente.length > 0" class="col-lg-6 col-md-12 pt-3 dashboard">
+  <div class="col-lg-6 col-md-12 pt-3 dashboard">
     <div class="ant-card-body">
       <nz-card [nzBordered]="false" [nzTitle]="'Ventes / Commerciaux'" [nzBodyStyle]="{ 'padding.px': 24 }"
         class="sales-card mb-0">
         <!-- <h4 class="margin:8px 0 32px 0;">{{ 'app.analysis.sales' | translate }}</h4> -->
-        <g2-pie class="pt-4" *ngIf="salesPieDataCommercialVente" [data]="salesPieDataCommercialVente" [hasLegend]="true"
-          [subTitle]="'Ventes'" [height]="248" [lineWidth]="4" [total]="salesTotalCommercialVente">
+        <g2-pie class="pt-4" *ngIf="salesPieDataCommercialVente && salesPieDataCommercialVente.length > 0"
+          [data]="salesPieDataCommercialVente" [hasLegend]="true" [subTitle]="'Ventes'" [height]="248" [lineWidth]="4"
+          [total]="salesTotalCommercialVente">
         </g2-pie>
+        <div class="p-3" *ngIf="!salesPieDataCommercialVente || salesPieDataCommercialVente?.length == 0">
+          <nz-empty></nz-empty>
+        </div>
       </nz-card>
     </div>
   </div>
-  <div *ngIf="listeOfArticleTop.length > 0" class="col-lg-6 col-md-12 pt-3 dashboard">
+  <div class="col-lg-6 col-md-12 pt-3 dashboard">
     <div class="ant-card-body">
       <nz-card [nzBordered]="false" [nzTitle]="'Meilleurs articles'" [nzBodyStyle]="{ 'padding.px': 24 }"
         class="sales-card mb-0">
@@ -118,6 +130,9 @@
           <div class="col-md-3 col-3 text-right pr-0">
             <span class="title-article-top">{{ item.quantite }} </span>
           </div>
+        </div>
+        <div class="p-3" *ngIf="!listeOfArticleTop || listeOfArticleTop?.length == 0">
+          <nz-empty></nz-empty>
         </div>
       </nz-card>
     </div>

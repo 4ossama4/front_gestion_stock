@@ -57,15 +57,23 @@ export class DashboardV1Component implements OnInit {
         this.listeOfDashboardByDate = response;
         if (this.listeOfDashboardByDate.villes && this.listeOfDashboardByDate.villes.length > 0) {
           this.salesPieDataVilleClient = this.listeOfDashboardByDate.villes;
+        } else {
+          this.salesPieDataVilleClient = [];
         }
         if (this.listeOfDashboardByDate.clients && this.listeOfDashboardByDate.clients.length > 0) {
           this.salesPieDataClientVente = this.listeOfDashboardByDate.clients;
+        } else {
+          this.salesPieDataClientVente = [];
         }
         if (this.listeOfDashboardByDate.commerciaux && this.listeOfDashboardByDate.commerciaux.length > 0) {
           this.salesPieDataCommercialVente = this.listeOfDashboardByDate.commerciaux;
+        } else {
+          this.salesPieDataCommercialVente = [];
         }
         if (this.listeOfDashboardByDate.top_articles && this.listeOfDashboardByDate.top_articles.length > 0) {
           this.listeOfArticleTop = this.listeOfDashboardByDate.top_articles;
+        } else {
+          this.listeOfArticleTop = [];
         }
 
         this.getChart();
