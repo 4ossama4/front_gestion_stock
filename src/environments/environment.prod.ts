@@ -3,7 +3,7 @@ export const environment = {
   production: true,
   useHash: true,
   hmr: false,
-  apiUrl: 'https://stores.bpa.ma/nador/api',
+  apiUrl: 'https://estocki.com/bpa_backend/api',
   // apiUrl: 'http://pieces_auto.test/api',
   cheminPFDs: 'https://stores.bpa.ma/pieces_auto_front/assets/factures/',
 };

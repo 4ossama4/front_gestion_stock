@@ -145,7 +145,7 @@ export class usersComponent implements OnInit {
             this.notificationService.createNotification('success', 'Utilisateur a été modifié avec succes', null);
             this.getUtilisateursByCriteria();
           },
-          (error) => {},
+          (error) => { },
         );
       } else if (!this.isUpdate && !this.find_user_name) {
         this.userService.store(this.userForm.value).subscribe(
@@ -154,7 +154,7 @@ export class usersComponent implements OnInit {
             this.notificationService.createNotification('success', 'Utilisateur a été ajouté avec succes', null);
             this.getUtilisateursByCriteria();
           },
-          (error) => {},
+          (error) => { },
         );
       }
     }
@@ -204,7 +204,7 @@ export class usersComponent implements OnInit {
       (response: any) => {
         this.listOfRoles = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -240,7 +240,7 @@ export class usersComponent implements OnInit {
           console.log('dd', response);
           this.find_user_name = response.find;
         },
-        (error) => {},
+        (error) => { },
       );
     }
     console.log('dd', $event.target.value);
@@ -277,7 +277,7 @@ export class usersComponent implements OnInit {
           this.notificationService.createNotification('success', 'Mot de passe a été modifié avec succes', null);
         }
       },
-      (error) => {},
+      (error) => { },
     );
   }
 

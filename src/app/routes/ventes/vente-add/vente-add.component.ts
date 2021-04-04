@@ -74,7 +74,7 @@ export class venteAddComponent implements OnInit {
         this.venteForm.patchValue({ reference: '' + response.count + '/' + response.year.toString().substring(2, 4) });
         this.venteForm.patchValue({ count: response.count, year: response.year });
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -162,7 +162,7 @@ export class venteAddComponent implements OnInit {
       (response: any) => {
         this.listOfClients = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -199,7 +199,7 @@ export class venteAddComponent implements OnInit {
           this.getVilles();
           this.notificationService.createNotification('success', 'Ville a été ajouté avec succes', null);
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -209,7 +209,7 @@ export class venteAddComponent implements OnInit {
       (response: any) => {
         this.listOfVille = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -227,7 +227,7 @@ export class venteAddComponent implements OnInit {
           this.notificationService.createNotification('success', 'Client a été ajouté avec succes', null);
           this.getClients();
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -237,7 +237,7 @@ export class venteAddComponent implements OnInit {
       (response: any) => {
         this.listOfPaymentsMode = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -246,7 +246,7 @@ export class venteAddComponent implements OnInit {
       (response: any) => {
         this.listOfModeExp = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -272,7 +272,7 @@ export class venteAddComponent implements OnInit {
       (response: any) => {
         this.listOfCommerciaux = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -311,7 +311,7 @@ export class venteAddComponent implements OnInit {
           this.notificationService.createNotification('success', 'Commerciale a été ajouté avec succes', null);
           this.getCommerciaux();
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -340,11 +340,11 @@ export class venteAddComponent implements OnInit {
       }
     }
   }
-
+  loadingSave: boolean = false;
   vente: any;
   saveVente() {
     this.clickSave = true;
-
+    this.loadingSave = true;
     for (const i in this.venteForm.controls) {
       this.venteForm.controls[i].markAsDirty();
       this.venteForm.controls[i].updateValueAndValidity();
@@ -363,8 +363,11 @@ export class venteAddComponent implements OnInit {
           this.notificationService.createNotification('success', 'Vente a été ajouté avec succes', null);
           this.goToList();
           this.clickSave = false;
+          this.loadingSave = false;
         },
-        (error) => {},
+        (error) => {
+          this.loadingSave = false;
+        },
       );
     }
   }
@@ -487,7 +490,7 @@ export class venteAddComponent implements OnInit {
         (response: any) => {
           this.listeOfArticles = response.data;
         },
-        (error) => {},
+        (error) => { },
       );
     } else {
       this.listeOfArticles = [];
