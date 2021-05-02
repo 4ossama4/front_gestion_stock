@@ -171,8 +171,10 @@
     <div *nzModalFooter>
       <button (click)="closeModalAdd()" nz-button nzType="default">Annuler</button>
 
-      <button *ngIf="!isUpdate" (click)="saveEncaissement()" nz-button nzType="primary">Enregistrer</button>
-      <button *ngIf="isUpdate" (click)="saveEncaissement()" nz-button nzType="primary">Modifier</button>
+      <button *ngIf="!isUpdate" (click)="saveEncaissement()" [nzLoading]="loadingSave" nz-button
+        nzType="primary">Enregistrer</button>
+      <button *ngIf="isUpdate" (click)="saveEncaissement()" [nzLoading]="loadingSave" nz-button
+        nzType="primary">Modifier</button>
     </div>
   </form>
 </nz-modal>

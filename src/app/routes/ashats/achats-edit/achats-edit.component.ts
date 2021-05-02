@@ -92,7 +92,7 @@ export class achatsEditComponent implements OnInit {
           });
         }
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -206,16 +206,23 @@ export class achatsEditComponent implements OnInit {
       });
       this.achatForm.value.lignes_achat = [];
       Object.assign(this.achatForm.value.lignes_achat, array);
+      this.loadingSave = true;
 
       this.achatsService.update(this.achatForm.value).subscribe(
         (reponse) => {
           this.notificationService.createNotification('success', 'Achat a été modifier avec succes', null);
           this.goToList();
+          this.loadingSave = false;
+
         },
-        (error) => {},
+        (error) => {
+          this.loadingSave = false;
+
+        },
       );
     }
   }
+  private loadingSave: boolean = false
 
   onlyNumberKey(event: any) {
     return event.charCode == 8 || event.charCode == 0 ? null : event.charCode >= 48 && event.charCode <= 57;
@@ -240,7 +247,7 @@ export class achatsEditComponent implements OnInit {
       (response: any) => {
         this.listOfFournisseur = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -249,7 +256,7 @@ export class achatsEditComponent implements OnInit {
       (response: any) => {
         this.listeOfArticles = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -261,7 +268,7 @@ export class achatsEditComponent implements OnInit {
         (response: any) => {
           this.listeOfArticles = response.data;
         },
-        (error) => {},
+        (error) => { },
       );
     } else {
       // this.listeOfArticles = [];
@@ -320,7 +327,7 @@ export class achatsEditComponent implements OnInit {
           this.notificationService.createNotification('success', 'Fournisseur a été ajouté avec succes', null);
           this.getFournisseur();
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -520,7 +527,7 @@ export class achatsEditComponent implements OnInit {
       (response: any) => {
         this.listOfPaymentsMode = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 

@@ -631,7 +631,7 @@ export class achatsAddComponent implements OnInit {
       valeur: [valeur, [Validators.required]],
     });
   }
-
+  private loadingSave: boolean = false
   saveAchat() {
     for (const i in this.achatForm.controls) {
       this.achatForm.controls[i].markAsDirty();
@@ -673,13 +673,15 @@ export class achatsAddComponent implements OnInit {
       });
       this.achatForm.value.lignes_achat = [];
       Object.assign(this.achatForm.value.lignes_achat, array);
+      this.loadingSave = true;
 
       this.achatsService.store(this.achatForm.value).subscribe(
         (reponse) => {
           this.notificationService.createNotification('success', 'Achat a été ajouté avec succes', null);
           this.goToList();
+          this.loadingSave = false;
         },
-        (error) => {},
+        (error) => { this.loadingSave = false; },
       );
     }
   }
@@ -707,7 +709,7 @@ export class achatsAddComponent implements OnInit {
       (response: any) => {
         this.listOfFournisseur = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -720,7 +722,7 @@ export class achatsAddComponent implements OnInit {
         (response: any) => {
           this.listeOfArticles = response.data;
         },
-        (error) => {},
+        (error) => { },
       );
     } else {
       // this.listeOfArticles = [];
@@ -779,7 +781,7 @@ export class achatsAddComponent implements OnInit {
           this.notificationService.createNotification('success', 'Fournisseur a été ajouté avec succes', null);
           this.getFournisseur();
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -979,7 +981,7 @@ export class achatsAddComponent implements OnInit {
       (response: any) => {
         this.listOfPaymentsMode = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 

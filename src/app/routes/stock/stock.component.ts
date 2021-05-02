@@ -24,7 +24,7 @@ export class StockComponent extends baseComponent implements OnInit {
   private visibleMarque = false;
   private stockModal: boolean = false;
   private isUpdate: boolean = false;
-
+  private loadingSave = false;
   private stockForm: FormGroup = new FormGroup({});
   private loading: boolean = true;
 
@@ -87,6 +87,7 @@ export class StockComponent extends baseComponent implements OnInit {
       quantite_min: 0,
     });
     this.stockModal = false;
+    this.loadingSave = false;
   }
 
   public openModalAdd() {
@@ -161,14 +162,16 @@ export class StockComponent extends baseComponent implements OnInit {
     }
     console.log('this.stockForm', this.stockForm.value);
     if (this.stockForm.valid) {
+      this.loadingSave = true;
       if (this.isUpdate) {
         this.stockService.update(this.stockForm.value).subscribe(
           (reponse) => {
             this.closeModalAdd();
             this.notificationService.createNotification('success', 'Stock a été modifié avec succes', null);
             this.getStocksByCriteria();
+
           },
-          (error) => { },
+          (error) => { this.loadingSave = false; },
         );
       } else {
         this.stockService.store(this.stockForm.value).subscribe(
@@ -177,7 +180,7 @@ export class StockComponent extends baseComponent implements OnInit {
             this.notificationService.createNotification('success', 'Stock a été ajouté avec succes', null);
             this.getStocksByCriteria();
           },
-          (error) => { },
+          (error) => { this.loadingSave = false; },
         );
       }
     }

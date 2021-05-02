@@ -91,7 +91,7 @@ export class encaissementComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listOfClients = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -113,7 +113,7 @@ export class encaissementComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listOfPaymentsMode = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -143,13 +143,14 @@ export class encaissementComponent extends baseComponent implements OnInit {
     this.encaissementForm.reset();
     this.encaissementModal = false;
     this.modalCheque = false;
+    this.loadingSave = false;
   }
 
   public openModalAdd() {
     this.encaissementModal = true;
     this.modalCheque = false;
   }
-
+  private loadingSave: boolean = false
   public saveEncaissement() {
     for (const i in this.encaissementForm.controls) {
       this.encaissementForm.controls[i].markAsDirty();
@@ -157,6 +158,7 @@ export class encaissementComponent extends baseComponent implements OnInit {
     }
 
     if (this.encaissementForm.valid) {
+      this.loadingSave = true;
       if (this.isUpdate) {
         this.encaissementService.update(this.encaissementForm.value).subscribe(
           (reponse) => {
@@ -164,7 +166,7 @@ export class encaissementComponent extends baseComponent implements OnInit {
             this.notificationService.createNotification('success', 'Encaissement a été modifié avec succes', null);
             this.getEncaissementsByCriteria();
           },
-          (error) => {},
+          (error) => { this.loadingSave = false; },
         );
       } else {
         this.encaissementService.store(this.encaissementForm.value).subscribe(
@@ -173,7 +175,7 @@ export class encaissementComponent extends baseComponent implements OnInit {
             this.notificationService.createNotification('success', 'Encaissement a été ajouté avec succes', null);
             this.getEncaissementsByCriteria();
           },
-          (error) => {},
+          (error) => { this.loadingSave = false; },
         );
       }
     }
@@ -470,7 +472,7 @@ export class encaissementComponent extends baseComponent implements OnInit {
         }
         this.notificationService.createNotification('success', 'Encaissements a été exporté avec succes', null);
       },
-      (error) => {},
+      (error) => { },
     );
   }
 }

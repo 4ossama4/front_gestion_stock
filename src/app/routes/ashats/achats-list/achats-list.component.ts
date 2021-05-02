@@ -204,7 +204,7 @@ export class achatsListComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listeOfFournisseurs = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -328,7 +328,7 @@ export class achatsListComponent extends baseComponent implements OnInit {
         // link.download = 'achat.pdf';
         // link.click();
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -340,8 +340,8 @@ export class achatsListComponent extends baseComponent implements OnInit {
     var data = { type: type, criteria: this.achatCriteria, table: 'achats' };
     console.log('data', data);
     this.stockService.exportData(data).subscribe(
-      (response: any) => {},
-      (error) => {},
+      (response: any) => { },
+      (error) => { },
     );
   }
 
@@ -352,18 +352,24 @@ export class achatsListComponent extends baseComponent implements OnInit {
       nzOkText: 'Oui',
       nzCancelText: 'Non',
       nzOnOk: () => {
-        this.confirmDelete(data);
+        if (!this.loadingSave) {
+          this.confirmDelete(data);
+        }
+
       },
     });
   }
-
+  loadingSave: boolean = false
   public confirmDelete(data: any) {
+    this.loadingSave = true;
     this.achatsService.delete(data.id).subscribe(
       (response: any) => {
         this.notificationService.createNotification('success', 'Achat a été supprimer avec succes', null);
         this.getAchatByCriteria();
+        this.loadingSave = false;
       },
       (error) => {
+        this.loadingSave = false;
         this.notificationService.createNotification('error', 'erreur de suppression', null);
       },
     );

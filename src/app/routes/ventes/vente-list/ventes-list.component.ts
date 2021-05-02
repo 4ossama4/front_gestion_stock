@@ -382,34 +382,40 @@ export class venteListComponent extends baseComponent implements OnInit {
         this.venteSelected.count = response.reference;
         this.venteSelected.ref_facture = '' + response.reference + '/' + new Date().getFullYear().toString().substring(2, 4);
       }
-      console.log('venre selected', this.venteSelected);
     });
   }
 
   hideModal() {
     this.modalFacture = false;
+    this.loadingSave = false;
   }
-
+  loadingSave: boolean = false;
   public printFacture() {
-    console.log('venre selected', this.venteSelected);
     if (this.venteSelected && this.venteSelected.lignes_vente && this.venteSelected.lignes_vente.length > 0) {
       this.venteSelected.lignes_vente.forEach((element: any) => {
         element.facture_id = null;
       });
-      this.ventesService.printFacture(this.venteSelected).subscribe(
-        (response: any) => {
-          var downloadURL = window.URL.createObjectURL(response);
-          var link = document.createElement('a');
-          link.href = downloadURL;
-          // link.download = 'Facture.pdf';
-          // link.click();
-          window.open(downloadURL);
-          this.notificationService.createNotification('success', 'Facture a été crée avec succes', null);
-          this.getVentesByCriteria();
-          this.hideModal();
-        },
-        (error) => { },
-      );
+      this.loadingSave = true;
+
+      this.ventesService.getVenteFactureById(this.venteSelected.id).subscribe((response: any) => {
+        if (response.reference) {
+          this.venteSelected.count = response.reference;
+          this.venteSelected.ref_facture = '' + response.reference + '/' + new Date().getFullYear().toString().substring(2, 4);
+        }
+        this.ventesService.printFacture(this.venteSelected).subscribe(
+          (response: any) => {
+            var downloadURL = window.URL.createObjectURL(response);
+            var link = document.createElement('a');
+            link.href = downloadURL;;
+            window.open(downloadURL);
+            this.notificationService.createNotification('success', 'Facture a été crée avec succes', null);
+            this.getVentesByCriteria();
+            this.hideModal();
+          },
+          (error) => { this.loadingSave = false; },
+        );
+      }, (error) => { this.loadingSave = false; });
+
     }
   }
 

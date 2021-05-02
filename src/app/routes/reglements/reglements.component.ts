@@ -91,7 +91,7 @@ export class reglementsComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listOfCommerciaux = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -162,7 +162,7 @@ export class reglementsComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listOfPaymentsMode = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -192,6 +192,7 @@ export class reglementsComponent extends baseComponent implements OnInit {
     this.reglementForm.reset();
     this.reglementModal = false;
     this.modalCheque = false;
+    this.loadingSave = false;
   }
 
   public openModalAdd() {
@@ -200,6 +201,7 @@ export class reglementsComponent extends baseComponent implements OnInit {
     this.modalCheque = false;
   }
 
+  private loadingSave = false;
   public saveReglement() {
     for (const i in this.reglementForm.controls) {
       this.reglementForm.controls[i].markAsDirty();
@@ -207,6 +209,7 @@ export class reglementsComponent extends baseComponent implements OnInit {
     }
 
     if (this.reglementForm.valid) {
+      this.loadingSave = true;
       if (this.isUpdate) {
         this.reglementService.update(this.reglementForm.value).subscribe(
           (reponse) => {
@@ -214,7 +217,7 @@ export class reglementsComponent extends baseComponent implements OnInit {
             this.notificationService.createNotification('success', 'Réglement a été modifié avec succes', null);
             this.getReglementByCriteria();
           },
-          (error) => {},
+          (error) => { this.loadingSave = false; },
         );
       } else {
         this.reglementService.store(this.reglementForm.value).subscribe(
@@ -223,7 +226,7 @@ export class reglementsComponent extends baseComponent implements OnInit {
             this.notificationService.createNotification('success', 'Réglement a été ajouté avec succes', null);
             this.getReglementByCriteria();
           },
-          (error) => {},
+          (error) => { this.loadingSave = false; },
         );
       }
     }
@@ -465,7 +468,7 @@ export class reglementsComponent extends baseComponent implements OnInit {
         }
         this.notificationService.createNotification('success', 'Réglements a été exporté avec succes', null);
       },
-      (error) => {},
+      (error) => { },
     );
   }
 }

@@ -12,27 +12,16 @@
   </div>
   <hr />
   <div class="col-md-12 pt-2 text-right">
-    <i (click)="exportData('excel')" style="font-size: 22px; color: green; cursor: pointer" class="fal fa-file-excel mr-2"></i>
+    <i (click)="exportData('excel')" style="font-size: 22px; color: green; cursor: pointer"
+      class="fal fa-file-excel mr-2"></i>
     <i (click)="exportData('pdf')" style="font-size: 22px; color: magenta; cursor: pointer" class="fal fa-file-pdf"></i>
   </div>
   <div class="row pt-1">
     <div class="col-md-12">
-      <nz-table
-        [nzTotal]="totalClients"
-        [nzFrontPagination]="false"
-        [(nzPageIndex)]="firstClient"
-        [nzPageSizeOptions]="[10, 50, 100]"
-        [(nzPageSize)]="maxResults"
-        [nzShowPagination]="true"
-        nzShowSizeChanger
-        nzOuterBordered
-        [nzLoading]="loading"
-        [nzSize]="'middle'"
-        #basicTable
-        [nzData]="listOfClients"
-        (nzQueryParams)="sort($event)"
-        [nzScroll]="{ x: '800px' }"
-      >
+      <nz-table [nzTotal]="totalClients" [nzFrontPagination]="false" [(nzPageIndex)]="firstClient"
+        [nzPageSizeOptions]="[10, 50, 100]" [(nzPageSize)]="maxResults" [nzShowPagination]="true" nzShowSizeChanger
+        nzOuterBordered [nzLoading]="loading" [nzSize]="'middle'" #basicTable [nzData]="listOfClients"
+        (nzQueryParams)="sort($event)" [nzScroll]="{ x: '800px' }">
         <thead>
           <tr>
             <th>Code</th>
@@ -158,7 +147,10 @@
         <nz-form-item>
           <nz-form-label [nzSpan]="8" nzFor="credit">Crédit</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <input formControlName="credit" [min]="0" nz-input name="credit" type="number" id="credit" />
+            <input *ngIf="isUpdate" formControlName="credit" [min]="0" nz-input name="credit" type="number" id="credit"
+              readonly disabled />
+            <input *ngIf="!isUpdate" formControlName="credit" [min]="0" nz-input name="credit" type="number"
+              id="credit" />
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -167,15 +159,8 @@
           <nz-form-label [nzSpan]="8" nzFor="ville_id">Ville</nz-form-label>
           <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
             <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-              <nz-select
-                nzAllowClear
-                nzShowSearch
-                style="width: 100%"
-                [nzDropdownRender]="renderTemplateVille"
-                formControlName="ville_id"
-                name="ville_id"
-                id="ville_id"
-              >
+              <nz-select nzAllowClear nzShowSearch style="width: 100%" [nzDropdownRender]="renderTemplateVille"
+                formControlName="ville_id" name="ville_id" id="ville_id">
                 <nz-option *ngFor="let ville of listOfVille" [nzLabel]="ville.label" [nzValue]="ville.id"> </nz-option>
               </nz-select>
               <ng-template #renderTemplateVille>
@@ -201,13 +186,8 @@
         <nz-form-item>
           <nz-form-label [nzSpan]="8" nzFor="addresse">Addresse</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <textarea
-              nz-input
-              formControlName="addresse"
-              name="addresse"
-              id="addresse"
-              [nzAutosize]="{ minRows: 2, maxRows: 6 }"
-            ></textarea>
+            <textarea nz-input formControlName="addresse" name="addresse" id="addresse"
+              [nzAutosize]="{ minRows: 2, maxRows: 6 }"></textarea>
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -283,7 +263,8 @@
   </div>
 </nz-dropdown-menu>
 
-<nz-modal [nzMaskClosable]="false" [(nzVisible)]="timeLineModal" [nzTitle]="titlzclient" (nzOnCancel)="hideTimeLineModal()">
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="timeLineModal" [nzTitle]="titlzclient"
+  (nzOnCancel)="hideTimeLineModal()">
   <ng-template #titlzclient>
     <span>
       Détails Client {{ clientSelected?.name }}
@@ -294,20 +275,16 @@
     <div class="row">
       <div class="col-md-6 filter-rupture pt-1">
         <nz-input-group [nzSize]="'small'" style="width: 100%" [nzAddOnAfter]="searchrelever">
-          <nz-range-picker
-            style="width: 100% !important"
-            #rangePicker
-            [nzRenderExtraFooter]="extraDate"
-            formControlName="date"
-            (ngModelChange)="onChangeDate($event)"
-          ></nz-range-picker>
+          <nz-range-picker style="width: 100% !important" #rangePicker [nzRenderExtraFooter]="extraDate"
+            formControlName="date" (ngModelChange)="onChangeDate($event)"></nz-range-picker>
         </nz-input-group>
         <ng-template #searchrelever>
           <i style="cursor: pointer" (click)="getRelever()" class="fal fa-search bg-purple"></i>
         </ng-template>
       </div>
       <div class="col-md-6 text-right pt-1">
-        <button (click)="imprimerRelever()" nz-button nzType="primary">Imprimer <i class="fal fa-print ml-3"></i></button>
+        <button (click)="imprimerRelever()" nz-button nzType="primary">Imprimer <i
+            class="fal fa-print ml-3"></i></button>
       </div>
     </div>
     <div class="row">
@@ -317,16 +294,8 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nz-table
-          [nzHideOnSinglePage]="true"
-          nzShowSizeChanger
-          nzOuterBordered
-          [nzLoading]="loadingReleve"
-          [nzSize]="'middle'"
-          #basicTableRelever
-          [nzData]="listeOfrelever.data"
-          [nzScroll]="{ x: '800px' }"
-        >
+        <nz-table [nzHideOnSinglePage]="true" nzShowSizeChanger nzOuterBordered [nzLoading]="loadingReleve"
+          [nzSize]="'middle'" #basicTableRelever [nzData]="listeOfrelever.data" [nzScroll]="{ x: '800px' }">
           <thead>
             <tr>
               <th>Date</th>
@@ -343,15 +312,13 @@
               <td>{{ data.ref }}</td>
               <td>{{ data.type }}</td>
               <td>
-                <span *ngIf="data.type == 'encaissement' || data.type == 'reglement'">{{ data.payment_mode?.label }} </span>
-                <span
-                  *ngIf="
+                <span *ngIf="data.type == 'encaissement' || data.type == 'reglement'">{{ data.payment_mode?.label }}
+                </span>
+                <span *ngIf="
                     (data.payment_mode_id == 2 || data.payment_mode_id == 4) &&
                     data.chequeinfo &&
                     (data.type == 'encaissement' || data.type == 'reglement')
-                  "
-                  >({{ data.chequeinfo?.reference }})</span
-                >
+                  ">({{ data.chequeinfo?.reference }})</span>
               </td>
               <td>
                 <span *ngIf="data.type != 'vente'"> {{ data.montant | priceFormat }} DH </span>
@@ -368,23 +335,24 @@
       <div class="col-md-12 d-flex justify-content-end">
         <nz-card style="width: 250px">
           <div>
-            <span>Total Débit</span> : <span style="float: right">{{ listeOfrelever?.total_ventes | priceFormat }} DH</span>
+            <span>Total Débit</span> : <span style="float: right">{{ listeOfrelever?.total_ventes | priceFormat }}
+              DH</span>
           </div>
           <div>
             <span>Total Crédit </span> :
-            <span style="float: right">{{ listeOfrelever?.total_encaissements + listeOfrelever?.total_avoirs | priceFormat }}DH</span>
+            <span style="float: right">{{ listeOfrelever?.total_encaissements + listeOfrelever?.total_avoirs |
+              priceFormat }}DH</span>
           </div>
           <div>
             <hr class="mt-2 mb-2" />
           </div>
           <div>
             <span class="pt-1">Total Solde</span> :
-            <span style="float: right; color: #e01372; font-size: 18px"
-              >{{
-                listeOfrelever?.total_ventes - (listeOfrelever?.total_encaissements + listeOfrelever?.total_avoirs) | priceFormat
+            <span style="float: right; color: #e01372; font-size: 18px">{{
+              listeOfrelever?.total_ventes - (listeOfrelever?.total_encaissements + listeOfrelever?.total_avoirs) |
+              priceFormat
               }}
-              DH</span
-            >
+              DH</span>
           </div>
         </nz-card>
       </div>

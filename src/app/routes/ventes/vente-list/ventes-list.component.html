@@ -346,7 +346,7 @@
                   </nz-input-number>
                 </ng-template>
               </td>
-              <td style="width: 150px" class="text-center">
+              <td style="width: 160px" class="text-center">
                 <div class="editable-cell" *ngIf="editId != index; else editTplprix_vente">
                   <div class="editable-cell-value-wrap" (click)="startEdit(index, data)">{{ data.prix_vente |
                     priceFormat }} DH</div>
@@ -356,7 +356,7 @@
                   </nz-input-number>
                 </ng-template>
               </td>
-              <td style="width: 100px" class="text-center">
+              <td style="width: 120px" class="text-center">
                 <div class="editable-cell" *ngIf="editId != index; else editTplRemise">
                   <div class="editable-cell-value-wrap" (click)="startEdit(index, data)">{{ data.remise }} %</div>
                 </div>
@@ -385,8 +385,8 @@
   </div>
   <div *nzModalFooter>
     <button (click)="hideModal()" nz-button nzType="default">Annuler</button>
-    <button *ngIf="venteSelected?.lignes_vente.length > 0 && ROLE_ADD_FACTURE" (click)="printFacture()" nz-button
-      nzType="primary">
+    <button *ngIf="venteSelected?.lignes_vente.length > 0 && ROLE_ADD_FACTURE" [nzLoading]="loadingSave"
+      (click)="printFacture()" nz-button nzType="primary">
       Imprimer
     </button>
   </div>

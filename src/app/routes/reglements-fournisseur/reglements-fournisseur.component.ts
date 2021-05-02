@@ -91,7 +91,7 @@ export class reglementsFournisseurComponent extends baseComponent implements OnI
       (response: any) => {
         this.listOfFournisseurs = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -113,7 +113,7 @@ export class reglementsFournisseurComponent extends baseComponent implements OnI
       (response: any) => {
         this.listOfPaymentsMode = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -143,6 +143,7 @@ export class reglementsFournisseurComponent extends baseComponent implements OnI
     this.reglementForm.reset();
     this.reglementModal = false;
     this.modalCheque = false;
+    this.loadingSave = false;
   }
 
   public openModalAdd() {
@@ -150,6 +151,7 @@ export class reglementsFournisseurComponent extends baseComponent implements OnI
     this.reglementModal = true;
     this.modalCheque = false;
   }
+  private loadingSave = false;
 
   public saveReglement() {
     for (const i in this.reglementForm.controls) {
@@ -158,6 +160,7 @@ export class reglementsFournisseurComponent extends baseComponent implements OnI
     }
 
     if (this.reglementForm.valid) {
+      this.loadingSave = true;
       if (this.isUpdate) {
         this.reglementService.update(this.reglementForm.value).subscribe(
           (reponse) => {
@@ -165,7 +168,7 @@ export class reglementsFournisseurComponent extends baseComponent implements OnI
             this.notificationService.createNotification('success', 'Réglement a été modifié avec succes', null);
             this.getReglementByCriteria();
           },
-          (error) => {},
+          (error) => { this.loadingSave = false; },
         );
       } else {
         this.reglementService.store(this.reglementForm.value).subscribe(
@@ -174,7 +177,9 @@ export class reglementsFournisseurComponent extends baseComponent implements OnI
             this.notificationService.createNotification('success', 'Réglement a été ajouté avec succes', null);
             this.getReglementByCriteria();
           },
-          (error) => {},
+          (error) => {
+            this.loadingSave = false;
+          },
         );
       }
     }
@@ -477,7 +482,7 @@ export class reglementsFournisseurComponent extends baseComponent implements OnI
         }
         this.notificationService.createNotification('success', 'Réglements a été exporté avec succes', null);
       },
-      (error) => {},
+      (error) => { },
     );
   }
 }
