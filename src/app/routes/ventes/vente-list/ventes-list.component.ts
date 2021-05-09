@@ -1,6 +1,6 @@
 import { Platform } from '@angular/cdk/platform';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
 // import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
@@ -22,6 +22,7 @@ import { StockService } from 'src/app/services/stock.service';
 import { FactureService } from 'src/app/services/facture.service';
 import { baseComponent } from '../../base-component/base-component.component';
 import { SettingsService } from '@delon/theme';
+import { articleCriteria } from 'src/app/models/article.criteria';
 
 @Component({
   selector: 'app-ventes-list',
@@ -383,6 +384,7 @@ export class venteListComponent extends baseComponent implements OnInit {
         this.venteSelected.ref_facture = '' + response.reference + '/' + new Date().getFullYear().toString().substring(2, 4);
       }
     });
+    this.createFormVente();
   }
 
   hideModal() {
@@ -402,18 +404,32 @@ export class venteListComponent extends baseComponent implements OnInit {
           this.venteSelected.count = response.reference;
           this.venteSelected.ref_facture = '' + response.reference + '/' + new Date().getFullYear().toString().substring(2, 4);
         }
-        this.ventesService.printFacture(this.venteSelected).subscribe(
-          (response: any) => {
-            var downloadURL = window.URL.createObjectURL(response);
-            var link = document.createElement('a');
-            link.href = downloadURL;;
-            window.open(downloadURL);
-            this.notificationService.createNotification('success', 'Facture a été crée avec succes', null);
-            this.getVentesByCriteria();
-            this.hideModal();
-          },
-          (error) => { this.loadingSave = false; },
-        );
+
+        for (const i in this.lignesFactuceForm.controls) {
+          this.lignesFactuceForm.controls[i].markAsDirty();
+          this.lignesFactuceForm.controls[i].updateValueAndValidity();
+        }
+        if (this.lignesFactuceForm.valid) {
+          this.venteSelected.lignesFactuceForm = this.lignesFactuceForm.value;
+          this.venteSelected.prix_vente_ht = this.venteSelected.prix_vente_ht + (this.lignesFactuceForm.value.prix_facture_ht ? this.lignesFactuceForm.value.prix_facture_ht : 0);
+          this.venteSelected.prix_vente_ttc = this.venteSelected.prix_vente_ttc + (this.lignesFactuceForm.value.prix_facture_ttc ? this.lignesFactuceForm.value.prix_facture_ttc : 0)
+          this.venteSelected.prix_vente_ttc_with_remise = this.venteSelected.prix_vente_ttc_with_remise + (this.lignesFactuceForm.value.prix_facture_ttc_with_remise ? this.lignesFactuceForm.value.prix_facture_ttc_with_remise : 0)
+          console.log('this.venteSelected', this.venteSelected);
+          // this.ventesService.printFacture(this.venteSelected).subscribe(
+          //   (response: any) => {
+          //     var downloadURL = window.URL.createObjectURL(response);
+          //     var link = document.createElement('a');
+          //     link.href = downloadURL;;
+          //     window.open(downloadURL);
+          //     this.notificationService.createNotification('success', 'Facture a été crée avec succes', null);
+          //     this.getVentesByCriteria();
+          //     this.hideModal();
+          //   },
+          //   (error) => { this.loadingSave = false; },
+          // );
+        }
+
+
       }, (error) => { this.loadingSave = false; });
 
     }
@@ -578,5 +594,214 @@ export class venteListComponent extends baseComponent implements OnInit {
       },
       (error) => { },
     );
+  }
+
+  // __________add ligne facture _______
+  addLigneFacture(
+    vente_id: any = this.venteSelected.id,
+    article_id?: any,
+    article?: any,
+    articleValid: any = true,
+    articleExiste: any = false,
+    designation?: any,
+    quantite: any = 0,
+    prix_vente?: any,
+    remise: any = 0,
+    prix_vente_avec_remise?: any,
+    total?: any,
+    total_with_remise?: any,
+  ) {
+    const control = <FormArray>this.lignesFactuceForm.get('lignes_facture');
+    control.push(
+      this.patchValues(
+        vente_id,
+        article_id,
+        article,
+        articleValid,
+        articleExiste,
+        designation,
+        quantite,
+        prix_vente,
+        remise,
+        prix_vente_avec_remise,
+        total,
+        total_with_remise,
+      ),
+    );
+  }
+
+  private patchValues(
+    vente_id: any,
+    article_id: any,
+    article: any,
+    articleValid: any,
+    articleExiste: any,
+    designation: any,
+    quantite: any,
+    prix_vente: any,
+    remise: any,
+    prix_vente_avec_remise: any,
+    total: any,
+    total_with_remise: any,
+  ) {
+    return this.fb.group({
+      vente_id: [vente_id],
+      article_id: [article_id, [Validators.required]],
+      article: [article],
+      articleValid: [articleValid, [Validators.required]],
+      articleExiste: [articleExiste, [Validators.required]],
+      designation: [designation],
+      quantite: [quantite, Validators.min(1)],
+      prix_vente: [prix_vente, [Validators.required]],
+      remise: [remise],
+      prix_vente_avec_remise: [prix_vente_avec_remise],
+      total: [total],
+      total_with_remise: [total_with_remise],
+      marge: [null],
+    });
+  }
+
+  private lignesFactuceForm: FormGroup = new FormGroup({});
+
+  public createFormVente() {
+    this.lignesFactuceForm = this.fb.group({
+      prix_facture_ttc: [0, [Validators.required]],
+      prix_facture_ttc_with_remise: [0, [Validators.required]],
+      prix_facture_ht: [0],
+      net_facture: [0],
+      remiseAuto: [0],
+      lignes_facture: this.fb.array([]),
+    });
+  }
+
+  private listeOfArticles: any[] = [];
+
+  public getArticles(event: any, index: any) {
+    if (event) {
+      let ArticleCriteria = new articleCriteria()
+      ArticleCriteria.maxResults = 1000;
+      ArticleCriteria.referenceNotSpaceLike = event.replace(/[&\/\\#\s,;\-\_+()$~%.'":*?<>{}]/g, '');
+      this.stockService.getStocksByCriteria(ArticleCriteria).subscribe(
+        (response: any) => {
+          this.listeOfArticles = response.data;
+        },
+        (error) => { },
+      );
+    } else {
+      this.listeOfArticles = [];
+    }
+  }
+
+  public onChangeArticle(event: any, index: any) {
+    const valeurParam = (<FormArray>this.lignesFactuceForm.get('lignes_facture')).at(index);
+    const foundArticle = this.lignesFactuceForm.value.lignes_facture.find((element: any) => element.article_id == event.id);
+    if (foundArticle) {
+      valeurParam.patchValue({ articleExiste: null });
+    } else {
+      valeurParam.patchValue({
+        article_id: event.id,
+        prix_vente: event.prix_vente,
+        designation: event.designation,
+        quantite: 0,
+        // remise: 0,
+        total: 0,
+        total_with_remise: 0,
+        articleValid: true,
+        articleExiste: false,
+      });
+    }
+  }
+
+  onMouseupQte(index: any) {
+    console.log('eeeee');
+    const valeurParam = (<FormArray>this.lignesFactuceForm.get('lignes_facture')).at(index);
+    this.checkQteArticle(valeurParam);
+    this.changePriceTotal(valeurParam);
+    this.calculePriceVente();
+  }
+
+  public checkQteArticle(valeurParam: any) {
+    if (valeurParam.value.article && valeurParam.value.quantite > valeurParam.value.article.quantite) {
+      valeurParam.patchValue({ articleValid: null });
+    } else {
+      valeurParam.patchValue({ articleValid: true });
+    }
+  }
+
+  public changePriceTotal(valeurParam: any) {
+    if (valeurParam.value.article) {
+      valeurParam.patchValue({
+        total: valeurParam.value.prix_vente * valeurParam.value.quantite,
+        prix_vente_avec_remise: valeurParam.value.prix_vente - valeurParam.value.prix_vente * (valeurParam.value.remise / 100),
+        total_with_remise:
+          (valeurParam.value.prix_vente - valeurParam.value.prix_vente * (valeurParam.value.remise / 100)) * valeurParam.value.quantite,
+      });
+    }
+  }
+
+  public calculePriceVente() {
+    const lignes_facture = this.lignesFactuceForm.value.lignes_facture;
+    this.lignesFactuceForm.patchValue({ prix_facture_ttc: 0, prix_facture_ttc_with_remise: 0 });
+    lignes_facture.forEach((element: any) => {
+      this.lignesFactuceForm.patchValue({
+        prix_facture_ttc: this.lignesFactuceForm.value.prix_facture_ttc + element.total,
+        prix_facture_ttc_with_remise: this.lignesFactuceForm.value.prix_facture_ttc_with_remise + element.total_with_remise,
+      });
+    });
+    this.lignesFactuceForm.patchValue({
+      prix_facture_ht: parseFloat(this.lignesFactuceForm.value.prix_facture_ttc_with_remise) / 1.2,
+    });
+
+    this.lignesFactuceForm.patchValue({
+      net_facture:
+        parseFloat(this.lignesFactuceForm.value.prix_facture_ttc_with_remise),
+    });
+  }
+
+  public changePriceVente(event: any, index: any) {
+    const valeurParam = (<FormArray>this.lignesFactuceForm.get('lignes_facture')).at(index);
+    if (event) {
+      valeurParam.patchValue({
+        total: event * valeurParam.value.quantite,
+        prix_vente_avec_remise: event - event * (valeurParam.value.remise / 100),
+      });
+      valeurParam.patchValue({
+        total_with_remise: (event - event * (valeurParam.value.remise / 100)) * valeurParam.value.quantite,
+      });
+      const lignes_facture = this.lignesFactuceForm.value.lignes_facture;
+
+      this.lignesFactuceForm.patchValue({ prix_facture_ttc: 0 });
+      this.lignesFactuceForm.patchValue({ prix_facture_ttc_with_remise: 0 });
+
+      lignes_facture.forEach((element: any) => {
+        this.lignesFactuceForm.patchValue({
+          prix_facture_ttc: parseFloat(this.lignesFactuceForm.value.prix_facture_ttc) + element.prix_vente * element.quantite,
+        });
+        this.lignesFactuceForm.patchValue({
+          prix_facture_ttc_with_remise:
+            parseFloat(this.lignesFactuceForm.value.prix_facture_ttc_with_remise) + element.prix_vente_avec_remise * element.quantite,
+        });
+      });
+      this.lignesFactuceForm.patchValue({
+        prix_facture_ht: parseFloat(this.lignesFactuceForm.value.prix_facture_ttc_with_remise) / 1.2,
+      });
+
+      this.lignesFactuceForm.patchValue({
+        net_vente:
+          parseFloat(this.lignesFactuceForm.value.prix_facture_ttc_with_remise),
+      });
+    }
+  }
+
+  public onMouseupRemise(index: any) {
+    const valeurParam = (<FormArray>this.lignesFactuceForm.get('lignes_facture')).at(index);
+    this.changePriceTotal(valeurParam);
+    this.calculePriceVente();
+  }
+
+  public deleteLigneVente(index: any) {
+    const control = <FormArray>this.lignesFactuceForm.get('lignes_facture');
+    control.removeAt(index);
+    this.calculePriceVente();
   }
 }
