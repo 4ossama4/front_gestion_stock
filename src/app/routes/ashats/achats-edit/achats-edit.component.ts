@@ -262,7 +262,7 @@ export class achatsEditComponent implements OnInit {
 
   public getArticles(event: any, index: any) {
     if (event) {
-      this.articleCriteria.maxResults = 1000;
+      this.articleCriteria.maxResults = 30;
       this.articleCriteria.referenceNotSpaceLike = event.replace(/[&\/\\#\s,;\-\_+()$~%.'":*?<>{}]/g, '');
       this.stockService.getStocksByCriteria(this.articleCriteria).subscribe(
         (response: any) => {

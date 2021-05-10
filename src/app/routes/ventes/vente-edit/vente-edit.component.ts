@@ -75,7 +75,7 @@ export class venteEditComponent implements OnInit {
       (response: any) => {
         this.listeOfArticles = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -84,7 +84,7 @@ export class venteEditComponent implements OnInit {
       (response: any) => {
         this.listOfModeExp = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -135,7 +135,7 @@ export class venteEditComponent implements OnInit {
         });
         console.log(' this.venteForm', this.venteForm.value);
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -154,7 +154,7 @@ export class venteEditComponent implements OnInit {
         this.venteForm.patchValue({ reference: '' + response.count + '/' + response.year.toString().substring(2, 4) });
         this.venteForm.patchValue({ count: response.count, year: response.year });
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -201,7 +201,7 @@ export class venteEditComponent implements OnInit {
       (response: any) => {
         this.listOfClients = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -238,7 +238,7 @@ export class venteEditComponent implements OnInit {
           this.getVilles();
           this.notificationService.createNotification('success', 'Ville a été ajouté avec succes', null);
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -248,7 +248,7 @@ export class venteEditComponent implements OnInit {
       (response: any) => {
         this.listOfVille = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -266,7 +266,7 @@ export class venteEditComponent implements OnInit {
           this.notificationService.createNotification('success', 'Client a été ajouté avec succes', null);
           this.getClients();
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -276,7 +276,7 @@ export class venteEditComponent implements OnInit {
       (response: any) => {
         this.listOfPaymentsMode = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -302,7 +302,7 @@ export class venteEditComponent implements OnInit {
       (response: any) => {
         this.listOfCommerciaux = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -341,7 +341,7 @@ export class venteEditComponent implements OnInit {
           this.notificationService.createNotification('success', 'Commerciale a été ajouté avec succes', null);
           this.getCommerciaux();
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -392,7 +392,7 @@ export class venteEditComponent implements OnInit {
           this.goToList();
           this.clickSave = false;
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -515,7 +515,7 @@ export class venteEditComponent implements OnInit {
 
   public getArticles(event: any, index: any) {
     if (event) {
-      this.articleCriteria.maxResults = 1000;
+      this.articleCriteria.maxResults = 30;
       // this.articleCriteria.referenceLike = event;
 
       // this.articleCriteria.referenceNotSpaceLike = event.replace(/\s/g, '');
@@ -524,7 +524,7 @@ export class venteEditComponent implements OnInit {
         (response: any) => {
           this.listeOfArticles = response.data;
         },
-        (error) => {},
+        (error) => { },
       );
     } else {
       this.listeOfArticles = [];

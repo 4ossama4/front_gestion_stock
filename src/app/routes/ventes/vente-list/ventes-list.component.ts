@@ -405,29 +405,31 @@ export class venteListComponent extends baseComponent implements OnInit {
           this.venteSelected.ref_facture = '' + response.reference + '/' + new Date().getFullYear().toString().substring(2, 4);
         }
 
-        for (const i in this.lignesFactuceForm.controls) {
-          this.lignesFactuceForm.controls[i].markAsDirty();
-          this.lignesFactuceForm.controls[i].updateValueAndValidity();
-        }
-        if (this.lignesFactuceForm.valid) {
-          this.venteSelected.lignesFactuceForm = this.lignesFactuceForm.value;
-          this.venteSelected.prix_vente_ht = this.venteSelected.prix_vente_ht + (this.lignesFactuceForm.value.prix_facture_ht ? this.lignesFactuceForm.value.prix_facture_ht : 0);
-          this.venteSelected.prix_vente_ttc = this.venteSelected.prix_vente_ttc + (this.lignesFactuceForm.value.prix_facture_ttc ? this.lignesFactuceForm.value.prix_facture_ttc : 0)
-          this.venteSelected.prix_vente_ttc_with_remise = this.venteSelected.prix_vente_ttc_with_remise + (this.lignesFactuceForm.value.prix_facture_ttc_with_remise ? this.lignesFactuceForm.value.prix_facture_ttc_with_remise : 0)
-          console.log('this.venteSelected', this.venteSelected);
-          // this.ventesService.printFacture(this.venteSelected).subscribe(
-          //   (response: any) => {
-          //     var downloadURL = window.URL.createObjectURL(response);
-          //     var link = document.createElement('a');
-          //     link.href = downloadURL;;
-          //     window.open(downloadURL);
-          //     this.notificationService.createNotification('success', 'Facture a été crée avec succes', null);
-          //     this.getVentesByCriteria();
-          //     this.hideModal();
-          //   },
-          //   (error) => { this.loadingSave = false; },
-          // );
-        }
+        // for (const i in this.lignesFactuceForm.controls) {
+        //   this.lignesFactuceForm.controls[i].markAsDirty();
+        //   this.lignesFactuceForm.controls[i].updateValueAndValidity();
+        // }
+        // if (this.lignesFactuceForm.valid) {
+        //   this.venteSelected.lignesFactuceForm = this.lignesFactuceForm.value;
+        //   this.venteSelected.prix_vente_ht = this.venteSelected.prix_vente_ht + (this.lignesFactuceForm.value.prix_facture_ht ? this.lignesFactuceForm.value.prix_facture_ht : 0);
+        //   this.venteSelected.prix_vente_ttc = this.venteSelected.prix_vente_ttc + (this.lignesFactuceForm.value.prix_facture_ttc ? this.lignesFactuceForm.value.prix_facture_ttc : 0)
+        //   this.venteSelected.prix_vente_ttc_with_remise = this.venteSelected.prix_vente_ttc_with_remise + (this.lignesFactuceForm.value.prix_facture_ttc_with_remise ? this.lignesFactuceForm.value.prix_facture_ttc_with_remise : 0)
+        //   console.log('this.venteSelected', this.venteSelected);
+
+        // }
+
+        this.ventesService.printFacture(this.venteSelected).subscribe(
+          (response: any) => {
+            var downloadURL = window.URL.createObjectURL(response);
+            var link = document.createElement('a');
+            link.href = downloadURL;;
+            window.open(downloadURL);
+            this.notificationService.createNotification('success', 'Facture a été crée avec succes', null);
+            this.getVentesByCriteria();
+            this.hideModal();
+          },
+          (error) => { this.loadingSave = false; },
+        );
 
 
       }, (error) => { this.loadingSave = false; });

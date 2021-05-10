@@ -316,9 +316,12 @@
       <label style="font-weight: 600">Liste des articles :</label>
     </div>
     <div class="col-md-4 col-4 ">
-      Total : <nz-tag class="ml-2">{{ venteSelected?.prix_vente_ttc_with_remise +
+      Total : <nz-tag class="ml-2">{{ venteSelected?.prix_vente_ttc_with_remise | priceFormat }} DH
+        <!-- +
         (lignesFactuceForm?.value?.prix_facture_ttc_with_remise ? lignesFactuceForm?.value?.prix_facture_ttc_with_remise
-        : 0) | priceFormat }} DH</nz-tag>
+        : 0)-->
+
+      </nz-tag>
     </div>
     <div class="col-2 col-md-2 text-right">
       <button class="btn-add-article" (click)="addLigneFacture()" [nzSize]="'small'" nz-button>
@@ -378,71 +381,10 @@
               </td>
             </tr>
           </ng-container>
-          <!-- <form [formGroup]="lignesFactuceForm">
-
-            <div formArrayName="lignes_facture">
-              <div *ngFor="let ligne_facture of lignesFactuceForm.get('lignes_facture').controls; let i = index">
-
-                <tr [formGroupName]="i">
-                  <td style="width: 30%">
-                    <nz-select [nzServerSearch]="true" (ngModelChange)="onChangeArticle($event, i)"
-                      (nzOnSearch)="getArticles($event, i)" style="width: 100%" nzShowSearch formControlName="article"
-                      nzAllowClear>
-                      <nz-option nzCustomContent *ngFor="let article of listeOfArticles" [nzValue]="article"
-                        [nzLabel]="article.reference">
-                        <strong>
-                          {{ article.reference }}
-                        </strong>
-                        {{ article.designation }}
-                       
-                      </nz-option>
-                    </nz-select>
-                  </td>
-                  <td style="width: 5%" class="text-center">
-                    <nz-input-group style="width: 100%">
-                      <nz-input-number style="width: 100%; text-align: center"
-                        [ngClass]="{ 'border-qte-error': ligne_facture.value.articleValid == null }" nz-input
-                        formControlName="quantite" type="number" [nzMin]="0" (mouseup)="onMouseupQte(i)"
-                        (keyup)="onMouseupQte(i)">
-                      </nz-input-number>
-                    </nz-input-group>
-                    <span *ngIf="ligne_facture.value.articleValid == null" style="color: red; font-size: 11px">
-                      Quantité de stock est insuffisant
-                    </span>
-                  </td>
-                  <td style="width: 20%" class="text-center">
-                    <nz-input-group style="width: 100%" nzAddOnAfter="DH">
-                      <nz-input-number (ngModelChange)="changePriceVente($event, i)" style="width: 100%" nz-input
-                        formControlName="prix_vente" type="number" [nzMin]="0">
-                      </nz-input-number>
-                    </nz-input-group>
-                  </td>
-                  <td style="width: 20%" class="text-center">
-                    <nz-input-group style="width: 100%" nzAddOnAfter="%">
-                      <nz-input-number style="width: 100%" (mouseup)="onMouseupRemise(i)" (keyup)="onMouseupRemise(i)"
-                        nz-input formControlName="remise" type="number" [nzMin]="0">
-                      </nz-input-number>
-                    </nz-input-group>
-                  </td>
-                  <td style="width: 20%" class="text-center">
-                    <nz-input-group nzAddOnAfter="DH">
-                      <nz-input-number [nzDisabled]="true" style="width: 100%" nz-input
-                        formControlName="total_with_remise" type="number" [nzMin]="0">
-                      </nz-input-number>
-                    </nz-input-group>
-                  </td>
-                  <td style="width: 5%" class="text-center">
-                    <i style="width: 14%; color: red" (click)="deleteLigneVente(i)" nz-icon nzType="close"
-                      class="c-pointer" nzTheme="outline"></i>
-                  </td>
-                </tr>
-              </div>
-            </div>
-          </form> -->
         </tbody>
       </nz-table>
     </div>
-    <div class="col-md-12">
+    <!-- <div class="col-md-12">
       <form [formGroup]="lignesFactuceForm">
         <div formArrayName="lignes_facture">
           <ng-container *ngFor="let ligne_facture of lignesFactuceForm.get('lignes_facture').controls; let i = index">
@@ -507,7 +449,7 @@
           </ng-container>
         </div>
       </form>
-    </div>
+    </div> -->
   </div>
   <div *ngIf="venteSelected?.lignes_vente.length == 0" class="row">
     <div class="col-md-12">
