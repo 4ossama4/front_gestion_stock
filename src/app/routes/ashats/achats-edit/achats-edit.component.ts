@@ -46,7 +46,7 @@ export class achatsEditComponent implements OnInit {
     this.createFormAchat();
     this.createFormFournisseur();
     this.achatId = this.route.snapshot.paramMap.get('id');
-    this.getAllArticle();
+    // this.getAllArticle();
     this.getAchat();
     // this.addLigneAchat();
   }
@@ -72,6 +72,7 @@ export class achatsEditComponent implements OnInit {
           reference: response.data.cheque ? response.data.cheque.reference : null,
         });
         this.achatData.lignes_achat.forEach((ligne_achat: any) => {
+          this.listeOfArticles.push(ligne_achat.article)
           control.push(
             this.patchValues(
               ligne_achat.achat_id,

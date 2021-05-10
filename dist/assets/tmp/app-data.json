@@ -1,0 +1,129 @@
+{
+  "app": {
+    "name": "BPA",
+    "description": "Ng-zorro admin panel front-end framework"
+  },
+  "user": {
+    "name": "Hafid",
+    "avatar": "./assets/tmp/img/avatar.png",
+    "email": "admin@admin.com"
+  },
+  "menu": [
+    {
+      "text": "Tableau de bord",
+      "i18n": "menu.dashboard",
+      "shortcut": true,
+      "icon": "fal fa-tachometer-alt",
+      "link": "/dashboard",
+      "role": "show_dashboard"
+    },
+    {
+      "text": "Gestion de stock",
+      "i18n": "menu.stock",
+      "shortcut": true,
+      "icon": "fal fa-boxes-alt",
+      "link": "/stock",
+      "role": "show_stock"
+    },    
+    {
+      "text": "Gestion des achats",
+      "i18n": "menu.achats",
+      "icon": "fal fa-shopping-cart",
+      "link": "/achats/list",
+      "role": "show_achat"
+    },
+    {
+      "text": "Gestion des ventes",
+      "i18n": "menu.ventes",
+      "icon": "fal fa-tags",
+      "link": "/ventes/list",
+      "role": "show_vente"
+    },
+    {
+      "text": "Gestion des factures",
+      "i18n": "menu.factures",
+      "icon": "fal fa-file-alt",
+      "link": "/factures/list",
+      "role": "show_factures"
+    },
+    {
+      "text": "Gestion des avoirs",
+      "i18n": "menu.avoirs",
+      "icon": "fal fa-reply",
+      "link": "/avoirs/list",
+      "role": "show_avoir"
+    },
+    {
+      "text": "Encaissements",
+      "i18n": "menu.encaissement",
+      "icon": "fal fa-hand-holding-usd",
+      "link": "/encaissements",
+      "role": "show_encaissement"
+    },
+    {
+      "text": "Réglements",
+      "i18n": "menu.reglement",
+      "icon": "fal fa-money-bill-alt",
+      "link": "/reglements",
+      "role": "show_reglement"
+    },
+    {
+      "text": "Fournisseurs Réglem.",
+      "i18n": "menu.reglementFournisseurs",
+      "icon": "fal fa-dollar-sign mr-2",
+      "link": "/reglements-fournisseurs",
+      "role": "show_freglement"
+    },
+    {
+      "text": "Repture Stock",
+      "i18n": "menu.repture",
+      "icon": "fal fa-bell mr-2",
+      "link": "/outofstock/list",
+      "role": "voir_repture"
+    }, 
+    {
+      "text": "Réferenciels",
+      "i18n": "menu.referenciels",
+      "icon": "fal fa-cogs mr-2",
+      "link": "/clients",
+      "role":"noRole",
+      "children":[
+        {
+          "text": "Clients",
+          "i18n": "menu.client",
+          "icon": "fal fa-users",
+          "link": "/clients",
+          "role": "show_client"
+        },
+        {
+          "text": "Commerciaux",
+          "i18n": "menu.commercials",
+          "icon": "fal fa-dollar-sign mr-2",
+          "link": "/commerciaux",
+          "role": "show_commercial"
+        },
+        {
+          "text": "Fournisseurs",
+          "i18n": "menu.fournisseur",
+          "icon": "fal fa-truck-container",
+          "link": "/fournisseurs",
+          "role": "show_fournisseur"
+        },
+        {
+          "text": "Les dépenses",
+          "i18n": "menu.depenses",
+          "icon": "fal fa-hands-usd",
+          "link": "/depenses",
+          "role": "show_depense"
+        },
+        {
+          "text": "Devis clients",
+          "i18n": "menu.devis",
+          "icon": "fal fa-file-edit mr-2",
+          "link": "/devis",
+          "role": "show_devis"
+        }
+      ]
+    }  
+  ]
+}

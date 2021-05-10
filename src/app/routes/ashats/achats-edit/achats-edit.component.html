@@ -197,7 +197,7 @@
                     {{ article.reference }}
                   </strong>
                   {{ article.designation }}
-                  <nz-tag>{{ article.marque.label }}</nz-tag>
+                  <nz-tag>{{ article?.marque?.label }}</nz-tag>
                   <nz-badge nzStandalone *ngIf="article.quantite" nzShowZero [nzOverflowCount]="article.quantite"
                     [nzCount]="article.quantite" [nzStyle]="{ backgroundColor: 'green' }"></nz-badge>
                   <nz-badge nzStandalone nzShowZero *ngIf="!article.quantite" [nzOverflowCount]="0" [nzCount]="0"
