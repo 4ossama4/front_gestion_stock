@@ -155,17 +155,23 @@
               <nz-select [nzServerSearch]="true" [compareWith]="nzCompareSelectedByreference"
                 (ngModelChange)="onChangeArticle($event, i)" (nzOnSearch)="getArticles($event, i)" style="width: 100%"
                 nzShowSearch formControlName="article" nzAllowClear [nzDropdownRender]="renderTemplateArticle">
-                <nz-option nzCustomContent *ngFor="let article of listeOfArticles" [nzValue]="article"
-                  [nzLabel]="article.reference">
-                  <strong>
-                    {{ article.reference }}
-                  </strong>
-                  {{ article.designation }}
-                  <nz-tag>{{ article?.marque?.label }}</nz-tag>
-                  <nz-badge *ngIf="article.quantite" nzStandalone nzShowZero [nzOverflowCount]="article.quantite"
-                    [nzCount]="article.quantite" [nzStyle]="{ backgroundColor: 'green' }"></nz-badge>
-                  <nz-badge *ngIf="!article.quantite" nzStandalone nzShowZero [nzOverflowCount]="0" [nzCount]="0"
-                    [nzStyle]="{ backgroundColor: 'red' }"></nz-badge>
+                <ng-container *ngFor="let article of listeOfArticles">
+
+                  <nz-option nzCustomContent *ngIf="!isLoadingArticle" [nzValue]="article"
+                    [nzLabel]="article.reference">
+                    <strong>
+                      {{ article.reference }}
+                    </strong>
+                    {{ article.designation }}
+                    <nz-tag>{{ article?.marque?.label }}</nz-tag>
+                    <nz-badge *ngIf="article.quantite" nzStandalone nzShowZero [nzOverflowCount]="article.quantite"
+                      [nzCount]="article.quantite" [nzStyle]="{ backgroundColor: 'green' }"></nz-badge>
+                    <nz-badge *ngIf="!article.quantite" nzStandalone nzShowZero [nzOverflowCount]="0" [nzCount]="0"
+                      [nzStyle]="{ backgroundColor: 'red' }"></nz-badge>
+                  </nz-option>
+                </ng-container>
+                <nz-option *ngIf="isLoadingArticle" nzDisabled nzCustomContent>
+                  <i nz-icon nzType="loading" class="loading-icon"></i> Chargemenet des données...
                 </nz-option>
               </nz-select>
               <span *ngIf="ligne_vente.value.articleExiste == null" style="color: red; font-size: 11px"> Article déja

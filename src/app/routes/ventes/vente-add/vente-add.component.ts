@@ -501,7 +501,8 @@ export class venteAddComponent implements OnInit {
                   reference: article.reference,
                   designation: article.designation,
                   quantite: article.quantite,
-                  marque: article.marque
+                  marque: article.marque,
+                  prix_vente: article.prix_vente
                 }
               )
             });

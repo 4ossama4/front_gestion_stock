@@ -422,8 +422,7 @@
         achatForm.value.lignes_achat.length }}) :</label>
     </div>
     <div class="col-md-12 pt-2">
-      <nz-table [nzSize]="'small'" [nzShowPagination]="false" nzOuterBordered #articleTable
-        [nzData]="achatForm.value.lignes_achat">
+      <nz-table [nzSize]="'small'" nzOuterBordered #articleTable [nzData]="achatForm.value.lignes_achat">
         <thead>
           <tr>
             <th>Article</th>
@@ -444,8 +443,7 @@
     </div>
     <div class="col-md-6 pt-2">
       <label style="font-size: inherit" class="title-article">Les Frais supplémentaire :</label>
-      <nz-table [nzSize]="'small'" [nzShowPagination]="false" nzOuterBordered #fraistable
-        [nzData]="achatForm.value.list_frais">
+      <nz-table [nzSize]="'small'" nzOuterBordered #fraistable [nzData]="achatForm.value.list_frais">
         <thead>
           <tr>
             <th>Frais</th>
