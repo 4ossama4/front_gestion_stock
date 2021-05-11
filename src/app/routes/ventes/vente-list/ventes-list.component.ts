@@ -677,17 +677,37 @@ export class venteListComponent extends baseComponent implements OnInit {
   }
 
   private listeOfArticles: any[] = [];
+  isLoadingArticle: boolean = false;
 
   public getArticles(event: any, index: any) {
+    this.listeOfArticles = [];
     if (event) {
+      this.isLoadingArticle = true;
+
       let ArticleCriteria = new articleCriteria()
-      ArticleCriteria.maxResults = 1000;
+      ArticleCriteria.maxResults = 20;
       ArticleCriteria.referenceNotSpaceLike = event.replace(/[&\/\\#\s,;\-\_+()$~%.'":*?<>{}]/g, '');
-      this.stockService.getStocksByCriteria(ArticleCriteria).subscribe(
+      this.stockService.getStocksByCriteria2(ArticleCriteria).subscribe(
         (response: any) => {
-          this.listeOfArticles = response.data;
+          if (response.data) {
+            response.data.forEach((article: any) => {
+              this.listeOfArticles.push(
+                {
+                  id: article.id,
+                  reference: article.reference,
+                  designation: article.designation,
+                  quantite: article.quantite,
+                  marque: article.marque
+                }
+              )
+            });
+          }
+          this.isLoadingArticle = false;
+
         },
-        (error) => { },
+        (error) => {
+          this.isLoadingArticle = false;
+        },
       );
     } else {
       this.listeOfArticles = [];

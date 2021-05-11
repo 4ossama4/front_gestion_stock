@@ -64,7 +64,7 @@ export class devisAddComponent implements OnInit {
         this.venteForm.patchValue({ reference: '' + response.count + '/' + response.year.toString().substring(2, 4) });
         this.venteForm.patchValue({ count: response.count, year: response.year });
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -97,7 +97,7 @@ export class devisAddComponent implements OnInit {
       (response: any) => {
         this.listOfClients = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -134,7 +134,7 @@ export class devisAddComponent implements OnInit {
           this.getVilles();
           this.notificationService.createNotification('success', 'Ville a été ajouté avec succes', null);
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -144,7 +144,7 @@ export class devisAddComponent implements OnInit {
       (response: any) => {
         this.listOfVille = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -162,7 +162,7 @@ export class devisAddComponent implements OnInit {
           this.notificationService.createNotification('success', 'Client a été ajouté avec succes', null);
           this.getClients();
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -172,7 +172,7 @@ export class devisAddComponent implements OnInit {
       (response: any) => {
         this.listOfPaymentsMode = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -207,7 +207,7 @@ export class devisAddComponent implements OnInit {
           this.goToList();
           this.clickSave = false;
         },
-        (error) => {},
+        (error) => { },
       );
     }
   }
@@ -319,17 +319,37 @@ export class devisAddComponent implements OnInit {
     this.changePriceTotal(valeurParam);
     this.calculePriceVente();
   }
+  isLoadingArticle: boolean = false;
 
   public getArticles(event: any, index: any) {
+    this.listeOfArticles = [];
     if (event) {
-      this.articleCriteria.maxResults = 1000;
+      this.isLoadingArticle = true;
+
+      this.articleCriteria.maxResults = 20;
       this.articleCriteria.referenceNotSpaceLike = event.replace(/\s/g, '');
       // this.articleCriteria.refOrgAndreferenceLike.replace(/\s/g, '');
-      this.stockService.getStocksByCriteria(this.articleCriteria).subscribe(
+      this.stockService.getStocksByCriteria2(this.articleCriteria).subscribe(
         (response: any) => {
-          this.listeOfArticles = response.data;
+          if (response.data) {
+            response.data.forEach((article: any) => {
+              this.listeOfArticles.push(
+                {
+                  id: article.id,
+                  reference: article.reference,
+                  designation: article.designation,
+                  quantite: article.quantite,
+                  marque: article.marque
+                }
+              )
+            });
+          }
+          this.isLoadingArticle = false;
+
         },
-        (error) => {},
+        (error) => {
+          this.isLoadingArticle = false;
+        },
       );
     } else {
       this.listeOfArticles = [];

@@ -61,7 +61,7 @@ export class venteEditComponent implements OnInit {
     this.getPaymentsMode();
     this.getModeExp();
     this.getCommerciaux();
-    this.getAllArticle();
+    // this.getAllArticle();
   }
 
   ngOnInit(): void {
@@ -114,6 +114,8 @@ export class venteEditComponent implements OnInit {
         });
 
         response.data.lignes_vente.forEach((ligne_vente: any) => {
+          this.listeOfArticles.push(ligne_vente.article)
+
           control.push(
             this.patchValues(
               ligne_vente.vente_id,
@@ -512,19 +514,37 @@ export class venteEditComponent implements OnInit {
     this.changePriceTotal(valeurParam);
     this.calculePriceVente();
   }
+  isLoadingArticle: boolean = false;
 
   public getArticles(event: any, index: any) {
+    this.listeOfArticles = [];
+
     if (event) {
-      this.articleCriteria.maxResults = 30;
+      this.articleCriteria.maxResults = 20;
       // this.articleCriteria.referenceLike = event;
 
       // this.articleCriteria.referenceNotSpaceLike = event.replace(/\s/g, '');
       this.articleCriteria.referenceNotSpaceLike = event.replace(/[&\/\\#\s,;\-\_+()$~%.'":*?<>{}]/g, '');
-      this.stockService.getStocksByCriteria(this.articleCriteria).subscribe(
+      this.stockService.getStocksByCriteria2(this.articleCriteria).subscribe(
         (response: any) => {
-          this.listeOfArticles = response.data;
+          if (response.data) {
+            response.data.forEach((article: any) => {
+              this.listeOfArticles.push(
+                {
+                  id: article.id,
+                  reference: article.reference,
+                  designation: article.designation,
+                  quantite: article.quantite,
+                  marque: article.marque
+                }
+              )
+            });
+          } this.isLoadingArticle = false;
+
         },
-        (error) => { },
+        (error) => {
+          this.isLoadingArticle = false;
+        },
       );
     } else {
       this.listeOfArticles = [];

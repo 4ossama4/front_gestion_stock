@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class StockService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   public getStocks() {
     return this.http.get(environment.apiUrl + `/articles`);
@@ -12,6 +12,10 @@ export class StockService {
 
   public getStocksByCriteria(articleCriteria: any) {
     return this.http.post(environment.apiUrl + `/articlebycriteria`, articleCriteria);
+  }
+
+  public getStocksByCriteria2(articleCriteria: any) {
+    return this.http.post(environment.apiUrl + `/articlebycriteria2`, articleCriteria);
   }
 
   public getStockById(stockId: number) {

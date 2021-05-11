@@ -260,16 +260,46 @@ export class achatsEditComponent implements OnInit {
       (error) => { },
     );
   }
-
+  isLoadingArticle: boolean = false;
   public getArticles(event: any, index: any) {
+    this.listeOfArticles = [];
     if (event) {
-      this.articleCriteria.maxResults = 30;
+      this.isLoadingArticle = true;
+      this.articleCriteria.maxResults = 10;
       this.articleCriteria.referenceNotSpaceLike = event.replace(/[&\/\\#\s,;\-\_+()$~%.'":*?<>{}]/g, '');
-      this.stockService.getStocksByCriteria(this.articleCriteria).subscribe(
+      this.stockService.getStocksByCriteria2(this.articleCriteria).subscribe(
         (response: any) => {
-          this.listeOfArticles = response.data;
+          if (response.data) {
+            response.data.forEach((article: any) => {
+              this.listeOfArticles.push(
+                {
+                  id: article.id,
+                  reference: article.reference,
+                  designation: article.designation,
+                  quantite: article.quantite,
+                  marque: article.marque
+                }
+              )
+            });
+          }
+          this.isLoadingArticle = false;
+
+          //  [{
+          //   id: 56,
+          //   marque: { id: 5, label: "Ajsparts" },
+          //   prix_achat: 140.12,
+          //   prix_vente: 395,
+          //   quantite: 5,
+          //   quantite_min: 0,
+          //   reference: "NLW-VW-000",
+          //   referencesanschar: "NLWVW000",
+          // }
+          // ]
+
         },
-        (error) => { },
+        (error) => {
+          this.isLoadingArticle = false;
+        },
       );
     } else {
       // this.listeOfArticles = [];
