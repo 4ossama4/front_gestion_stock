@@ -411,7 +411,7 @@
                 <nz-input-group style="width: 100%">
                   <nz-input-number style="width: 100%; text-align: center"
                     [ngClass]="{ 'border-qte-error': ligne_facture.value.articleValid == null }" nz-input
-                    formControlName="quantite" type="number" [nzMin]="0" (mouseup)="onMouseupQte(i)"
+                    formControlName="quantite_facture" type="number" [nzMin]="0" (mouseup)="onMouseupQte(i)"
                     (keyup)="onMouseupQte(i)">
                   </nz-input-number>
                 </nz-input-group>

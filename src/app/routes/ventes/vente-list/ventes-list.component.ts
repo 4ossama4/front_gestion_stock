@@ -609,7 +609,7 @@ export class venteListComponent extends baseComponent implements OnInit {
     articleValid: any = true,
     articleExiste: any = false,
     designation?: any,
-    quantite: any = 0,
+    quantite_facture: any = 0,
     prix_vente?: any,
     remise: any = 0,
     prix_vente_avec_remise?: any,
@@ -625,7 +625,7 @@ export class venteListComponent extends baseComponent implements OnInit {
         articleValid,
         articleExiste,
         designation,
-        quantite,
+        quantite_facture,
         prix_vente,
         remise,
         prix_vente_avec_remise,
@@ -642,7 +642,7 @@ export class venteListComponent extends baseComponent implements OnInit {
     articleValid: any,
     articleExiste: any,
     designation: any,
-    quantite: any,
+    quantite_facture: any,
     prix_vente: any,
     remise: any,
     prix_vente_avec_remise: any,
@@ -656,7 +656,7 @@ export class venteListComponent extends baseComponent implements OnInit {
       articleValid: [articleValid, [Validators.required]],
       articleExiste: [articleExiste, [Validators.required]],
       designation: [designation],
-      quantite: [quantite, Validators.min(1)],
+      quantite_facture: [quantite_facture, Validators.min(1)],
       prix_vente: [prix_vente, [Validators.required]],
       remise: [remise],
       prix_vente_avec_remise: [prix_vente_avec_remise],
@@ -729,7 +729,7 @@ export class venteListComponent extends baseComponent implements OnInit {
         article_id: event.id,
         prix_vente: event.prix_vente,
         designation: event.designation,
-        quantite: 0,
+        quantite_facture: 0,
         // remise: 0,
         total: 0,
         total_with_remise: 0,
@@ -748,7 +748,7 @@ export class venteListComponent extends baseComponent implements OnInit {
   }
 
   public checkQteArticle(valeurParam: any) {
-    if (valeurParam.value.article && valeurParam.value.quantite > valeurParam.value.article.quantite) {
+    if (valeurParam.value.article && valeurParam.value.quantite_facture > valeurParam.value.article.quantite) {
       valeurParam.patchValue({ articleValid: null });
     } else {
       valeurParam.patchValue({ articleValid: true });
@@ -758,10 +758,10 @@ export class venteListComponent extends baseComponent implements OnInit {
   public changePriceTotal(valeurParam: any) {
     if (valeurParam.value.article) {
       valeurParam.patchValue({
-        total: valeurParam.value.prix_vente * valeurParam.value.quantite,
+        total: valeurParam.value.prix_vente * valeurParam.value.quantite_facture,
         prix_vente_avec_remise: valeurParam.value.prix_vente - valeurParam.value.prix_vente * (valeurParam.value.remise / 100),
         total_with_remise:
-          (valeurParam.value.prix_vente - valeurParam.value.prix_vente * (valeurParam.value.remise / 100)) * valeurParam.value.quantite,
+          (valeurParam.value.prix_vente - valeurParam.value.prix_vente * (valeurParam.value.remise / 100)) * valeurParam.value.quantite_facture,
       });
     }
   }
@@ -789,11 +789,11 @@ export class venteListComponent extends baseComponent implements OnInit {
     const valeurParam = (<FormArray>this.lignesFactuceForm.get('lignes_facture')).at(index);
     if (event) {
       valeurParam.patchValue({
-        total: event * valeurParam.value.quantite,
+        total: event * valeurParam.value.quantite_facture,
         prix_vente_avec_remise: event - event * (valeurParam.value.remise / 100),
       });
       valeurParam.patchValue({
-        total_with_remise: (event - event * (valeurParam.value.remise / 100)) * valeurParam.value.quantite,
+        total_with_remise: (event - event * (valeurParam.value.remise / 100)) * valeurParam.value.quantite_facture,
       });
       const lignes_facture = this.lignesFactuceForm.value.lignes_facture;
 
@@ -802,11 +802,11 @@ export class venteListComponent extends baseComponent implements OnInit {
 
       lignes_facture.forEach((element: any) => {
         this.lignesFactuceForm.patchValue({
-          prix_facture_ttc: parseFloat(this.lignesFactuceForm.value.prix_facture_ttc) + element.prix_vente * element.quantite,
+          prix_facture_ttc: parseFloat(this.lignesFactuceForm.value.prix_facture_ttc) + element.prix_vente * element.quantite_facture,
         });
         this.lignesFactuceForm.patchValue({
           prix_facture_ttc_with_remise:
-            parseFloat(this.lignesFactuceForm.value.prix_facture_ttc_with_remise) + element.prix_vente_avec_remise * element.quantite,
+            parseFloat(this.lignesFactuceForm.value.prix_facture_ttc_with_remise) + element.prix_vente_avec_remise * element.quantite_facture,
         });
       });
       this.lignesFactuceForm.patchValue({
