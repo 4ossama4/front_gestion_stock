@@ -419,6 +419,8 @@ export class venteListComponent extends baseComponent implements OnInit {
 
         this.venteSelected.lignes_vente.forEach((element: any) => {
           element.facture_id = null;
+          element.created_at = null;
+          element.updated_at = null;
         });
 
         this.ventesService.printFacture(this.venteSelected).subscribe(
