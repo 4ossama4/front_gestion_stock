@@ -316,11 +316,11 @@
       <label style="font-weight: 600">Liste des articles :</label>
     </div>
     <div class="col-md-4 col-4 ">
-      Total : <nz-tag class="ml-2">{{ venteSelected?.prix_vente_ttc_with_remise | priceFormat }} DH
-        <!-- +
+      Total : <nz-tag class="ml-2">{{ venteSelected?.prix_vente_ttc_with_remise
+        +
         (lignesFactuceForm?.value?.prix_facture_ttc_with_remise ? lignesFactuceForm?.value?.prix_facture_ttc_with_remise
-        : 0)-->
-
+        : 0)
+        | priceFormat }} DH
       </nz-tag>
     </div>
     <div class="col-2 col-md-2 text-right">
@@ -384,7 +384,7 @@
         </tbody>
       </nz-table>
     </div>
-    <!-- <div class="col-md-12">
+    <div class="col-md-12">
       <form [formGroup]="lignesFactuceForm">
         <div formArrayName="lignes_facture">
           <ng-container *ngFor="let ligne_facture of lignesFactuceForm.get('lignes_facture').controls; let i = index">
@@ -449,7 +449,7 @@
           </ng-container>
         </div>
       </form>
-    </div> -->
+    </div>
   </div>
   <div *ngIf="venteSelected?.lignes_vente.length == 0" class="row">
     <div class="col-md-12">
