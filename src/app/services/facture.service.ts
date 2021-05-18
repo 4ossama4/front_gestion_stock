@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class FactureService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   public getFactures() {
     return this.http.get(environment.apiUrl + `/factures`);
@@ -25,4 +25,18 @@ export class FactureService {
   public delete(factureId: number) {
     return this.http.delete(environment.apiUrl + `/factures/` + factureId);
   }
+
+  public getVenteFactureById(venteId: number) {
+    return this.http.get(environment.apiUrl + `/ventes_factures/${venteId}`);
+  }
+
+  public getFactureById(factureId: number) {
+    return this.http.get(environment.apiUrl + `/factures/${factureId}`);
+  }
+
+
+  public update(facture: any) {
+    return this.http.put(environment.apiUrl + `/factures/${facture.id}`, facture);
+  }
+
 }

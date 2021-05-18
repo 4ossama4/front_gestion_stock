@@ -10,35 +10,32 @@
   <div class="row">
     <div class="col-md-12 filter-rupture">
       <nz-input-group [nzSize]="'small'" style="width: 100%" [nzAddOnAfter]="searchFacture">
-        <nz-range-picker
-          style="width: 30% !important"
-          #rangePicker
-          [nzRenderExtraFooter]="extraDate"
-          [(ngModel)]="factureCriteria.date"
-          (ngModelChange)="onChange($event)"
-        ></nz-range-picker>
+        <nz-range-picker style="width: 30% !important" #rangePicker [nzRenderExtraFooter]="extraDate"
+          [(ngModel)]="factureCriteria.date" (ngModelChange)="onChange($event)"></nz-range-picker>
         <ng-template #extraDate>
           <div class="text-center">
-            <button [nzSize]="'small'" (click)="toDay('30J')" nz-button nzType="primary"><< 30 jours</button>
-            <button [nzSize]="'small'" (click)="toDay('7J')" nz-button nzType="primary"><< 7 jours</button>
-            <button [nzSize]="'small'" (click)="toDay('HIER')" nz-button nzType="primary"><< Hier</button>
-            <button [nzSize]="'small'" (click)="toDay('TODAY')" nz-button nzType="primary">aujourd'hui</button>
+            <button [nzSize]="'small'" (click)="toDay('30J')" nz-button nzType="primary">
+              << 30 jours</button>
+                <button [nzSize]="'small'" (click)="toDay('7J')" nz-button nzType="primary">
+                  << 7 jours</button>
+                    <button [nzSize]="'small'" (click)="toDay('HIER')" nz-button nzType="primary">
+                      << Hier</button>
+                        <button [nzSize]="'small'" (click)="toDay('TODAY')" nz-button
+                          nzType="primary">aujourd'hui</button>
           </div>
         </ng-template>
         <span style="width: 20%; display: inline-flex">
-          <input placeholder="charcher par référence" [(ngModel)]="factureCriteria.referenceLike" nz-input type="text" />
+          <input placeholder="charcher par référence" [(ngModel)]="factureCriteria.referenceLike" nz-input
+            type="text" />
         </span>
-        <nz-select nzPlaceHolder="Chercher par client" nzAllowClear nzShowSearch style="width: 25%" [(ngModel)]="factureCriteria.client">
+        <nz-select nzPlaceHolder="Chercher par client" nzAllowClear nzShowSearch style="width: 25%"
+          [(ngModel)]="factureCriteria.client">
           <nz-option *ngFor="let client of listeOfClients" [nzLabel]="client.name" [nzValue]="client"> </nz-option>
         </nz-select>
-        <nz-select
-          nzPlaceHolder="Chercher par commerciale"
-          nzAllowClear
-          nzShowSearch
-          style="width: 25%"
-          [(ngModel)]="factureCriteria.commerciale"
-        >
-          <nz-option *ngFor="let commerciale of listOfCommerciaux" [nzLabel]="commerciale.name" [nzValue]="commerciale"> </nz-option>
+        <nz-select nzPlaceHolder="Chercher par commerciale" nzAllowClear nzShowSearch style="width: 25%"
+          [(ngModel)]="factureCriteria.commerciale">
+          <nz-option *ngFor="let commerciale of listOfCommerciaux" [nzLabel]="commerciale.name" [nzValue]="commerciale">
+          </nz-option>
         </nz-select>
       </nz-input-group>
       <ng-template #searchFacture>
@@ -49,19 +46,15 @@
 
   <div *ngIf="filterApplyList.length > 0" class="row pt-2 pb-1">
     <div class="col-md-10">
-      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués : </span>
-      <nz-tag
-        *ngFor="let filter of filterApplyList; let index = index"
-        (nzOnClose)="deleteFilter(index, filter)"
-        [nzMode]="'closeable'"
-        [nzColor]="filter.color"
-        >{{ filter.label }} : {{ filter.name ? filter.name : filter.value }}</nz-tag
-      >
+      <span style="font-weight: 600; color: #1890ff" class="pr-3"> <i class="fal fa-filter"></i> Filtres appliqués :
+      </span>
+      <nz-tag *ngFor="let filter of filterApplyList; let index = index" (nzOnClose)="deleteFilter(index, filter)"
+        [nzMode]="'closeable'" [nzColor]="filter.color">{{ filter.label }} : {{ filter.name ? filter.name : filter.value
+        }}</nz-tag>
     </div>
     <div class="col-md-2 text-right">
-      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button nzType="link"
-        >Supprimer les filters</a
-      >
+      <a (click)="deleteAllfilter()" class="pl-0 pr-0" style="color: #e01372; border-bottom: 1px solid" nz-button
+        nzType="link">Supprimer les filters</a>
       <i style="color: #e01372" class="fal fa-trash"></i>
     </div>
   </div>
@@ -72,24 +65,11 @@
           Affichage {{ from }} à {{ to }} de <strong>{{ totalFactures }}</strong> factures
         </span>
       </ng-template>
-      <nz-table
-        [nzShowTotal]="datasize"
-        class="pt-1"
-        [nzTotal]="totalFactures"
-        [nzFrontPagination]="false"
-        [(nzPageIndex)]="firstFacture"
-        [nzPageSizeOptions]="[10, 50, 100]"
-        (nzPageSizeChange)="currentPageDataChange($event)"
-        [(nzPageSize)]="maxResults"
-        [nzShowPagination]="true"
-        nzShowSizeChanger
-        nzOuterBordered
-        [nzLoading]="loading"
-        [nzSize]="'middle'"
-        #basicTable
-        [nzData]="listeOfFactures"
-        (nzQueryParams)="sort($event)"
-      >
+      <nz-table [nzShowTotal]="datasize" class="pt-1" [nzTotal]="totalFactures" [nzFrontPagination]="false"
+        [(nzPageIndex)]="firstFacture" [nzPageSizeOptions]="[10, 50, 100]"
+        (nzPageSizeChange)="currentPageDataChange($event)" [(nzPageSize)]="maxResults" [nzShowPagination]="true"
+        nzShowSizeChanger nzOuterBordered [nzLoading]="loading" [nzSize]="'middle'" #basicTable
+        [nzData]="listeOfFactures" (nzQueryParams)="sort($event)">
         <thead>
           <tr>
             <th>Date</th>
@@ -111,6 +91,7 @@
 
             <td class="text-center">
               <i *ngIf="ROLE_DELETE" (click)="deleteFacture(data.id)" class="fal fa-trash-alt mr-2 my-btn-delete"></i>
+              <i (click)="editFacture(data)" class="fal fa-pen my-btn-edit mr-2"></i>
               <i (click)="getFacture(data)" class="fal fa-eye my-btn-edit mr-2 c-green"></i>
             </td>
           </tr>

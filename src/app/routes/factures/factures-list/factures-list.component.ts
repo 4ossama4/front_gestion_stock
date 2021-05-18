@@ -203,7 +203,7 @@ export class facturesListComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listeOfClients = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -212,7 +212,7 @@ export class facturesListComponent extends baseComponent implements OnInit {
       (response: any) => {
         this.listOfCommerciaux = response;
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -324,7 +324,7 @@ export class facturesListComponent extends baseComponent implements OnInit {
         link.href = downloadURL;
         window.open(downloadURL);
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -348,5 +348,9 @@ export class facturesListComponent extends baseComponent implements OnInit {
         this.notificationService.createNotification('error', 'error de supprission', null);
       },
     );
+  }
+
+  editFacture(item: any) {
+    this.router.navigate(['factures/edit/' + item.id]);
   }
 }

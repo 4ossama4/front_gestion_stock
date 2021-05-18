@@ -1,0 +1,266 @@
+<page-header [title]="'Modifier la facture ' + factureForm?.value?.reference"></page-header>
+
+<nz-card
+    [nzBodyStyle]="{ 'padding-top': '.5rem', 'padding-bottom': '.5rem', 'padding-left': '18px', 'padding-right': '18px' }"
+    class="mt-5" style="border-radius: 5px" [nzBordered]="true">
+    <div class="row d-flex align-items-center">
+        <div class="col-md-6 col-6">
+            <button (click)="goToList()" nz-button nzType="default"><i class="fal fa-chevron-left pr-2"></i>Liste des
+                factures</button>
+        </div>
+        <div class="col-md-6 col-6 text-right">Numéro Facture : {{ factureForm?.value?.reference }}</div>
+    </div>
+</nz-card>
+<nz-card class="mt-4" style="border-radius: 5px" [nzBordered]="true">
+    <form [formGroup]="factureForm">
+        <div class="row">
+            <div class="col-md-6">
+                <div nz-row [nzGutter]="24">
+                    <div nz-col [nzSpan]="24">
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="8" nzFor="date">Date </nz-form-label>
+                            <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                                <nz-date-picker formControlName="date">
+                                </nz-date-picker>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div nz-row [nzGutter]="24">
+                    <!-- <div nz-col [nzSpan]="24">
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="8" nzFor="name">Client</nz-form-label>
+                            <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                                <nz-input-group style="width: 100%" [nzAddOnAfter]="addclientTemplate">
+                                    <nz-select [compareWith]="nzCompareSelectedByID"
+                                        (ngModelChange)="selectClient($event)" nzAllowClear nzShowSearch
+                                        style="width: 100%" formControlName="client" name="client" id="client">
+                                        <nz-option *ngFor="let client of listOfClients" [nzLabel]="client.name"
+                                            [nzValue]="client">
+                                        </nz-option>
+                                    </nz-select>
+                                </nz-input-group>
+                                <ng-template #addclientTemplate>
+                                    <i nzTooltipTitle="Ajouter un client" nzTooltipPlacement="top" nz-tooltip
+                                        (click)="addClient()" class="fal fa-plus c-pointer"></i>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <!-- <div nz-row [nzGutter]="24">
+                    <div nz-col [nzSpan]="24">
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="8" nzFor="payment_mode_id">Mode de paiment </nz-form-label>
+                            <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                                <nz-select [nzDropdownRender]="addmodeTemplate" nzAllowClear
+                                    (ngModelChange)="changeModePaiment($event)" nzShowSearch style="width: 100%"
+                                    formControlName="payment_mode_id" name="payment_mode_id" id="payment_mode_id">
+                                    <nz-option *ngFor="let mode of listOfPaymentsMode" [nzLabel]="mode.label"
+                                        [nzValue]="mode.id">
+                                    </nz-option>
+                                </nz-select>
+                                <ng-template #addmodeTemplate>
+                                    <nz-divider class="mt-2 mb-2"></nz-divider>
+                                    <div class="row m-0">
+                                        <div class="col-md-10">
+                                            <input [nzSize]="'small'" type="text" nz-input #inputModeElement />
+                                        </div>
+                                        <div class="col-md-1">
+                                            <a class="add-item" (click)="saveMode(inputModeElement)">
+                                                <i nz-icon nzType="plus" class="c-green" nzTheme="outline"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div> -->
+            </div>
+            <!-- <div class="col-md-6">
+                <div nz-row [nzGutter]="24">
+                    <div nz-col [nzSpan]="24">
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="8" nzFor="name">Commerciale</nz-form-label>
+                            <nz-form-control [nzSpan]="16">
+                                <nz-input-group style="width: 100%" [nzAddOnAfter]="addcommercialeTemplate">
+                                    <nz-select [compareWith]="nzCompareSelectedByID"
+                                        (ngModelChange)="selectCommerciale($event)" nzAllowClear nzShowSearch
+                                        style="width: 100%" formControlName="commerciale" name="commerciale"
+                                        id="commerciale">
+                                        <nz-option *ngFor="let commerciale of listOfCommerciaux"
+                                            [nzLabel]="commerciale.name" [nzValue]="commerciale">
+                                        </nz-option>
+                                    </nz-select>
+                                </nz-input-group>
+                                <ng-template #addcommercialeTemplate>
+                                    <i nzTooltipTitle="Ajouter un Commerciale" nzTooltipPlacement="top" nz-tooltip
+                                        (click)="addCommerciale()" class="fal fa-plus c-pointer"></i>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+        <div class="row div-articles m-0 pt-2 pb-2 d-flex align-items-center">
+            <div class="col-md-10 col-6">
+                <label style="font-size: inherit" class="mb-0 title-article">
+                    Liste des Articles ({{ factureForm?.value?.lignes_facture.length }}) :
+                </label>
+            </div>
+            <div class="col-lg-2 col-6 d-flex justify-content-end">
+                <button class="btn-add-article" (click)="addLigneFacture()" [nzSize]="'small'" nz-button>
+                    Article <i style="font-size: 13px" class="fal fa-plus pl-3"></i>
+                </button>
+            </div>
+            <div formArrayName="lignes_facture" class="col-md-12"
+                [ngClass]="{ 'pt-3': factureForm?.value?.lignes_facture.length > 0 ? true : false }">
+                <div *ngIf="factureForm?.value?.lignes_facture.length > 0" class="row">
+                    <div class="col-md-4 col-6 pr-0">Article :</div>
+                    <div class="col-md-2 col-6 pl-0 pr-0">Quantite :</div>
+                    <div class="col-md-2 col-6 pl-0 pr-0">Prix-U :</div>
+                    <div class="col-md-2 col-6 pl-0 pr-0">Remise :</div>
+                    <div class="col-md-2 col-12 pl-0 pr-0">Total :</div>
+                    <div class="col-md-12">
+                        <hr class="mt-1" />
+                    </div>
+                </div>
+
+                <ng-container *ngFor="let ligne_facture of factureForm.get('lignes_facture').controls; let i = index">
+                    <div class="row pt-2 m-0 mb-2 pb-2 d-flex align-items-center div-ligne-achat" [formGroupName]="i">
+                        <div class="col-md-4 col-6 pr-0">
+                            <nz-select [nzServerSearch]="true" [compareWith]="nzCompareSelectedByreference"
+                                (ngModelChange)="onChangeArticle($event, i)" (nzOnSearch)="getArticles($event, i)"
+                                style="width: 100%" nzShowSearch formControlName="article" nzAllowClear
+                                [nzDropdownRender]="renderTemplateArticle">
+                                <ng-container *ngFor="let article of listeOfArticles">
+
+                                    <nz-option nzCustomContent *ngIf="!isLoadingArticle" [nzValue]="article"
+                                        [nzLabel]="article.reference">
+                                        <strong>
+                                            {{ article.reference }}
+                                        </strong>
+                                        {{ article.designation }}
+                                        <nz-tag>{{ article?.marque?.label }}</nz-tag>
+                                        <nz-badge *ngIf="article.quantite" nzStandalone nzShowZero
+                                            [nzOverflowCount]="article.quantite" [nzCount]="article.quantite"
+                                            [nzStyle]="{ backgroundColor: 'green' }"></nz-badge>
+                                        <nz-badge *ngIf="!article.quantite" nzStandalone nzShowZero
+                                            [nzOverflowCount]="0" [nzCount]="0" [nzStyle]="{ backgroundColor: 'red' }">
+                                        </nz-badge>
+                                    </nz-option>
+                                </ng-container>
+                                <nz-option *ngIf="isLoadingArticle" nzDisabled nzCustomContent>
+                                    <i nz-icon nzType="loading" class="loading-icon"></i> Chargemenet des données...
+                                </nz-option>
+                            </nz-select>
+                            <!-- <span *ngIf="ligne_facture.value.articleExiste == null" style="color: red; font-size: 11px">
+                                Article déja
+                                existe </span> -->
+                            <ng-template #renderTemplateArticle>
+                                <nz-divider class="mt-2 mb-2"></nz-divider>
+                                <div style="background: #efefef" class="text-center pb-2 pt-2">
+                                    <i nz-icon nzType="plus"></i>
+                                </div>
+                            </ng-template>
+                        </div>
+                        <!-- quantite -->
+                        <div class="col-md-2 col-6 pl-0 pr-0">
+                            <nz-input-group style="width: 100%">
+                                <nz-input-number style="width: 100%; text-align: center" nz-input
+                                    formControlName="quantite_facture" type="number" [nzMin]="0"
+                                    (mouseup)="onMouseupQte(i)" (keyup)="onMouseupQte(i)">
+                                </nz-input-number>
+                            </nz-input-group>
+                            <!-- <ng-template #btnPlus>
+                                <i (click)="plusQte(i)" class="fal fa-plus c-pointer"></i>
+                            </ng-template>
+                            <ng-template #btnMinus>
+                                <i (click)="minQte(i)" class="fal fa-minus c-pointer"></i>
+                            </ng-template> -->
+                        </div>
+                        <!-- prix vente -->
+                        <div class="col-md-2 col-6 pl-0 pr-0">
+                            <nz-input-group style="width: 100%" nzAddOnAfter="DH">
+                                <nz-input-number (ngModelChange)="changePriceVente($event, i)" style="width: 100%"
+                                    nz-input formControlName="prix_vente" type="number" [nzMin]="0">
+                                </nz-input-number>
+                            </nz-input-group>
+                        </div>
+                        <!-- remise -->
+                        <div class="col-md-2 col-6 pl-0 pr-0">
+                            <nz-input-group style="width: 100%" nzAddOnAfter="%">
+                                <nz-input-number style="width: 100%" (mouseup)="onMouseupRemise(i)"
+                                    (keyup)="onMouseupRemise(i)" nz-input formControlName="remise" type="number"
+                                    [nzMin]="0">
+                                </nz-input-number>
+                            </nz-input-group>
+                        </div>
+                        <!-- Total -->
+                        <div class="col-md-2 col-12 pl-0 pr-0">
+                            <nz-input-group style="width: 86%" nzAddOnAfter="DH">
+                                <nz-input-number [nzDisabled]="true" style="width: 100%" nz-input
+                                    formControlName="total_with_remise" type="number" [nzMin]="0">
+                                </nz-input-number>
+                            </nz-input-group>
+                            <i style="width: 14%; color: red" (click)="deleteLigneVente(i)" nz-icon nzType="close"
+                                class="c-pointer" nzTheme="outline"></i>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+
+    </form>
+</nz-card>
+
+<nz-card class="mt-4" style="border-radius: 5px" [nzBordered]="true">
+    <div class="row  m-0  pb-1 pr-3">
+        <div class="col-md-9"></div>
+        <div class="col-md-3 col-12 div-articles p-2">
+            <div>
+                <span>Total H.T : </span>
+                <br />
+                <span style="font-weight: 600; font-size: 22px; color: #242582">{{ factureForm?.value.prix_vente_ht |
+                    priceFormat }} DH </span>
+            </div>
+            <div>
+                <span>TVA : </span>
+                <br />
+                <span style="font-weight: 600; font-size: 22px">{{ factureForm.value.prix_total -
+                    factureForm.value.prix_vente_ht | priceFormat }}
+                    DH
+                </span>
+            </div>
+            <div>
+                <span>Total T.T.C : </span>
+                <br />
+                <span style="font-weight: 600; font-size: 22px; color: #e01372">{{
+                    factureForm.value.prix_total
+                    | priceFormat }} DH
+                </span>
+            </div>
+            <div>
+                <hr class="mt-2 mb-2" />
+            </div>
+
+            <div class="pt-3 ">
+                <button style="width: 100%" (click)="saveFacture()" nz-button nzType="primary">
+                    <span style="float: left"> Enregistrer </span>
+                    <span style="float: right;font-weight: bold;">
+                        {{ factureForm.value.prix_total | priceFormat }}
+                        DH
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</nz-card>
