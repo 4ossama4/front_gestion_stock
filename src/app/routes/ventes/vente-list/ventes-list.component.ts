@@ -421,6 +421,7 @@ export class venteListComponent extends baseComponent implements OnInit {
           element.facture_id = null;
           element.created_at = null;
           element.updated_at = null;
+          element.isProvisional = element.isProvisional ? element.isProvisional : false;
         });
 
         this.ventesService.printFacture(this.venteSelected).subscribe(
