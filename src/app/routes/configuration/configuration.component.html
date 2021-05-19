@@ -1,0 +1,89 @@
+<page-header [title]="'gestion de configuration'"></page-header>
+<nz-card [nzBodyStyle]="{ padding: '18px' }" class="mt-5" style="border-radius: 5px" [nzBordered]="true">
+  <div class="row d-flex align-items-center">
+    <div class="col-md-6">
+      <h4 class="mb-0 title-page">Liste des paramètres</h4>
+    </div>
+    <div class="col-md-6 d-flex justify-content-end">
+      <button (click)="openModalAdd()" class="d-flex align-items-center" nz-button nzType="primary">
+        Paramètre <i nz-icon nzType="plus"></i>
+      </button>
+    </div>
+  </div>
+  <hr />
+  <div class="row pt-3">
+    <div class="col-md-12">
+      <nz-table [nzTotal]="totalUsers" [nzFrontPagination]="false" [(nzPageIndex)]="firstUser"
+        [nzPageSizeOptions]="[10, 50, 100]" [(nzPageSize)]="maxResults" [nzShowPagination]="true" nzShowSizeChanger
+        nzOuterBordered [nzLoading]="loading" [nzSize]="'middle'" #basicTable [nzData]="listOfUsers"
+        (nzQueryParams)="sort($event)">
+        <thead>
+          <tr>
+            <th>Libelle</th>
+            <th>Code</th>
+            <th>Value</th>
+            <th class="text-center pl-3 pr-3">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{ data.name }}</td>
+            <td>{{ data.telephone }}</td>
+            <td>{{ data.fixe }}</td>
+
+            <td class="text-center">
+              <i (click)="deleteUser(data.id)" class="fal fa-trash-alt mr-2 my-btn-delete"></i>
+              <i (click)="openModalUpdate(data)" class="fal fa-pen my-btn-edit mr-2"></i>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</nz-card>
+
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="userModal"
+  [nzTitle]="!isUpdate ? 'Ajouter paramètre' : 'Modifier paramètre'" (nzOnCancel)="closeModalAdd()">
+  <form [formGroup]="userForm">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="last_name">Libelle</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input formControlName="last_name" nz-input name="last_name" type="text" id="last_name" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="first_name">Code</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input formControlName="first_name" nz-input name="first_name" type="text" id="first_name" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzFor="name">Valeur</nz-form-label>
+          <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+            <input (keyup)="findUser($event)" formControlName="name" nz-input name="name" type="text" id="name" />
+            <span
+              *ngIf="find_user_name && userSelected?.name?.toLowerCase() != userForm?.value?.name?.toLowerCase() && userForm.value.name"
+              style="font-size: 12px; color: red">
+              ce nom est déja utilisé
+            </span>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+
+    <div *nzModalFooter>
+      <button (click)="closeModalAdd()" nz-button nzType="default">Annuler</button>
+
+      <button *ngIf="!isUpdate" (click)="saveUser()" nz-button nzType="primary">Enregistrer</button>
+      <button *ngIf="isUpdate" (click)="saveUser()" nz-button nzType="primary">Modifier</button>
+    </div>
+  </form>
+</nz-modal>

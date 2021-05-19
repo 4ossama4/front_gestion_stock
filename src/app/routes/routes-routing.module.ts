@@ -53,6 +53,8 @@ import { devisEditComponent } from './devis/devis-edit/devis-edit.component';
 import { referencielsComponent } from './referenciels/referenciels.component';
 import { demandesListComponent } from './demandes/demandes-list/demandes-list.component';
 import { demandesDetailsComponent } from './demandes/demandes-details/demandes-details.component';
+import { configurationComponent } from './configuration/configuration.component';
+import { facturesEditComponent } from './factures/facture-edit/facture-edit.component';
 
 const routes: Routes = [
   {
@@ -68,6 +70,7 @@ const routes: Routes = [
       { path: 'fournisseurs', component: fournisseurComponent },
       { path: 'clients', component: clientComponent },
       { path: 'users', component: usersComponent },
+      { path: 'configuration', component: configurationComponent },
 
       { path: 'encaissements', component: encaissementComponent },
       { path: 'reglements-fournisseurs', component: reglementsFournisseurComponent },
@@ -121,6 +124,7 @@ const routes: Routes = [
         children: [
           { path: '', redirectTo: 'list', pathMatch: 'full' },
           { path: 'list', component: facturesListComponent },
+          { path: 'edit/:id', component: facturesEditComponent },
         ],
       },
       {

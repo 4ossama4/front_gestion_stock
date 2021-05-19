@@ -43,6 +43,7 @@ import { RoleAddComponent } from './roles/role-add/role-add.component';
 import { RoleViewComponent } from './roles/role-view/role-view.component';
 
 import { outOfStockComponent } from './out-of-stock/out-of-stock.component';
+import { configurationComponent } from './configuration/configuration.component';
 
 // servies
 import { NotificationService } from '../services/notification.service';
@@ -89,6 +90,7 @@ import { demandesListComponent } from './demandes/demandes-list/demandes-list.co
 import { DemandeService } from '../services/demande.service';
 import { TimerComponent } from './demandes/timer/timer/timer.component';
 import { demandesDetailsComponent } from './demandes/demandes-details/demandes-details.component';
+import { facturesEditComponent } from './factures/facture-edit/facture-edit.component';
 
 const COMPONENTS = [
   DashboardV1Component,
@@ -151,6 +153,9 @@ const COMPONENTS = [
 
   usersComponent,
   depensesComponent,
+  configurationComponent,
+  facturesEditComponent,
+
   baseComponent,
   PriceFormat,
 ];
