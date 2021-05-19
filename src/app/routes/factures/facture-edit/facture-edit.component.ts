@@ -249,6 +249,10 @@ export class facturesEditComponent extends baseComponent implements OnInit {
         if (this.factureForm.valid && this.factureForm.value.lignes_facture.length > 0) {
             this.factureService.update(this.factureForm.value).subscribe(
                 (reponse) => {
+                    var downloadURL = window.URL.createObjectURL(reponse);
+                    var link = document.createElement('a');
+                    link.href = downloadURL;
+                    window.open(downloadURL);
                     this.notificationService.createNotification('success', 'Facture a été modifié avec succes', null);
                     this.goToList();
                 },

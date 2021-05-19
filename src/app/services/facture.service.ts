@@ -36,7 +36,11 @@ export class FactureService {
 
 
   public update(facture: any) {
-    return this.http.put(environment.apiUrl + `/factures/${facture.id}`, facture);
+    const httpOptions = {
+      responseType: 'blob' as 'json',
+    };
+
+    return this.http.put(environment.apiUrl + `/factures/${facture.id}`, facture, httpOptions);
   }
 
 }
