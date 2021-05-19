@@ -75,7 +75,7 @@
           Affichage {{ from }} à {{ to }} de <strong>{{ totalVente }}</strong> ventes
         </span>
       </ng-template>
-      <div class="text-center" *ngIf="listeOfVente.length > 0">
+      <div class="text-center" *ngIf="listeOfVente?.length > 0">
         <span style="font-weight: 600">Total : </span>
         <nz-tag [nzColor]="'green'">{{ somme_ventes | priceFormat }} DH</nz-tag>
       </div>
@@ -384,7 +384,7 @@
         </tbody>
       </nz-table>
     </div>
-    <div class="col-md-12">
+    <div *ngIf="showFormIsProvisionnel" class="col-md-12">
       <form [formGroup]="lignesFactuceForm">
         <div formArrayName="lignes_facture">
           <ng-container *ngFor="let ligne_facture of lignesFactuceForm.get('lignes_facture').controls; let i = index">

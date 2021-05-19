@@ -392,6 +392,7 @@ export class venteListComponent extends baseComponent implements OnInit {
     this.loadingSave = false;
   }
   loadingSave: boolean = false;
+  showFormIsProvisionnel: boolean = true;
   public printFacture() {
     if (this.venteSelected && this.venteSelected.lignes_vente && this.venteSelected.lignes_vente.length > 0) {
 
@@ -407,8 +408,10 @@ export class venteListComponent extends baseComponent implements OnInit {
           this.lignesFactuceForm.controls[i].markAsDirty();
           this.lignesFactuceForm.controls[i].updateValueAndValidity();
         }
+
         if (this.lignesFactuceForm.valid && this.lignesFactuceForm.value.lignes_facture.length > 0) {
           // this.venteSelected.lignesFactuceForm = this.lignesFactuceForm.value;
+          this.showFormIsProvisionnel = false;
           this.venteSelected.lignes_vente = this.venteSelected.lignes_vente.concat(this.lignesFactuceForm.value.lignes_facture);
           this.venteSelected.prix_vente_ht = this.venteSelected.prix_vente_ht + (this.lignesFactuceForm.value.prix_facture_ht ? this.lignesFactuceForm.value.prix_facture_ht : 0);
           this.venteSelected.prix_vente_ttc = this.venteSelected.prix_vente_ttc + (this.lignesFactuceForm.value.prix_facture_ttc ? this.lignesFactuceForm.value.prix_facture_ttc : 0)
@@ -433,8 +436,17 @@ export class venteListComponent extends baseComponent implements OnInit {
             this.notificationService.createNotification('success', 'Facture a été crée avec succes', null);
             this.getVentesByCriteria();
             this.hideModal();
+            this.showFormIsProvisionnel = true;
+
           },
-          (error) => { this.loadingSave = false; },
+          (error) => {
+            this.loadingSave = false;
+            if (this.lignesFactuceForm && this.lignesFactuceForm.value && this.lignesFactuceForm.value.lignes_facture && this.lignesFactuceForm.value.lignes_facture.length > 0) {
+              this.venteSelected.lignes_vente.length = this.venteSelected.lignes_vente.length - this.lignesFactuceForm.value.lignes_facture.length;
+            }
+
+            this.showFormIsProvisionnel = true;
+          },
         );
 
 
