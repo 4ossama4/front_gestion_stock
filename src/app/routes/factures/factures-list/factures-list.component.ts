@@ -45,7 +45,7 @@ export class facturesListComponent extends baseComponent implements OnInit {
   private to: number = 0;
 
   private ROLE_DELETE: boolean = false;
-
+  private ROLE_SHOW_FACTURE: boolean = false;
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -59,6 +59,7 @@ export class facturesListComponent extends baseComponent implements OnInit {
   ) {
     super(settings);
     this.ROLE_DELETE = this.hasPermission('delete_facture');
+    this.ROLE_SHOW_FACTURE = this.hasPermission('show_factures');
   }
 
   ngOnInit(): void {

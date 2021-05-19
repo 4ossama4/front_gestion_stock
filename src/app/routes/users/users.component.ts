@@ -281,6 +281,15 @@ export class usersComponent implements OnInit {
     );
   }
 
+  public backup() {
+    this.userService.getbackUp().subscribe(
+      (response: any) => {
+
+      },
+      (error) => { },
+    );
+  }
+
   confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
     if (!control.value) {
       return { required: true };

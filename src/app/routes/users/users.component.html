@@ -5,6 +5,10 @@
       <h4 class="mb-0 title-page">Liste des utlisateurs</h4>
     </div>
     <div class="col-md-6 d-flex justify-content-end">
+      <button (click)="backup()" class="d-flex align-items-center pr-2" nz-button nzType="primary">
+        BackUp <i nz-icon nzType="download"></i>
+      </button>
+
       <button (click)="openModalAdd()" class="d-flex align-items-center" nz-button nzType="primary">
         Utilisateur <i nz-icon nzType="plus"></i>
       </button>
@@ -13,21 +17,10 @@
   <hr />
   <div class="row pt-3">
     <div class="col-md-12">
-      <nz-table
-        [nzTotal]="totalUsers"
-        [nzFrontPagination]="false"
-        [(nzPageIndex)]="firstUser"
-        [nzPageSizeOptions]="[10, 50, 100]"
-        [(nzPageSize)]="maxResults"
-        [nzShowPagination]="true"
-        nzShowSizeChanger
-        nzOuterBordered
-        [nzLoading]="loading"
-        [nzSize]="'middle'"
-        #basicTable
-        [nzData]="listOfUsers"
-        (nzQueryParams)="sort($event)"
-      >
+      <nz-table [nzTotal]="totalUsers" [nzFrontPagination]="false" [(nzPageIndex)]="firstUser"
+        [nzPageSizeOptions]="[10, 50, 100]" [(nzPageSize)]="maxResults" [nzShowPagination]="true" nzShowSizeChanger
+        nzOuterBordered [nzLoading]="loading" [nzSize]="'middle'" #basicTable [nzData]="listOfUsers"
+        (nzQueryParams)="sort($event)">
         <thead>
           <tr>
             <th>Utilisateur</th>
@@ -57,12 +50,8 @@
   </div>
 </nz-card>
 
-<nz-modal
-  [nzMaskClosable]="false"
-  [(nzVisible)]="userModal"
-  [nzTitle]="!isUpdate ? 'Ajouter utilisateur' : 'Modifier l\'utilisateur'"
-  (nzOnCancel)="closeModalAdd()"
->
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="userModal"
+  [nzTitle]="!isUpdate ? 'Ajouter utilisateur' : 'Modifier l\'utilisateur'" (nzOnCancel)="closeModalAdd()">
   <form [formGroup]="userForm">
     <div nz-row [nzGutter]="24">
       <div nz-col [nzSpan]="12">
@@ -90,8 +79,7 @@
             <input (keyup)="findUser($event)" formControlName="name" nz-input name="name" type="text" id="name" />
             <span
               *ngIf="find_user_name && userSelected?.name?.toLowerCase() != userForm?.value?.name?.toLowerCase() && userForm.value.name"
-              style="font-size: 12px; color: red"
-            >
+              style="font-size: 12px; color: red">
               ce nom est déja utilisé
             </span>
           </nz-form-control>
@@ -137,7 +125,8 @@
         <nz-form-item>
           <nz-form-label [nzSpan]="8" nzFor="role_id">Role</nz-form-label>
           <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
-            <nz-select nzAllowClear nzShowSearch style="width: 100%" formControlName="role_id" name="role_id" id="role_id">
+            <nz-select nzAllowClear nzShowSearch style="width: 100%" formControlName="role_id" name="role_id"
+              id="role_id">
               <nz-option *ngFor="let role of listOfRoles" [nzLabel]="role.name" [nzValue]="role.id"> </nz-option>
             </nz-select>
           </nz-form-control>
@@ -150,21 +139,12 @@
           <nz-form-label [nzSpan]="8" nzFor="password">Mot de passe</nz-form-label>
           <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
             <nz-input-group [nzSuffix]="suffixIconSearch">
-              <input
-                nz-input
-                [type]="showPassword ? 'text' : 'password'"
-                id="password"
-                formControlName="password"
-                (ngModelChange)="updateConfirmValidator()"
-              />
+              <input nz-input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
+                (ngModelChange)="updateConfirmValidator()" />
             </nz-input-group>
             <ng-template #suffixIconSearch>
-              <i
-                style="cursor: pointer"
-                [ngClass]="{ 'fa-eye': !showPassword, 'fa-eye-slash': showPassword }"
-                class="fal"
-                (click)="showPassword = !showPassword"
-              ></i>
+              <i style="cursor: pointer" [ngClass]="{ 'fa-eye': !showPassword, 'fa-eye-slash': showPassword }"
+                class="fal" (click)="showPassword = !showPassword"></i>
             </ng-template>
           </nz-form-control>
         </nz-form-item>
@@ -176,7 +156,8 @@
             <input nz-input type="password" formControlName="password_confirmation" id="password_confirmation" />
             <ng-template #errorTpl let-control>
               <ng-container *ngIf="control.hasError('required')"> Veuillez confirmer votre mot de passe! </ng-container>
-              <ng-container *ngIf="control.hasError('confirm')"> Deux mots de passe que vous saisissez sont incohérents! </ng-container>
+              <ng-container *ngIf="control.hasError('confirm')"> Deux mots de passe que vous saisissez sont incohérents!
+              </ng-container>
             </ng-template>
           </nz-form-control>
         </nz-form-item>
@@ -201,12 +182,8 @@
   </form>
 </nz-modal>
 
-<nz-modal
-  [nzMaskClosable]="false"
-  [(nzVisible)]="modalPassword"
-  [nzTitle]="'Modifier mot de passe d\'utilisateur  ' + nameUser"
-  (nzOnCancel)="hideModalUpdatePassword()"
->
+<nz-modal [nzMaskClosable]="false" [(nzVisible)]="modalPassword"
+  [nzTitle]="'Modifier mot de passe d\'utilisateur  ' + nameUser" (nzOnCancel)="hideModalUpdatePassword()">
   <form [formGroup]="userPasswordForm">
     <div nz-row [nzGutter]="24">
       <div nz-col [nzSpan]="12">
@@ -214,15 +191,12 @@
           <nz-form-label [nzSpan]="10" nzFor="old_password">Ancien Mot de passe</nz-form-label>
           <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="14">
             <nz-input-group [nzSuffix]="suffixIconSearchOld">
-              <input nz-input [type]="showPasswordOld ? 'text' : 'password'" id="old_password" formControlName="old_password" />
+              <input nz-input [type]="showPasswordOld ? 'text' : 'password'" id="old_password"
+                formControlName="old_password" />
             </nz-input-group>
             <ng-template #suffixIconSearchOld>
-              <i
-                style="cursor: pointer"
-                [ngClass]="{ 'fa-eye': !showPasswordOld, 'fa-eye-slash': showPasswordOld }"
-                class="fal"
-                (click)="showPasswordOld = !showPasswordOld"
-              ></i>
+              <i style="cursor: pointer" [ngClass]="{ 'fa-eye': !showPasswordOld, 'fa-eye-slash': showPasswordOld }"
+                class="fal" (click)="showPasswordOld = !showPasswordOld"></i>
             </ng-template>
           </nz-form-control>
         </nz-form-item>
@@ -234,21 +208,12 @@
           <nz-form-label [nzSpan]="10" nzFor="password">Nouveau Mot de passe</nz-form-label>
           <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="14">
             <nz-input-group [nzSuffix]="suffixIconSearch">
-              <input
-                nz-input
-                [type]="showPassword ? 'text' : 'password'"
-                id="password"
-                formControlName="password"
-                (ngModelChange)="updateConfirmValidatorPass()"
-              />
+              <input nz-input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
+                (ngModelChange)="updateConfirmValidatorPass()" />
             </nz-input-group>
             <ng-template #suffixIconSearch>
-              <i
-                style="cursor: pointer"
-                [ngClass]="{ 'fa-eye': !showPassword, 'fa-eye-slash': showPassword }"
-                class="fal"
-                (click)="showPassword = !showPassword"
-              ></i>
+              <i style="cursor: pointer" [ngClass]="{ 'fa-eye': !showPassword, 'fa-eye-slash': showPassword }"
+                class="fal" (click)="showPassword = !showPassword"></i>
             </ng-template>
           </nz-form-control>
         </nz-form-item>
@@ -260,7 +225,8 @@
             <input nz-input type="password" formControlName="password_confirmation" id="password_confirmation" />
             <ng-template #errorTpl let-control>
               <ng-container *ngIf="control.hasError('required')"> Veuillez confirmer votre mot de passe! </ng-container>
-              <ng-container *ngIf="control.hasError('confirm')"> Deux mots de passe que vous saisissez sont incohérents! </ng-container>
+              <ng-container *ngIf="control.hasError('confirm')"> Deux mots de passe que vous saisissez sont incohérents!
+              </ng-container>
             </ng-template>
           </nz-form-control>
         </nz-form-item>
