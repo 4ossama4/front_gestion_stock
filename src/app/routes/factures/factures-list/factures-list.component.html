@@ -90,7 +90,7 @@
             <td>{{ data.prix_total | priceFormat }} DH</td>
 
             <td class="text-center">
-              <i *ngIf="ROLE_DELETE" (click)="deleteFacture(data.id)" class="fal fa-trash-alt mr-2 my-btn-delete"></i>
+              <!-- <i *ngIf="ROLE_DELETE" (click)="deleteFacture(data.id)" class="fal fa-trash-alt mr-2 my-btn-delete"></i> -->
               <i (click)="editFacture(data)" class="fal fa-pen my-btn-edit mr-2"></i>
               <i (click)="getFacture(data)" class="fal fa-eye my-btn-edit mr-2 c-green"></i>
             </td>

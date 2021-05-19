@@ -29,26 +29,32 @@
             </div>
             <div class="col-md-6">
                 <div nz-row [nzGutter]="24">
-                    <!-- <div nz-col [nzSpan]="24">
+                    <div nz-col [nzSpan]="24">
                         <nz-form-item>
-                            <nz-form-label [nzSpan]="8" nzFor="name">Client</nz-form-label>
+                            <nz-form-label [nzSpan]="8" nzFor="client_name">Client</nz-form-label>
                             <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
-                                <nz-input-group style="width: 100%" [nzAddOnAfter]="addclientTemplate">
-                                    <nz-select [compareWith]="nzCompareSelectedByID"
-                                        (ngModelChange)="selectClient($event)" nzAllowClear nzShowSearch
-                                        style="width: 100%" formControlName="client" name="client" id="client">
-                                        <nz-option *ngFor="let client of listOfClients" [nzLabel]="client.name"
-                                            [nzValue]="client">
-                                        </nz-option>
-                                    </nz-select>
-                                </nz-input-group>
-                                <ng-template #addclientTemplate>
-                                    <i nzTooltipTitle="Ajouter un client" nzTooltipPlacement="top" nz-tooltip
-                                        (click)="addClient()" class="fal fa-plus c-pointer"></i>
-                                </ng-template>
+
+                                <input formControlName="client_name" nz-input name="client_name" type="text"
+                                    id="client_name" />
+
                             </nz-form-control>
                         </nz-form-item>
-                    </div> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-6">
+                <div nz-row [nzGutter]="24">
+                    <div nz-col [nzSpan]="24">
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="8" nzFor="adresse">Adresse</nz-form-label>
+                            <nz-form-control nzErrorTip="Ce champs est obligatoire" [nzSpan]="16">
+                                <textarea nz-input formControlName="adresse" name="adresse" id="adresse"
+                                    [nzAutosize]="{ minRows: 2, maxRows: 6 }"></textarea>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
                 </div>
             </div>
         </div>
