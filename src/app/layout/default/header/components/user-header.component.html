@@ -1,22 +1,13 @@
-<i
-  style="color: white; cursor: pointer"
-  nz-icon
-  *ngIf="ROLE_ADMIN"
-  nzType="appstore"
-  nz-dropdown
-  nzPlacement="bottom"
-  [nzDropdownMenu]="menuAdmin"
-  nzTheme="outline"
-  class="mr-sm pr-2 mb-1 mr-4"
-></i>
+<i style="color: white; cursor: pointer" nz-icon *ngIf="ROLE_ADMIN" nzType="appstore" nz-dropdown nzPlacement="bottom"
+  [nzDropdownMenu]="menuAdmin" nzTheme="outline" class="mr-sm pr-2 mb-1 mr-4"></i>
 <nz-dropdown-menu #menuAdmin="nzDropdownMenu">
   <div
-    class="wd-xl animated jello ant-dropdown-menu ant-dropdown-menu-root ant-dropdown-menu-light ant-dropdown-menu-vertical ng-tns-c206-5"
-  >
+    class="wd-xl animated jello ant-dropdown-menu ant-dropdown-menu-root ant-dropdown-menu-light ant-dropdown-menu-vertical ng-tns-c206-5">
     <div class="ant-spin-container ng-star-inserted">
       <div nz-row="" class="app-icons ant-row ant-row-middle ant-row-center">
         <div (click)="goToReferenciel('ref_original')" nz-col="" class="ant-col ant-col-6">
-          <i style="width: 50px; height: 50px" class="fal fa-hashtag bg-error text-white"></i><small>Ref. Original</small>
+          <i style="width: 50px; height: 50px" class="fal fa-hashtag bg-error text-white"></i><small>Ref.
+            Original</small>
         </div>
         <div (click)="goToReferenciel('familles')" nz-col="" class="ant-col ant-col-6">
           <i style="width: 50px; height: 50px" class="fal fa-home bg-geekblue text-white"></i>
@@ -52,25 +43,14 @@
   </div>
 </nz-dropdown-menu>
 
-<button
-  *ngIf="ROLE_ADMIN"
-  nz-dropdown
-  nzPlacement="bottomRight"
-  [nzDropdownMenu]="userMenu"
-  class="pr-2 mb-1 mr-2"
-  style="border-radius: 13px; background: #242582 !important; border-color: white !important"
-  nz-button
-  nzType="primary"
->
+<button nz-dropdown nzPlacement="bottomRight" [nzDropdownMenu]="userMenu" class="pr-2 mb-1 mr-2"
+  style="border-radius: 13px; background: #242582 !important; border-color: white !important" nz-button
+  nzType="primary">
   <i *ngIf="ROLE_ADMIN" class="txt-logout" nz-icon nzType="setting" class="mr-sm"></i> Paramètres
 </button>
-<button
-  (click)="logout()"
-  class="pr-2 mb-1"
-  style="border-radius: 13px; background-color: #242582 !important; border-color: #242582 !important"
-  nz-button
-  nzType="primary"
->
+<button (click)="logout()" class="pr-2 mb-1"
+  style="border-radius: 13px; background-color: #242582 !important; border-color: #242582 !important" nz-button
+  nzType="primary">
   Déconnexion <i class="txt-logout" nz-icon nzType="logout" class="mr-sm"></i>
 </button>
 
@@ -84,6 +64,11 @@
     <div *ngIf="ROLE_ADMIN" nz-menu-item routerLink="/roles/list">
       <i nz-icon nzType="setting" class="mr-sm"></i>
       Gestion des roles
+    </div>
+    <hr class="mt-0 mb-0">
+    <div nz-menu-item (click)="backup()">
+      <i nz-icon nzType="download" class="mr-sm"></i>
+      BackUp
     </div>
   </div>
 </nz-dropdown-menu>
