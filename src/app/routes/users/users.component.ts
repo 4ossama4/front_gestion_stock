@@ -284,6 +284,13 @@ export class usersComponent implements OnInit {
   public backup() {
     this.userService.getbackUp().subscribe(
       (response: any) => {
+        var downloadURL = window.URL.createObjectURL(response);
+        var link = document.createElement('a');
+        link.href = downloadURL;
+        var t = new Date();
+        link.download = t + 'stocks.sql';
+        link.click();
+        this.notificationService.createNotification('success', 'Backup a été exporté avec succes', null);
 
       },
       (error) => { },

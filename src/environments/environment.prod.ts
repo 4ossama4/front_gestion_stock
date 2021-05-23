@@ -3,7 +3,9 @@ export const environment = {
   production: true,
   useHash: true,
   hmr: false,
-  apiUrl: 'https://estocki.com/bpa_backend/api',
+  // apiUrl: 'https://estocki.com/bpa_backend/api',
+  apiUrl: 'https://sprt.bpa.ma/bpa_backend/api',
+
   // apiUrl: 'http://pieces_auto.test/api',
   cheminPFDs: 'https://stores.bpa.ma/pieces_auto_front/assets/factures/',
 };

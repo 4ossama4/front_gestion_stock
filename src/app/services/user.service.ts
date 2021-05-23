@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class usersService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   public getUsers() {
     return this.http.get(environment.apiUrl + `/users`);
@@ -44,5 +44,12 @@ export class usersService {
 
   public logout() {
     return this.http.post(environment.apiUrl + `/logout`, null);
+  }
+
+  public getbackUp() {
+    const httpOptions = {
+      responseType: 'blob' as 'json',
+    };
+    return this.http.get(environment.apiUrl + `/backup`, httpOptions);
   }
 }
