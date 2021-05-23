@@ -288,7 +288,7 @@ export class usersComponent implements OnInit {
         var link = document.createElement('a');
         link.href = downloadURL;
         var t = new Date();
-        link.download = t + 'stocks.sql';
+        link.download = t + 'backUp.sql';
         link.click();
         this.notificationService.createNotification('success', 'Backup a été exporté avec succes', null);
 
