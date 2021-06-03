@@ -502,7 +502,8 @@ export class venteAddComponent implements OnInit {
                   designation: article.designation,
                   quantite: article.quantite,
                   marque: article.marque,
-                  prix_vente: article.prix_vente
+                  prix_vente: article.prix_vente,
+                  prix_achat: article.prix_achat
                 }
               )
             });
@@ -522,6 +523,7 @@ export class venteAddComponent implements OnInit {
   public onChangeArticle(event: any, index: any) {
     const valeurParam = (<FormArray>this.venteForm.get('lignes_vente')).at(index);
     console.log('articles', this.venteForm.value.lignes_vente);
+    console.log('event', event)
     const foundArticle = this.venteForm.value.lignes_vente.find((element: any) => element.article_id == event.id);
     if (foundArticle) {
       valeurParam.patchValue({ articleExiste: null });
@@ -536,6 +538,7 @@ export class venteAddComponent implements OnInit {
         total_with_remise: 0,
         articleValid: true,
         articleExiste: false,
+        prix_achat: event.prix_achat
       });
     }
     console.log('foundArticle', foundArticle);

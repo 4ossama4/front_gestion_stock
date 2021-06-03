@@ -536,7 +536,8 @@ export class venteEditComponent implements OnInit {
                   designation: article.designation,
                   quantite: article.quantite,
                   marque: article.marque,
-                  prix_vente: article.prix_vente
+                  prix_vente: article.prix_vente,
+                  prix_achat: article.prix_achat
                 }
               )
             });
@@ -568,6 +569,7 @@ export class venteEditComponent implements OnInit {
         total_with_remise: 0,
         articleValid: true,
         articleExiste: false,
+        prix_achat: event.prix_achat
       });
     }
   }
