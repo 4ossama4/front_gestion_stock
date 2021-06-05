@@ -201,14 +201,24 @@ export class devisAddComponent implements OnInit {
     console.log('this.venteForm', this.venteForm.value);
 
     if (this.venteForm.valid && !this.clientInvalid && this.venteForm.value.lignes_devis.length > 0) {
-      this.devisService.store(this.venteForm.value).subscribe(
-        (reponse) => {
-          this.notificationService.createNotification('success', 'Vente a été ajouté avec succes', null);
-          this.goToList();
-          this.clickSave = false;
+
+      this.devisService.getReferenceDevis(new Date().getFullYear()).subscribe(
+        (response: any) => {
+          console.log('response', response);
+          this.venteForm.patchValue({ reference: '' + response.count + '/' + response.year.toString().substring(2, 4) });
+          this.venteForm.patchValue({ count: response.count, year: response.year });
+          this.devisService.store(this.venteForm.value).subscribe(
+            (reponse) => {
+              this.notificationService.createNotification('success', 'Vente a été ajouté avec succes', null);
+              this.goToList();
+              this.clickSave = false;
+            },
+            (error) => { },
+          );
         },
         (error) => { },
       );
+
     }
   }
 

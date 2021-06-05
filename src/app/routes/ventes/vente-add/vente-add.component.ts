@@ -358,17 +358,27 @@ export class venteAddComponent implements OnInit {
     console.log('this.venteForm', this.venteForm.value);
 
     if (this.venteForm.valid && !this.clientInvalid && this.venteForm.value.lignes_vente.length > 0) {
-      this.ventesService.store(this.venteForm.value).subscribe(
-        (reponse) => {
-          this.notificationService.createNotification('success', 'Vente a été ajouté avec succes', null);
-          this.goToList();
-          this.clickSave = false;
-          this.loadingSave = false;
+
+      this.ventesService.getReferenceVente(new Date().getFullYear()).subscribe(
+        (response: any) => {
+          console.log('response', response);
+          this.venteForm.patchValue({ reference: '' + response.count + '/' + response.year.toString().substring(2, 4) });
+          this.venteForm.patchValue({ count: response.count, year: response.year });
+          this.ventesService.store(this.venteForm.value).subscribe(
+            (reponse) => {
+              this.notificationService.createNotification('success', 'Vente a été ajouté avec succes', null);
+              this.goToList();
+              this.clickSave = false;
+              this.loadingSave = false;
+            },
+            (error) => {
+              this.loadingSave = false;
+            },
+          );
         },
-        (error) => {
-          this.loadingSave = false;
-        },
+        (error) => { },
       );
+
     }
   }
 
